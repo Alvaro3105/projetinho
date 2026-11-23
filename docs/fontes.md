@@ -9,11 +9,11 @@ Consultas feitas em **23/11/2026**. O ambiente de construção bloqueava acesso 
 | Código, README, testes e histórico do ExplAIner | [github.com/Alvaro3105/Explainer](https://github.com/Alvaro3105/Explainer) | Clonado; suíte executada: 189 testes passando |
 | Portfólio, projetos listados, eventos e certificados | [github.com/Alvaro3105/Portfolio](https://github.com/Alvaro3105/Portfolio) | Clonado e lido |
 
-## Conferido por você na página oficial
+## Consultado por você na página oficial
 
 | Item | Fonte | Observação |
 |---|---|---|
-| Matriz de Engenharia de Software — Coração Eucarístico, noturno (8 períodos, 62 disciplinas) | [pucminas.br — Engenharia de Software](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx) | Atualizada pela PUC em 21/11/2026; conferida por você na página oficial em 23/11/2026. **Referência provisória** até a confirmação da matriz vinculada à matrícula de 2027. O acesso direto ao site seguia bloqueado no ambiente de construção. |
+| Matriz de Engenharia de Software — Coração Eucarístico, noturno (8 períodos, 62 disciplinas) | [pucminas.br — Engenharia de Software](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx) | Consultada na página oficial em 21/11/2026. **Pendente de confirmação** com a documentação da matrícula de 2027 (até lá, referência provisória). O acesso direto ao site seguia bloqueado no ambiente de construção, então o conteúdo da matriz veio da sua consulta. |
 
 ## Lido via mecanismo de busca (confirmar na fonte)
 

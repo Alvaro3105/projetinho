@@ -1,7 +1,7 @@
 // Grade de Engenharia de Software — PUC Minas, campus Coração Eucarístico, turno noturno.
-// FONTE: matriz curricular da página oficial do curso (atualizada pela PUC em 21/11/2026),
-// conferida pelo Álvaro na página oficial em 23/11/2026. A página apresenta grade para manhã e noite.
-// STATUS: referência PROVISÓRIA até a confirmação da matriz vinculada à matrícula de 2027
+// FONTE: matriz curricular da página oficial do curso, consultada em 21/11/2026 (turno noturno;
+// a página apresenta grade para manhã e noite).
+// STATUS: PENDENTE DE CONFIRMAÇÃO com a documentação da matrícula de 2027; até lá, referência provisória
 // (Configurações guardam a data dessa confirmação). Nenhuma ementa, professor ou pré-requisito foi inventado.
 
 export const CURRICULUM_VERSION = '2026-11-21';
@@ -12,10 +12,9 @@ export const CURRICULUM_SOURCE = {
   url: 'https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx',
   campus: 'Coração Eucarístico',
   shift: 'Noturno',
-  updated: '2026-11-21',
-  consulted: '2026-11-23',
-  status: 'provisoria',
-  note: 'Matriz oficial atualizada em 21/11/2026 e conferida por você na página da PUC. Referência provisória até a confirmação da matriz vinculada à matrícula de 2027.',
+  consulted: '2026-11-21',
+  status: 'pendente_confirmacao',
+  note: 'Consultada na página oficial da PUC Minas em 21/11/2026. Pendente de confirmação com a documentação da matrícula de 2027; até lá, referência provisória.',
 };
 
 /** Lacunas da grade em relação aos seus objetivos: estudar em paralelo. */

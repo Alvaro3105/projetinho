@@ -4,9 +4,9 @@
 
 ## 1. Fonte da grade
 
-[Matriz curricular oficial](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx), atualizada pela PUC Minas em **21/11/2026** e conferida por você na página oficial em 23/11/2026. A página apresenta a grade dos turnos manhã e noite.
+[Matriz curricular oficial](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx), consultada na página oficial da PUC Minas em **21/11/2026**. A página apresenta a grade dos turnos manhã e noite; o CAREER OS usa a do turno noturno.
 
-**Status: referência provisória.** Ela vale até você confirmar a matriz vinculada à sua matrícula de 2027 (portal do aluno ou secretaria). Quando tiver essa matriz: compare período a período, edite o que mudar em Roadmap › Semestres › Disciplinas e clique em **Confirmar matriz da matrícula**. Depois disso, nenhuma atualização automática altera as disciplinas. Há um marco e uma atividade com prazo em 15/03/2027 para isso. Ementas, professores e pré-requisitos não foram incluídos porque não estavam nos dados informados.
+**Status: pendente de confirmação com a documentação da sua matrícula de 2027.** Até lá, ela é uma referência provisória. Ela vale até você confirmar a matriz vinculada à sua matrícula de 2027 (portal do aluno ou secretaria). Quando tiver essa matriz: compare período a período, edite o que mudar em Roadmap › Semestres › Disciplinas e clique em **Confirmar matriz da matrícula**. Depois disso, nenhuma atualização automática altera as disciplinas. Há um marco e uma atividade com prazo em 15/03/2027 para isso. Ementas, professores e pré-requisitos não foram incluídos porque não estavam nos dados informados.
 
 Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 536 + 494 + 464 + 516). Atividades complementares, extensão curricularizada e estágio, se exigidos, não entram nessa soma; verifique no projeto pedagógico.
 

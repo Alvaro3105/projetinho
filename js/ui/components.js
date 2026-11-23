@@ -85,7 +85,8 @@ export function tabs(items, active, onChange, label = 'Seções') {
       onclick: () => onChange(key),
       onkeydown: (e) => {
         if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-        const idx = items.findIndex(([k]) => k === active);
+        e.preventDefault();
+        const idx = items.findIndex(([k]) => k === key); // parte da aba focada, não da ativa
         const next = items[(idx + (e.key === 'ArrowRight' ? 1 : items.length - 1)) % items.length][0];
         onChange(next);
         requestAnimationFrame(() => document.querySelector('.tabs [aria-selected="true"]')?.focus());

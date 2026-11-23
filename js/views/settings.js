@@ -73,7 +73,7 @@ function profile({ store }) {
       }),
       h('div', { class: 'field full' }, h('label', { for: 'pf-mission' }, 'Missão'), mission),
       h('div', { class: 'field full' }, h('label', { for: 'pf-obj' }, 'Objetivos principais (um por linha)'), objectives),
-      h('div', { class: 'full' }, btn('Salvar perfil', () => save(), { kind: 'primary', iconName: 'check', type: 'submit' }))));
+      h('div', { class: 'full' }, btn('Salvar perfil', null, { kind: 'primary', iconName: 'check', type: 'submit' }))));
   function save() {
     const patch = {};
     for (const [k, , type] of fields) {
@@ -109,7 +109,7 @@ function data({ store }) {
   };
   return h('div', { class: 'stack' },
     notice(h('span', {}, h('strong', {}, 'Onde ficam seus dados: '), 'somente neste navegador (localStorage), neste dispositivo. Não há servidor nem sincronização. Limpar os dados do navegador, usar janela anônima ou trocar de computador apaga ou esconde tudo. Faça backup semanal e guarde o arquivo em um lugar seu (Google Drive, pendrive, repositório privado).'), 'warn'),
-    !store.persistent ? notice('O navegador está bloqueando o armazenamento local. As alterações desta sessão serão perdidas ao fechar a página. Exporte um backup antes de sair.', 'bad') : null,
+    !store.persistent ? notice('O navegador não está conseguindo salvar (armazenamento bloqueado ou espaço cheio). As alterações desta sessão serão perdidas ao fechar a página. Exporte um backup antes de sair.', 'bad') : null,
     h('div', { class: 'grid cols-3' },
       card({}, stat('Registros', String(counts), 'em todas as coleções')),
       card({}, stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDate(store.state.meta.lastExportAt.slice(0, 10)) : 'Exporte agora', { na: days === null })),
@@ -134,7 +134,7 @@ function showJSON(json, downloaded) {
   openModal({
     title: 'Backup exportado',
     body: h('div', { class: 'stack' },
-      h('p', { class: 'small muted' }, downloaded ? 'O download do arquivo foi iniciado. Se o navegador bloqueou o download, copie o conteúdo abaixo e salve como arquivo .json.' : 'Copie o conteúdo abaixo e salve como arquivo .json.'),
+      h('p', { class: 'small muted' }, downloaded ? 'Confira se o arquivo careeros-backup apareceu nos seus downloads. Alguns ambientes bloqueiam downloads sem avisar (por exemplo, a visualização dentro do claude.ai): se o arquivo não apareceu, copie o conteúdo abaixo e salve como .json em um lugar seu.' : 'Copie o conteúdo abaixo e salve como arquivo .json em um lugar seu.'),
       h('div', { class: 'field' }, h('label', { for: 'bk-json' }, 'Conteúdo do backup'), area)),
     footer: [btn('Fechar', () => closeModal(), { kind: 'ghost' }), btn('Copiar', async () => {
       try { await navigator.clipboard.writeText(json); toast('Backup copiado.'); } catch { area.focus(); area.select(); toast('Selecionei o texto: use Ctrl+C para copiar.'); }

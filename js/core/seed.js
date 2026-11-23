@@ -24,7 +24,7 @@ const NEW_JAVA = { title: 'Java + Spring Boot em nível intermediário', period:
 const NEW_IC = { title: 'Candidatura a iniciação científica na PUC Minas', period: '2028/1 ou 2028/2', due: '2028-08-31', description: 'Prepare em Introdução à Pesquisa em Informática (2º). Candidate-se no 3º só se a carga de 708 h permitir; senão, no 4º.' };
 const NEW_MATHML = { phase: 4, title: 'Álgebra Linear I e II (fora da grade da PUC)', period: 'jan–fev/2029 + 2029/1', due: '2029-07-15', description: 'MIT 18.06 com exercícios: parte I nas férias, parte II com Estatística e Fundamentos de IA. Chegar ao 6º período (Ciência de Dados e IA) com a base de ML.' };
 const NEW_MILESTONES = {
-  matrix: { title: 'Confirmar a matriz curricular vinculada à matrícula de 2027', period: '2027/1', due: '2027-03-15', description: 'Comparar com a referência provisória (página oficial, 21/11/2026) e confirmar em Roadmap › Semestres.' },
+  matrix: { title: 'Confirmar a matriz curricular vinculada à matrícula de 2027', period: '2027/1', due: '2027-03-15', description: 'Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Roadmap › Semestres.' },
   p3: { title: '3º período (708 h) concluído sem sobrecarga', period: '2028/1', due: '2028-07-15', description: 'Aprovação em todas as disciplinas e Estruturas de Dados sólida. Estudo extra reduzido (fator 0,8), sem matemática complementar, projeto pessoal só em manutenção, TI de 216 h como projeto do semestre.' },
   discrete: { title: 'Matemática Discreta completa (fora da grade)', period: '2027/2 + jul/2028', due: '2028-08-15', description: 'Discreta I em 2027/2 e Discreta II nas férias de julho, antes de Algoritmos em Grafos.' },
 };

@@ -53,7 +53,7 @@ function habits({ store }) {
             const on = (hb.checks || []).includes(d);
             return h('td', { style: { textAlign: 'center' } }, h('button', {
               type: 'button', class: 'check', 'aria-pressed': on ? 'true' : 'false', disabled: d > now ? true : null,
-              'aria-label': `${hb.name} em ${fmtDate(d)}: ${on ? 'feito' : 'não feito'}`,
+              'aria-label': `${hb.name} em ${fmtDate(d)}`, // estado em aria-pressed (rótulo estável)
               style: { margin: '0 auto', opacity: d > now ? '0.35' : '1' },
               onclick: () => store.update('habits', hb.id, { checks: on ? hb.checks.filter((x) => x !== d) : [...(hb.checks || []), d] }),
               html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',

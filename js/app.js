@@ -108,7 +108,7 @@ function renderNav(active) {
   clear(navHost).append(...ROUTES.map((r) => {
     if (r.group) return h('div', { class: 'nav-label', 'aria-hidden': 'true' }, r.group);
     const count = r.count ? r.count(store.state) : 0;
-    return h('a', { href: `#${r.id}`, 'aria-current': r.id === active ? 'page' : null, onclick: () => toggleNav(false) },
+    return h('a', { href: `#${r.id}`, 'aria-current': r.id === active ? 'page' : null, onclick: () => { toggleNav(false); if (location.hash === `#${r.id}`) render({ focus: true }); } },
       icon(r.icon), h('span', {}, r.label), count ? h('span', { class: 'nav-count', 'aria-label': `${count} pendentes` }, String(count)) : null);
   }));
 }
@@ -130,6 +130,10 @@ function render({ focus = false } = {}) {
   const route = currentRoute();
   const changed = route.id !== lastRoute;
   const activeId = document.activeElement?.id;
+  const activeEl = document.activeElement;
+  const activeLabel = activeEl && !activeId ? (activeEl.getAttribute?.('aria-label') || activeEl.getAttribute?.('title')) : null;
+  const activeTag = activeEl?.tagName?.toLowerCase();
+  const focusWasInContent = content.contains(document.activeElement) && document.activeElement !== content;
   const scroll = window.scrollY;
   renderNav(route.id);
   crumb.replaceChildren(h('span', {}, 'CAREER OS / '), h('strong', {}, route.label));
@@ -144,7 +148,7 @@ function render({ focus = false } = {}) {
   }
   const banners = [];
   if (store.loadError) banners.push(notice(`Os dados salvos neste navegador não puderam ser lidos (${store.loadError.message}). Nada foi sobrescrito. Importe um backup em Configurações ou restaure a configuração inicial.`, 'bad'));
-  else if (!store.persistent) banners.push(notice('O armazenamento local está indisponível (janela anônima ou bloqueio do navegador). Suas alterações valem só até fechar a página: exporte um backup.', 'warn'));
+  else if (!store.persistent) banners.push(notice('Não foi possível salvar neste navegador (armazenamento bloqueado, janela anônima ou espaço cheio). Suas alterações valem só até fechar a página: exporte um backup agora em Configurações › Dados e backup.', 'warn'));
   clear(content).append(...banners, view);
   if (changed || focus) {
     lastRoute = route.id;
@@ -152,20 +156,40 @@ function render({ focus = false } = {}) {
     (content.querySelector('#page-title') || content).focus({ preventScroll: true });
   } else {
     window.scrollTo(0, scroll);
-    if (activeId) document.getElementById(activeId)?.focus({ preventScroll: true });
+    const byLabel = () => {
+      if (!activeLabel || !window.CSS?.escape) return null;
+      const v = CSS.escape(activeLabel);
+      return content.querySelector(`${activeTag}[aria-label="${v}"], ${activeTag}[title="${v}"]`);
+    };
+    const target = activeId ? document.getElementById(activeId) : byLabel();
+    if (target) target.focus({ preventScroll: true });
+    // O elemento focado foi substituído (ex.: botão sem id): o foco vai ao título, não se perde.
+    else if (focusWasInContent) {
+      if (!document.querySelector('.modal')) content.querySelector('#page-title')?.focus({ preventScroll: true });
+    }
   }
+}
+
+// Mudanças de dados redesenham a tela logo DEPOIS do evento que as causou. Assim um Tab que
+// confirma um campo já levou o foco ao próximo campo, e o foco é restaurado no lugar certo.
+let scheduled = null;
+function scheduleRender(opts = {}) {
+  if (scheduled) { scheduled.focus = scheduled.focus || !!opts.focus; return; }
+  scheduled = { focus: !!opts.focus };
+  setTimeout(() => { const o = scheduled; scheduled = null; render(o); }, 0);
 }
 
 window.addEventListener('hashchange', () => { closeModal(); render(); });
 store.subscribe((change) => {
   if (change.type === 'settings') applyTheme();
-  if (change.type === 'import' || change.type === 'reset') { upgrade(); applyTheme(); render({ focus: true }); return; }
-  render();
+  if (change.type === 'import' || change.type === 'reset') { upgrade(); applyTheme(); scheduleRender({ focus: true }); return; }
+  scheduleRender();
 });
 window.addEventListener('storage', (e) => {
   if (e.key === 'careeros:v1') toast('Os dados foram alterados em outra aba. Recarregue a página para ver a versão mais recente.', { error: true });
 });
 
 applyTheme();
-render({ focus: false });
+// Primeira renderização não move o foco: o primeiro Tab deve chegar ao link "Pular para o conteúdo".
 lastRoute = currentRoute().id;
+render({ focus: false });

@@ -73,7 +73,10 @@ export function heatmap(days, { label = 'Dias de estudo' } = {}) {
     days.map((d) => h('i', { 'data-l': d.future ? null : String(level(d.minutes)), title: `${d.date}: ${d.minutes} min`, style: d.future ? { opacity: '0.25' } : null })));
 }
 
+/** Número com vírgula decimal (padrão brasileiro). */
+export const fmtNum = (n) => String(n).replace('.', ',');
+/** Horas a partir de minutos: 90 → "1,5h"; 600 → "10h". */
 export const fmtHours = (min) => {
   const hrs = min / 60;
-  return hrs >= 10 ? `${Math.round(hrs)}h` : `${Math.round(hrs * 10) / 10}h`;
+  return hrs >= 10 ? `${Math.round(hrs)}h` : `${fmtNum(Math.round(hrs * 10) / 10)}h`;
 };

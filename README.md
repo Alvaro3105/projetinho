@@ -100,11 +100,11 @@ Decisões principais:
 npm test
 ```
 
-Cobrem datas, dados iniciais (nenhum nível inventado, referências válidas), progresso sem dados = `null`, CRUD e persistência, integridade referencial, exportação/importação e rejeição de arquivos inválidos, dados corrompidos não sobrescritos, validação, consistência, independência de IA, metas, funil, lacunas de vagas, hábitos, rotina e dependências do roadmap. A CI (`.github/workflows/ci.yml`) roda a verificação de sintaxe e os testes a cada push.
+Cobrem datas, dados iniciais (nenhum nível inventado, referências válidas), progresso sem dados = `null`, CRUD e persistência, integridade referencial, exportação/importação e rejeição de arquivos inválidos, dados corrompidos não sobrescritos, validação, consistência, independência de IA, metas, funil, lacunas de vagas, hábitos, rotina e dependências do roadmap. `tests/consistency.test.js` garante que o documento da faculdade, a matriz do código e o plano (marcos, datas de matemática, recursos de IA) não divergem. A CI (`.github/workflows/ci.yml`) roda a verificação de sintaxe e os testes a cada push.
 
 ## Limitações
 
 - Sem sincronização entre dispositivos (só backup manual).
-- A grade da PUC Minas segue a matriz oficial do campus Coração Eucarístico, turno noturno, atualizada em 21/11/2026 e conferida na página oficial. É uma referência provisória até a confirmação da matriz da matrícula de 2027 (botão em Roadmap › Semestres).
+- A grade da PUC Minas segue a matriz do campus Coração Eucarístico, turno noturno, consultada na página oficial em 21/11/2026. Está pendente de confirmação com a documentação da matrícula de 2027 (botão em Roadmap › Semestres); até lá, é uma referência provisória.
 - Oportunidades e requisitos de empresas mudam: o sistema marca o que não foi confirmado na fonte oficial.
 - Construído com apoio de IA. Ver [docs/11-uso-de-ia.md](docs/11-uso-de-ia.md) sobre como torná-lo um projeto seu.

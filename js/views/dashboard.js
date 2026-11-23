@@ -6,7 +6,7 @@ import {
 } from '../core/metrics.js';
 import { optionLabel, TASK_STATUS, PROJECT_STATUS, PRIORITY, AREAS } from '../core/schema.js';
 import { card, stat, progressBar, pct, badge, optBadge, empty, btn, levelView, notice } from '../ui/components.js';
-import { barChart, fmtHours } from '../ui/charts.js';
+import { barChart, fmtHours, fmtNum } from '../ui/charts.js';
 import { crud } from '../ui/form.js';
 import { icon } from '../ui/icons.js';
 
@@ -109,7 +109,7 @@ export function renderDashboard({ store, navigate }) {
   const weeks = minutesByWeek(allSessions(st), 8, now);
   const total8 = weeks.reduce((a, w) => a + w.minutes, 0);
   const hoursCard = card({ title: 'Horas registradas', iconName: 'clock', meta: total8 ? `${fmtHours(total8)} em 8 semanas` : 'Sem registros', actions: btn('Registrar sessão', () => crud(store, 'studyLogs', { titleNew: 'Registrar sessão de estudo', defaults: { date: now, minutes: 50, kind: 'pratica', aiUse: 'nenhuma' } }), { size: 'sm', iconName: 'plus' }) },
-    total8 ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${v}h`, label: 'Horas por semana', height: 160 })
+    total8 ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por semana', height: 160 })
       : empty('Nenhuma sessão registrada.', 'As horas aparecem aqui assim que você registrar a primeira sessão. Horas medem esforço; resultados estão no Skill Tracker.'));
 
   // Objetivos principais + sinais

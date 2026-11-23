@@ -8,7 +8,7 @@ Data do diagnóstico: 23/11/2026. Fonte: o que você informou + análise dos rep
 |---|---|---|
 | Idade e local | 17 anos, região de Belo Horizonte (MG) | Informado |
 | Formação atual | Ensino Médio Técnico em TI, COTEMIG, conclusão em dez/2026 | Informado; confirmado no portfólio (2024–2026) |
-| Graduação | Engenharia de Software, PUC Minas, **Coração Eucarístico, noturno**, 8 períodos (2027–2030) | Conferido por você na página oficial (matriz de 21/11/2026); **referência provisória** até a confirmação da matrícula de 2027) |
+| Graduação | Engenharia de Software, PUC Minas, **Coração Eucarístico, noturno**, 8 períodos (2027–2030) | Matriz consultada na página oficial da PUC Minas em 21/11/2026; **pendente de confirmação** com a documentação da matrícula de 2027 |
 | Experiência profissional em TI | Nenhuma consolidada | Informado |
 | Projetos | ExplAIner (equipe de 6), Portfólio, 6 projetos acadêmicos listados | Verificado nos repositórios |
 | Comunidade | Google I/O Extended BH (13/06/2026), Minas Summit (17–18/06/2026), DevFest BH 2026, voluntariado no Code Club e World Creativity Day | Portfólio + relato |

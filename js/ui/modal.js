@@ -30,8 +30,10 @@ export function openModal({ title, body, footer, size = '', onClose, labelledBy 
   document.body.append(backdrop);
   document.querySelector('.app')?.setAttribute('aria-hidden', 'true');
   open = { backdrop, onKey, previous, onClose };
+  // Foco imediato (o diálogo já está no DOM). Um foco adiado poderia "roubar" o cursor de um
+  // campo em que você já começou a digitar e jogar o texto no primeiro campo.
   const firstField = dialog.querySelector('input, select, textarea') || closeBtn;
-  requestAnimationFrame(() => firstField.focus());
+  if (!dialog.contains(document.activeElement)) firstField.focus();
   return { dialog, close: closeModal };
 }
 

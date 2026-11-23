@@ -126,8 +126,15 @@
   .menu-btn { display: inline-flex; }
   .topbar { padding-left: max(var(--sp-4), env(safe-area-inset-left, 0px)); padding-right: max(var(--sp-4), env(safe-area-inset-right, 0px)); }
   .content { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: var(--sp-5) var(--sp-8); }
-  .cols-2, .cols-3, .cols-4 { grid-template-columns: minmax(0, 1fr); }
+  /* Tablet: grades de 3–4 colunas ficam em 2; só o celular empilha tudo (abaixo). */
+  .cols-3, .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .span-2 { grid-column: auto; }
+}
+
+@media (max-width: 600px) {
+  .cols-2, .cols-3, .cols-4 { grid-template-columns: minmax(0, 1fr); }
+  /* Quadro de projetos: colunas empilhadas no celular, sem rolagem lateral. */
+  .board { grid-template-columns: minmax(0, 1fr) !important; overflow-x: visible; }
 }
 
 @media (max-width: 960px) {

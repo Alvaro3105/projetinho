@@ -201,27 +201,82 @@ export function weeklyReviewDue(reviews, now = todayISO()) {
   return !hasCurrent;
 }
 
-/** Distribuição sugerida de horas semanais por frente, conforme fase e disponibilidade. */
+/** Distribuição sugerida de horas semanais por frente, conforme a fase. */
 export const PHASE_WEIGHTS = {
-  1: { 'Programação e lógica (sem IA)': 0.35, 'Matemática': 0.2, 'Inglês': 0.2, 'Projeto e Git': 0.15, 'Carreira (currículo, vagas)': 0.1 },
-  2: { 'Algoritmos e programação': 0.3, 'Projeto de portfólio': 0.25, 'Inglês': 0.15, 'Matemática da faculdade': 0.15, 'Carreira e comunidade': 0.15 },
-  3: { 'Estruturas de dados e entrevistas': 0.3, 'Projeto robusto / estágio': 0.3, 'Inglês': 0.15, 'Fundamentos de IA': 0.1, 'Carreira e comunidade': 0.15 },
-  4: { 'Especialização (backend + IA)': 0.3, 'Entrevistas (DSA + system design)': 0.25, 'Pesquisa / projeto avançado': 0.2, 'Inglês profissional': 0.1, 'Carreira e networking': 0.15 },
+  1: { 'Programação e lógica (sem IA)': 0.35, 'Matemática (álgebra, funções, pré-cálculo)': 0.2, 'Inglês': 0.2, 'Projeto e Git': 0.15, 'Carreira (currículo, vagas)': 0.1 },
+  2: { 'Algoritmos e programação': 0.3, 'Projeto de portfólio': 0.25, 'Inglês': 0.15, 'Matemática (Cálculo I + Discreta I)': 0.15, 'Carreira e comunidade': 0.15 },
+  3: { 'Estruturas de dados e entrevistas': 0.3, 'Projeto / estágio': 0.3, 'Inglês': 0.15, 'Matemática complementar (Discreta II)': 0.1, 'Carreira e comunidade': 0.15 },
+  4: { 'Especialização (backend + IA)': 0.25, 'Entrevistas (DSA + system design)': 0.25, 'Álgebra linear e matemática para ML': 0.15, 'Projeto avançado / pesquisa': 0.15, 'Inglês profissional': 0.1, 'Carreira e networking': 0.1 },
   5: { 'Projeto de alto nível / TCC': 0.3, 'Entrevistas e processos': 0.3, 'Especialização': 0.2, 'Inglês e internacionalização': 0.1, 'Networking': 0.1 },
   6: { 'Pesquisa / pós-graduação': 0.35, 'Trabalho e entregas': 0.35, 'Comunidade e ensino': 0.15, 'Internacionalização': 0.15 },
 };
 
-export function weeklyHours(settings) {
-  const mode = settings.routineMode || 'normal';
-  if (mode === 'minima') return 3.5; // 30 min por dia
-  const source = mode === 'ferias' ? (settings.availabilityVacation || settings.availability) : settings.availability;
-  return Object.values(source || {}).reduce((a, v) => a + (Number(v) || 0), 0);
+/**
+ * Cenários de trabalho. A disponibilidade de cada um é editável em Configurações.
+ * Estudar à noite não significa ter o dia livre: deslocamento, família, trabalho e descanso contam.
+ * "sem_estagio" usa settings.availability (compatível com dados antigos).
+ */
+export const WORK_SCENARIOS = [
+  { value: 'sem_estagio', label: 'Sem estágio', key: 'availability', defaults: { seg: 2, ter: 2, qua: 2, qui: 2, sex: 1.5, sab: 3, dom: 1 }, note: 'Dia sem compromisso fixo, mas com deslocamento, descanso, família e imprevistos. Blocos de 1h30–2h antes da aula.' },
+  { value: 'estagio_20h', label: 'Estágio 20 h/semana (4 h/dia)', key: 'availabilityIntern20', defaults: { seg: 1, ter: 1, qua: 1, qui: 1, sex: 1, sab: 3, dom: 1 }, note: 'Estágio em um turno + deslocamento + aula à noite. Um bloco curto por dia útil; o estudo pesado vai para o sábado.' },
+  { value: 'estagio_30h', label: 'Estágio 30 h/semana (6 h/dia)', key: 'availabilityIntern30', defaults: { seg: 0.5, ter: 0.5, qua: 0.5, qui: 0.5, sex: 0, sab: 3, dom: 0.5 }, note: 'Dias úteis cheios: só rotina mínima (30 min) quando der. Sábado concentra o estudo extra; domingo é descanso e revisão.' },
+];
+export const VACATION_DEFAULTS = { seg: 4, ter: 4, qua: 4, qui: 4, sex: 3, sab: 3, dom: 0 };
+
+export function scenarioOf(settings) {
+  return WORK_SCENARIOS.find((w) => w.value === settings.workScenario) || WORK_SCENARIOS[0];
 }
 
-export function routinePlan(settings, phaseValue) {
-  const total = weeklyHours(settings);
+export function availabilityFor(settings) {
+  const mode = settings.routineMode || 'normal';
+  if (mode === 'ferias') return settings.availabilityVacation || VACATION_DEFAULTS;
+  const sc = scenarioOf(settings);
+  return settings[sc.key] || sc.defaults;
+}
+
+/** Horas extras/semana que você declarou disponíveis (antes do ajuste por carga). */
+export function weeklyHours(settings) {
+  if ((settings.routineMode || 'normal') === 'minima') return 3.5; // 30 min por dia
+  return Object.values(availabilityFor(settings) || {}).reduce((a, v) => a + (Number(v) || 0), 0);
+}
+
+/** Carga média por período da matriz (4.522 h / 8). Semestres acima da média reduzem o estudo extra. */
+export const AVERAGE_SEMESTER_HOURS = 565;
+
+export function semesterHours(semester) {
+  return (semester?.disciplines || []).reduce((a, d) => a + (Number(d.hours) || 0), 0);
+}
+
+/** Semestre em curso: o marcado como "cursando" ou o do período letivo atual (se não concluído). */
+export function currentSemester(semesters, now = todayISO()) {
+  const marked = semesters.find((s) => s.status === 'cursando');
+  if (marked) return marked;
+  const [y, m] = now.split('-').map(Number);
+  const term = `${y}/${m <= 6 ? 1 : 2}`;
+  return semesters.find((s) => s.term === term && s.status !== 'concluido') || null;
+}
+
+/** Fator de carga: 1 em semestres até a média; menor em semestres pesados (mínimo 0,7). */
+export function loadFactor(semester) {
+  const hours = semesterHours(semester);
+  if (!hours) return 1;
+  return Math.max(0.7, Math.min(1, AVERAGE_SEMESTER_HOURS / hours));
+}
+
+/**
+ * Plano semanal: horas disponíveis × fator de carga (só no modo normal, durante o semestre)
+ * distribuídas pelos pesos da fase.
+ */
+export function routinePlan(settings, phaseValue, { semester = null } = {}) {
+  const declared = weeklyHours(settings);
+  const factor = (settings.routineMode || 'normal') === 'normal' && semester ? loadFactor(semester) : 1;
+  const total = Math.round(declared * factor * 2) / 2;
   const weights = PHASE_WEIGHTS[phaseValue] || PHASE_WEIGHTS[1];
-  return Object.entries(weights).map(([area, w]) => ({ area, hours: Math.round(total * w * 2) / 2 }));
+  const items = Object.entries(weights).map(([area, w]) => ({ area, hours: Math.round(total * w * 2) / 2 }));
+  items.declared = declared;
+  items.total = total;
+  items.factor = factor;
+  return items;
 }
 
 /** Sinais acionáveis para o painel e os relatórios. */

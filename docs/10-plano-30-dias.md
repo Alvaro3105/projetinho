@@ -67,4 +67,4 @@ Esses objetivos já estão cadastrados como metas (Desenvolvimento pessoal › M
 
 - **Avaliação muito ruim:** ótimo, o plano existe para isso. Reduza o escopo de janeiro e aumente o tempo de lógica.
 - **Semana perdida:** não compense dobrando a próxima. Volte para a rotina normal e registre o motivo na revisão.
-- **Vontade de pular para IA:** registre a ideia em Projetos › Ideias. Ela fica guardada para a Fase 3.
+- **Vontade de pular para IA:** registre a ideia em Projetos › Ideias. Ela fica guardada para a Fase 4 (2029), quando IA entra na faculdade.

@@ -4,26 +4,48 @@
 
 ## 1. Fonte da grade
 
-[Matriz curricular oficial](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx), atualizada pela PUC Minas em **21/11/2026**, consultada e informada por você em 23/11/2026. A página apresenta a grade dos turnos manhã e noite. A própria PUC avisa que as informações curriculares podem mudar: **confira a matriz vinculada à sua matrícula de 2027** e, se algo mudar, edite em Roadmap › Semestres. Ementas, professores e pré-requisitos não foram incluídos porque não estavam nos dados informados.
+[Matriz curricular oficial](https://www.pucminas.br/campus/coracao-eucaristico/ensino/graduacao/Paginas/Engenharia-de-Software.aspx), atualizada pela PUC Minas em **21/11/2026** e conferida por você na página oficial em 23/11/2026. A página apresenta a grade dos turnos manhã e noite.
+
+**Status: referência provisória.** Ela vale até você confirmar a matriz vinculada à sua matrícula de 2027 (portal do aluno ou secretaria). Quando tiver essa matriz: compare período a período, edite o que mudar em Roadmap › Semestres › Disciplinas e clique em **Confirmar matriz da matrícula**. Depois disso, nenhuma atualização automática altera as disciplinas. Há um marco e uma atividade com prazo em 15/03/2027 para isso. Ementas, professores e pré-requisitos não foram incluídos porque não estavam nos dados informados.
 
 Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 536 + 494 + 464 + 516). Atividades complementares, extensão curricularizada e estágio, se exigidos, não entram nessa soma; verifique no projeto pedagógico.
 
 ## 2. O que a grade significa para o seu plano
 
-**O turno noturno é uma vantagem estratégica.** As aulas à noite deixam o dia livre para estágio desde o 1º período (com matrícula ativa você já é elegível a estágio). O custo é energia: um dia com estágio de 6 h e aula à noite deixa pouco espaço para estudo extra. A rotina do sistema precisa refletir isso (ver Desenvolvimento pessoal e rotina).
+**Turno noturno não significa dia inteiro livre.** As aulas à noite permitem estagiar durante o dia (com matrícula ativa você é elegível a estágio), mas o dia também tem deslocamento, descanso, família e imprevistos. O CAREER OS trabalha com três cenários, cada um com disponibilidade própria em Configurações:
+
+| Cenário | Dias úteis | Fim de semana | Estudo extra padrão |
+|---|---|---|---|
+| Sem estágio | 1h30–2h por dia, antes da aula | Sábado 3 h, domingo 1 h | 13,5 h/semana |
+| Estágio 20 h (4 h/dia) | 1 bloco curto (~1 h) | Sábado 3 h, domingo 1 h | 9 h/semana |
+| Estágio 30 h (6 h/dia) | Só rotina mínima (30 min), quando der | Sábado 3 h, domingo 30 min | 5,5 h/semana |
+
+Os valores são pontos de partida: ajuste à sua realidade. Detalhes em Desenvolvimento pessoal e rotina.
+
+**A carga varia muito entre períodos** (de 464 h a 708 h). O plano reduz o estudo extra em semestres acima da média de 565 h por período: fator = 565 ÷ carga do período, com mínimo de 0,7. Na prática, 2º período ≈ 91%, **3º ≈ 80%**, 4º ≈ 87%, os demais 100%.
 
 **A grade cobre muito do que você quer:** fundamentos de programação (Introdução a Algoritmos, Programação Modular, Estruturas de Dados, Grafos, Análise e Projeto de Algoritmos), sistemas (Sistemas Operacionais, Redes, Sistemas Distribuídos e Nuvem, DevOps, SRE), engenharia profissional (Projeto, Arquitetura, Testes, Segurança, Qualidade, Manutenção) e IA (Estatística e Probabilidade, Fundamentos de IA, Ciência de Dados e IA).
 
-**O que a grade não cobre, e você precisa estudar em paralelo:**
+**Matemática: o que a grade cobre e o que não cobre.**
 
-| Lacuna | Por que importa | Quando estudar |
+- **Na grade:** Cálculo I (2º) e II (3º), Estatística e Probabilidade (5º), Computabilidade (1º) e Filosofia: Lógica e Pensamento Crítico (1º).
+- **Computabilidade não é Matemática Discreta.** Computabilidade estuda o que pode ser computado (em geral modelos como autômatos e máquinas de Turing e decidibilidade; a ementa não foi verificada). Ela usa lógica e provas, mas não cobre a formação completa em discreta: lógica de predicados, técnicas de prova, indução, conjuntos, relações e funções, contagem e combinatória, recorrências, teoria dos números, grafos e probabilidade discreta. Essa formação sustenta algoritmos, complexidade e entrevistas.
+- **Álgebra Linear não está na grade** e é indispensável para Machine Learning e IA (vetores, matrizes, autovalores, SVD, projeções). Entra como estudo complementar antes de Ciência de Dados e IA (6º).
+
+| Quando | Origem | Conteúdo |
 |---|---|---|
-| **Matemática discreta** | Base de algoritmos, provas, contagem e grafos | 2027/2–2028/1 (MIT 6.042J) |
-| **Álgebra linear** | Indispensável para ML e deep learning; Ciência de Dados e IA chega só no 6º período | 2028/2–2029/1 (MIT 18.06, *Mathematics for ML*) |
-| **Treino de entrevistas** | A grade ensina os fundamentos, não o formato de entrevista | Contínuo a partir de 2027 |
-| **Compiladores** | Opcional; útil para sistemas | Fase 4 (*Crafting Interpreters*) |
+| dez/2026–fev/2027 (férias) | Complementar | Álgebra, funções, pré-cálculo |
+| 2027/1 (1º) | PUC | Computabilidade; Filosofia: Lógica e Pensamento Crítico |
+| 2027/2 (2º) | PUC + complementar | Cálculo I + **Matemática Discreta I** (lógica, provas, indução, conjuntos, funções), ~1h30/semana, MIT 6.042J |
+| 2028/1 (3º, 708 h) | PUC | Cálculo II. **Nenhuma matemática complementar.** |
+| jul/2028 (férias) | Complementar | **Matemática Discreta II** (contagem, recorrências, grafos, probabilidade discreta), antes de Algoritmos em Grafos |
+| jan–fev/2029 (férias) | Complementar | **Álgebra Linear I** (vetores, matrizes, sistemas, espaços vetoriais), MIT 18.06 |
+| 2029/1 (5º) | PUC + complementar | Estatística e Probabilidade + **Álgebra Linear II** (autovalores, SVD, projeções) |
+| 2029/2 (6º) | PUC + complementar | Ciência de Dados e IA + cálculo vetorial para ML (*Mathematics for ML*) |
 
-**IA começa tarde na grade (5º e 6º períodos).** Isso confirma a estratégia da trilha: a especialização em IA entra quando a faculdade chega lá, e você chega preparado, com álgebra linear e probabilidade já vistas em paralelo.
+**Outras lacunas:** treino de entrevistas (contínuo desde 2027, com volume menor no 3º período) e compiladores (opcional, Fase 4, *Crafting Interpreters*).
+
+**IA começa tarde na grade (5º e 6º períodos).** Isso confirma a estratégia da trilha: a especialização em IA entra quando a faculdade chega lá, e você chega preparado, com Álgebra Linear I estudada nas férias de jan–fev/2029.
 
 **Trabalhos Interdisciplinares em todos os períodos** (de 50 h a 216 h). São a melhor fonte de portfólio do curso: use Git desde o primeiro dia, README, testes, e deixe claro o que *você* fez.
 
@@ -46,7 +68,7 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 - **Materiais:** CS50x, beecrowd, *Entendendo Algoritmos*; Khan Academy para pré-cálculo.
 - **Além da faculdade:** terminar o CS50x; 60–120 problemas sem IA; preparar Cálculo I.
 - **Projeto:** o Trabalho Interdisciplinar de aplicações web como projeto de portfólio.
-- **Profissional:** com aulas à noite, candidaturas a Jovem Aprendiz/estágio já no 1º semestre.
+- **Profissional:** aulas à noite permitem buscar Jovem Aprendiz/estágio durante o dia, se a rotina comportar. Quando começar, troque o cenário de trabalho em Configurações.
 
 ### 2º período — 2027/2 · Programação e matemática (620 h)
 
@@ -63,7 +85,7 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 
 - **Fundamentos-chave:** POO e modularização (Programação Modular), derivadas (Cálculo I).
 - **Materiais:** CS50P (POO e testes), *Engenharia de Software Moderna* (M. T. Valente, UFMG), MIT 18.01.
-- **Além:** começar matemática discreta (MIT 6.042J).
+- **Além:** Matemática Discreta I (lógica, provas, indução, conjuntos, funções), ~1h30/semana com MIT 6.042J.
 - **Projeto:** Projeto #1 começa (API feita sozinho, com testes e CI).
 - **Profissional:** primeiro hackathon. **Introdução à Pesquisa** é a hora de conhecer professores e linhas de pesquisa (prepara a IC do 3º–4º período). Metodologias de Extensão pode virar um projeto de software para uma organização real.
 
@@ -78,11 +100,18 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 | Fundamentos de Sistemas Operacionais | 84 h |
 | Trabalho Interdisciplinar: Desenvolvimento de Aplicações para Sustentabilidade | 216 h |
 
-- **Período mais pesado do curso** (708 h, com o maior Trabalho Interdisciplinar). Planeje rotina mais leve de estudo extra e não acumule estágio de 30 h se não for necessário.
-- **Fundamentos-chave:** estruturas de dados e complexidade (base das entrevistas), SQL e modelagem, processos e concorrência.
-- **Além:** implementar cada estrutura do zero; problemas por padrão; CS50 SQL; OSTEP junto com Sistemas Operacionais.
-- **Projeto:** Projeto #1 com PostgreSQL, Docker e deploy.
-- **Profissional:** estágio em desenvolvimento ou dados; candidatura a iniciação científica.
+- **Período mais pesado do curso** (708 h, com o maior Trabalho Interdisciplinar, de 216 h). Metas do semestre ajustadas para evitar sobrecarga:
+  - **Meta principal:** aprovação em todas as 6 disciplinas, com Estruturas de Dados sólida (é a base das entrevistas).
+  - **Estudo extra a ~80%** da sua disponibilidade (o plano aplica o fator automaticamente). Com estágio de 30 h, só rotina mínima nos dias úteis.
+  - **Sem matemática complementar** (Discreta II fica para as férias de julho).
+  - **Projeto pessoal só em manutenção:** o TI de 216 h é o projeto de portfólio do semestre.
+  - **Problemas de algoritmos:** volume menor, focado nas estruturas da disciplina.
+  - **Estágio:** se já tiver, mantenha; se puder escolher, evite começar um estágio de 30 h neste semestre.
+  - **Iniciação científica:** candidate-se só se a carga permitir; senão, no 4º período.
+- **Fundamentos-chave:** estruturas de dados e complexidade, SQL e modelagem, processos e concorrência.
+- **Além (leve):** implementar as estruturas da disciplina do zero; SQL junto com Bancos de Dados; OSTEP só nos capítulos da disciplina.
+- **Projeto:** Projeto #1 (concluído em 2027) em manutenção.
+- **Profissional:** manter o que já existe; revisar a rotina na revisão mensal se a carga apertar.
 
 ### 4º período — 2028/2 · Engenharia e infraestrutura (648 h)
 
@@ -99,7 +128,7 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 | Trabalho Interdisciplinar: Desenvolvimento de Sistemas em Ambientes de Produção | 192 h |
 
 - **Fundamentos-chave:** grafos (BFS, DFS, caminhos mínimos), padrões de projeto, CI/CD, TCP/IP.
-- **Além:** Java + Spring Boot; grafos no LeetCode; **começar álgebra linear**.
+- **Além:** Java + Spring Boot (junto com Projeto de Software); grafos no LeetCode, aproveitando a Discreta II das férias de julho. Álgebra Linear fica para as férias de jan–fev/2029.
 - **Projeto:** Projeto #2 (fila, cache, observabilidade, deploy contínuo), em diálogo com DevOps e o TI de produção.
 - **Profissional:** Desenvolvimento de Carreira Internacional combina com a meta de inglês B2+ e com o currículo em inglês. Primeira contribuição open source.
 
@@ -117,7 +146,7 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 | Trabalho Interdisciplinar: Desenvolvimento de Aplicações Inovadoras | 74 h |
 
 - **Fundamentos-chave:** programação dinâmica e guloso (entrevistas), probabilidade e inferência (IA), consistência e replicação.
-- **Além:** CS50 AI e ML Crash Course junto com Fundamentos de IA; *An Introduction to Statistical Learning* com Estatística.
+- **Além:** Álgebra Linear II (autovalores, SVD); CS50 AI junto com Fundamentos de IA; *An Introduction to Statistical Learning* com Estatística.
 - **Projeto:** Projeto #3 (IA aplicada) começa, possivelmente no TI de Aplicações Inovadoras.
 - **Profissional:** ciclo de candidaturas a estágios de grande porte, incluindo Big Techs (ver requisitos de formatura de cada ciclo).
 
@@ -135,7 +164,7 @@ Soma das cargas das disciplinas listadas: **4.522 h** (536 + 620 + 708 + 648 + 5
 | Trabalho Interdisciplinar: Engenharia de Arquiteturas Avançadas | 50 h |
 
 - **Fundamentos-chave:** trade-offs arquiteturais, ML aplicado, desempenho (medição, filas), segurança de aplicações, estratégia de testes.
-- **Além:** deep learning (d2l.ai, *Zero to Hero*); system design para entrevistas.
+- **Além:** cálculo vetorial para ML; deep learning (d2l.ai, *Zero to Hero*); system design para entrevistas.
 - **Projeto:** consolidar o Projeto #3 com métricas, testes e documentação em inglês.
 - **Profissional:** mobilidade internacional, se viável; estágio de maior porte.
 

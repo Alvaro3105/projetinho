@@ -12,7 +12,7 @@
 | 6. Internacional | 2031–2034 | Empresa internacional (remoto ou presencial) | Mestrado no exterior como ponte |
 | 7. Big Tech | horizonte | Big Tech ou laboratório de IA | Empresas de alto nível fora do grupo "Big Tech" |
 
-**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você. Como o turno é **noturno**, você pode estagiar durante o dia já a partir do 1º período.
+**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você. Como o turno é **noturno**, é possível estagiar durante o dia já a partir do 1º período, se a rotina comportar: o CAREER OS tem cenários de 20 h e 30 h semanais com disponibilidades diferentes (ver Desenvolvimento pessoal e rotina).
 
 ## 2. Competências profissionais
 
@@ -58,7 +58,7 @@ Programas para estudantes mudam a cada ano e variam por país. Verifique sempre 
 |---|---|---|
 | Fase 1 (dez/2026–fev/2027) | Lógica sem IA (beecrowd Iniciante) | 60 problemas |
 | 2027 | beecrowd + LeetCode fácil; estruturas do zero | 150 problemas acumulados |
-| 2028 | Padrões (two pointers, sliding window, BFS/DFS, heap, DP básica); explicar em voz alta | 250 acumulados; 1 mock por mês no 2º semestre |
+| 2028 | 1º semestre (3º período, 708 h): volume menor, focado nas estruturas da disciplina. 2º semestre: padrões (two pointers, sliding window, BFS/DFS, heap, DP básica); explicar em voz alta | 250 acumulados no fim do ano; 1 mock por mês no 2º semestre |
 | 2029 | Médio cronometrado; comportamental STAR; system design básico | 2–3 mocks por mês antes do ciclo de estágios |
 | 2030 | Manutenção + system design | Conforme processos |
 

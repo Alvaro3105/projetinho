@@ -59,7 +59,7 @@ O detalhamento de cada cargo (dia a dia, problemas, tecnologias, fundamentos, li
 
 **Trilha complementar — Dados e Cloud.** SQL avançado, modelagem, pipelines simples, Docker, CI/CD e noções de cloud. Isso torna você um backend melhor, abre portas de estágio em dados e é a base operacional de IA.
 
-**Especialização de longo prazo — Engenharia de IA / ML Engineering.** Começa de verdade na Fase 3, depois de álgebra linear e probabilidade. Ramo opcional: pesquisa (IC → mestrado → Research Engineer), decidido com base na experiência de IC, não no entusiasmo de agora. Alternativa: AI Infrastructure, se você descobrir gosto por sistemas e C.
+**Especialização de longo prazo — Engenharia de IA / ML Engineering.** Começa de verdade em 2029 (Fase 4), quando a PUC oferece Estatística e Fundamentos de IA (5º) e Ciência de Dados e IA (6º), com álgebra linear estudada antes, fora da grade. Ramo opcional: pesquisa (IC → mestrado → Research Engineer), decidido com base na experiência de IC, não no entusiasmo de agora. Alternativa: AI Infrastructure, se você descobrir gosto por sistemas e C.
 
 **O que não fazer:** tentar dominar front, back, mobile, dados, cloud, segurança e IA ao mesmo tempo. Cada área nova entra quando a anterior virou evidência.
 

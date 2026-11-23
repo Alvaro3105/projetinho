@@ -29,6 +29,8 @@ export function emptyState() {
       routineMode: 'normal',
       availability: { seg: 2, ter: 2, qua: 2, qui: 2, sex: 1.5, sab: 3, dom: 1 },
       weeklyReviewDay: 'dom',
+      workScenario: 'sem_estagio',
+      curriculumConfirmedAt: null,
     },
     profile: {},
     collections,

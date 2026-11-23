@@ -10,7 +10,8 @@ Lógica + Python (sem IA) ──► Estruturas de dados ──► Algoritmos/com
         ▼                          ▼                          ▼
    Git + Linux ──► SQL/modelagem ──► API com testes ──► Docker/CI/deploy ──► Sistemas distribuídos ──► System design
                                           │
-Matemática básica ──► Cálculo ──► Álgebra linear + Probabilidade ──► ML ──► Deep Learning ──► LLMs/RAG/agentes ──► MLOps
+Matemática básica ──► Cálculo I/II (PUC) ──► Álgebra linear (fora da grade) + Probabilidade (PUC, 5º) ──► ML ──► Deep Learning ──► LLMs/RAG/agentes ──► MLOps
+Lógica/provas ──► Matemática Discreta (fora da grade; Computabilidade não a substitui) ──► Grafos e algoritmos
                                                                                        ▲
                                                            Backend sólido ─────────────┘
 Inglês: contínuo, do primeiro ao último dia.
@@ -28,7 +29,7 @@ Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coraç
 | Algoritmos | Ambos (Introdução a Algoritmos 1º, Grafos 4º, Análise e Projeto de Algoritmos 5º) | 1–4 | MIT 6.006, CLRS |
 | Estruturas de dados | PUC (Estruturas de Dados, 3º, 144 h) + paralelo | 3 | MIT 6.006, implementação do zero |
 | Complexidade e análise | PUC (Estruturas de Dados 3º; Análise e Projeto de Algoritmos 5º) | 3–4 | 6.006 |
-| Matemática discreta | **Paralelo — não está na grade** | 2–3 | MIT 6.042J |
+| Matemática discreta | **Paralelo — não está na grade** (Discreta I em 2027/2; II nas férias de jul/2028) | 2–3 | MIT 6.042J |
 | Teoria da computação | PUC (Computabilidade, 1º; Métodos Formais, 7º) | 2, 5 | — |
 | Sistemas operacionais | PUC (Fundamentos de Sistemas Operacionais, 3º) + paralelo | 3 | OSTEP |
 | Arquitetura de computadores | PUC (2º, 42 h) | 2 | CS50x (memória) |
@@ -75,11 +76,12 @@ Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coraç
 |---|---|---|---|---|---|
 | Matemática básica, álgebra, funções | Indispensável | Indispensável | Indispensável | Indispensável | Fase 1 |
 | Geometria analítica | Útil | Útil | Útil (vetores) | Indispensável | Fase 2 |
-| Matemática discreta (lógica, indução, grafos, contagem) | **Indispensável** | Útil | Útil | Indispensável | **Paralelo** (não está na grade): 2027/2–2028/1 |
-| Cálculo diferencial e integral | Desejável | Desejável | **Indispensável** (gradientes) | Indispensável | PUC: Cálculo I (2º) e II (3º) |
-| Álgebra linear | Desejável | Útil | **Indispensável** | Indispensável | **Paralelo** (não está na grade): 2028/2–2029/1 |
+| Matemática discreta (lógica, indução, grafos, contagem) | **Indispensável** | Útil | Útil | Indispensável | **Paralelo** (não está na grade): Discreta I em 2027/2, II nas férias de jul/2028 |
+| Computabilidade / teoria da computação | Útil | — | — | Importante | PUC: Computabilidade (1º). Não substitui a discreta |
+| Cálculo diferencial e integral | Desejável | Desejável | **Indispensável** (gradientes) | Indispensável | PUC: Cálculo I (2º) e II (3º); cálculo vetorial para ML em 2029/2 |
+| Álgebra linear | Desejável | Útil | **Indispensável** | Indispensável | **Paralelo** (não está na grade): I nas férias de jan–fev/2029, II em 2029/1 |
 | Probabilidade e estatística | Útil (métricas, SLOs, A/B) | **Indispensável** | **Indispensável** | Indispensável | PUC: Estatística e Probabilidade (5º); base em paralelo antes |
-| Otimização | — | Útil | Importante | Indispensável | Fase 4 |
+| Otimização | — | Útil | Importante | Indispensável | Fase 4 (com ML, 2029/2+) |
 | Métodos numéricos | — | Útil | Útil | Importante | Fase 4+ |
 
 ## 5. Recursos

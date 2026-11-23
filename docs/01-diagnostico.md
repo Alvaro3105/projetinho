@@ -8,7 +8,7 @@ Data do diagnóstico: 23/11/2026. Fonte: o que você informou + análise dos rep
 |---|---|---|
 | Idade e local | 17 anos, região de Belo Horizonte (MG) | Informado |
 | Formação atual | Ensino Médio Técnico em TI, COTEMIG, conclusão em dez/2026 | Informado; confirmado no portfólio (2024–2026) |
-| Graduação | Engenharia de Software, PUC Minas, **Coração Eucarístico, noturno**, 8 períodos (2027–2030) | Informado; matriz oficial atualizada em 21/11/2026 (confirmar a da matrícula de 2027) |
+| Graduação | Engenharia de Software, PUC Minas, **Coração Eucarístico, noturno**, 8 períodos (2027–2030) | Conferido por você na página oficial (matriz de 21/11/2026); **referência provisória** até a confirmação da matrícula de 2027) |
 | Experiência profissional em TI | Nenhuma consolidada | Informado |
 | Projetos | ExplAIner (equipe de 6), Portfólio, 6 projetos acadêmicos listados | Verificado nos repositórios |
 | Comunidade | Google I/O Extended BH (13/06/2026), Minas Summit (17–18/06/2026), DevFest BH 2026, voluntariado no Code Club e World Creativity Day | Portfólio + relato |
@@ -39,7 +39,10 @@ Data do diagnóstico: 23/11/2026. Fonte: o que você informou + análise dos rep
 | CC | Linux, redes, arquitetura de computadores | Contato | Média/baixa | Em desenvolvimento/intermediário |
 | CC | SO, concorrência, sistemas distribuídos | Sem registro | Baixa | Em desenvolvimento (2029) |
 | Matemática | Álgebra e funções | Dificuldade ("matemática aplicada") | Alta | Intermediário (fev/2027) |
-| Matemática | Discreta, cálculo, álgebra linear, probabilidade | Sem registro | Média | Em desenvolvimento (2028) |
+| Matemática | Matemática discreta (fora da grade) | Sem registro | Média | Intermediário (ago/2028) |
+| Matemática | Álgebra linear (fora da grade; essencial para ML/IA) | Sem registro | Média | Intermediário (jul/2029) |
+| Matemática | Cálculo e probabilidade/estatística (na grade: 2º, 3º e 5º períodos) | Sem registro | Média | Em desenvolvimento (2028–2029) |
+| CC | Computabilidade e teoria da computação (na grade: 1º período) | Sem registro | Baixa | Em desenvolvimento (jul/2027) |
 | Dados | SQL e modelagem relacional | Dificuldade | Alta | Intermediário (dez/2027) |
 | IA | Fundamentos, ML, DL | Contato introdutório (curso Cisco) / sem registro | Baixa agora | Em desenvolvimento (2028–2029) |
 | IA | LLMs, RAG, agentes | Contato via ExplAIner (API Gemini) | Baixa agora | Em desenvolvimento (2029) |
@@ -50,7 +53,7 @@ Data do diagnóstico: 23/11/2026. Fonte: o que você informou + análise dos rep
 | Comunicação | Escrita técnica, apresentações, ensinar | Contato (READMEs, apresentação, voluntariado) | Média | Intermediário |
 | Autogestão | Tempo, aprender sozinho, equipe, liderança, networking | Parcial | Alta/média | Intermediário |
 
-A matriz completa (57 competências) está no Skill Tracker, com próxima ação para cada uma.
+A matriz completa (58 competências) está no Skill Tracker, com próxima ação para cada uma.
 
 ## 3. O que você já conhece (contato confirmado)
 

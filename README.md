@@ -21,9 +21,9 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | Módulo | O que faz |
 |---|---|
 | Dashboard | Saudação, fase atual, progresso acadêmico/técnico/profissional/pessoal (só com dados medidos), metas da semana, pendências, projetos, marcos, competências prioritárias, alertas |
-| Roadmap | 6 fases com 34 marcos, dependências e status; 8 semestres da PUC Minas (Coração Eucarístico, noturno) com as 62 disciplinas oficiais, lacunas da grade e plano complementar |
+| Roadmap | 6 fases com 37 marcos, dependências e status; 8 semestres da PUC Minas (Coração Eucarístico, noturno) com as 62 disciplinas oficiais, lacunas da grade e plano complementar |
 | Estudos | Materiais (CRUD), sessões com registro de uso de IA, horas, biblioteca com 48 recursos |
-| Competências | Skill Tracker com 57 competências: nível atual × desejado, evidências, histórico, materiais, projetos, próxima ação; 10 avaliações diagnósticas |
+| Competências | Skill Tracker com 58 competências: nível atual × desejado, evidências, histórico, materiais, projetos, próxima ação; 10 avaliações diagnósticas |
 | Projetos | Kanban de ideias a concluídos, tarefas, melhorias, competências, links |
 | Carreira | Candidaturas com funil e lacunas ligadas ao Skill Tracker, empresas, experiências, preparação para entrevistas |
 | Inglês | Avaliações CEFR, vocabulário, prática por habilidade, metas de proficiência |
@@ -32,7 +32,7 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | Revisões | Ciclo semanal e mensal (Planejar → Estudar → Praticar → Desenvolver → Avaliar → Ajustar) |
 | Relatórios | Evolução mensal/semestral, consistência, independência de IA, metas, aprendizagem, oportunidades, pontos de melhoria |
 | Guia estratégico | Os documentos de `docs/` renderizados no app |
-| Configurações | Rotina (mínima/normal/férias), disponibilidade por dia, perfil, tema, backup |
+| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h) com disponibilidade por dia, ajuste automático pela carga do semestre, perfil, tema, backup |
 
 ### Integração entre módulos
 
@@ -65,6 +65,8 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 ## Dados e backup
 
 Os dados ficam **somente no navegador** (`localStorage`, chave `careeros:v1`). Não há servidor nem sincronização. Limpar os dados do navegador, usar janela anônima ou trocar de computador faz os dados não aparecerem.
+
+**Atualizações do plano:** quando o plano muda (como a revisão da grade, da rotina e da matemática), o sistema só acrescenta registros ou ajusta os que você não editou, uma única vez. Nada é apagado; níveis, evidências, histórico, sessões e disciplinas editadas por você ficam intactos. Testado em `tests/core.test.js`.
 
 **Backup:** Configurações › Dados e backup › Exportar (arquivo JSON). Para restaurar ou levar para outro computador: Importar. A importação valida o arquivo antes de substituir os dados. Se o conteúdo salvo estiver corrompido, o sistema não o sobrescreve e avisa.
 
@@ -103,6 +105,6 @@ Cobrem datas, dados iniciais (nenhum nível inventado, referências válidas), p
 ## Limitações
 
 - Sem sincronização entre dispositivos (só backup manual).
-- A grade da PUC Minas segue a matriz oficial do campus Coração Eucarístico, turno noturno, atualizada em 21/11/2026. Ela pode mudar: confira a matriz da matrícula de 2027 e edite no Roadmap.
+- A grade da PUC Minas segue a matriz oficial do campus Coração Eucarístico, turno noturno, atualizada em 21/11/2026 e conferida na página oficial. É uma referência provisória até a confirmação da matriz da matrícula de 2027 (botão em Roadmap › Semestres).
 - Oportunidades e requisitos de empresas mudam: o sistema marca o que não foi confirmado na fonte oficial.
 - Construído com apoio de IA. Ver [docs/11-uso-de-ia.md](docs/11-uso-de-ia.md) sobre como torná-lo um projeto seu.

@@ -203,3 +203,91 @@ test('grade oficial: cargas por período e sincronização preserva registros', 
   assert.equal(syncCurriculum(store), false, 'idempotente');
   assert.equal(JSON.parse(storage.getItem(STORAGE_KEY)).meta.curriculumVersion, CURRICULUM_VERSION, 'versão persistida');
 });
+
+test('rotina: cenários com e sem estágio e ajuste pela carga do semestre', async () => {
+  const { WORK_SCENARIOS, loadFactor, currentSemester, semesterHours } = await import('../js/core/metrics.js');
+  const { SEMESTERS } = await import('../js/data/curriculum.js');
+  const base = { routineMode: 'normal', availability: { seg: 2, ter: 2, qua: 2, qui: 2, sex: 1.5, sab: 3, dom: 1 } };
+  assert.equal(weeklyHours(base), 13.5, 'sem estágio usa a disponibilidade antiga (dados preservados)');
+  assert.equal(weeklyHours({ ...base, workScenario: 'estagio_30h' }), 5.5, 'padrão do estágio 30 h');
+  assert.equal(weeklyHours({ ...base, workScenario: 'estagio_20h', availabilityIntern20: { sab: 4 } }), 4, 'disponibilidade editada vence o padrão');
+  assert.equal(weeklyHours({ ...base, routineMode: 'ferias' }), 22, 'férias com padrão');
+  assert.equal(WORK_SCENARIOS.length, 3);
+  const third = { disciplines: SEMESTERS[2].disciplines };
+  assert.equal(semesterHours(third), 708);
+  assert.equal(Math.round(loadFactor(third) * 100), 80);
+  assert.equal(loadFactor({ disciplines: SEMESTERS[0].disciplines }), 1);
+  const plan = routinePlan(base, 3, { semester: third });
+  assert.equal(plan.declared, 13.5);
+  assert.equal(plan.total, 11);
+  assert.equal(routinePlan({ ...base, routineMode: 'ferias' }, 3, { semester: third }).factor, 1, 'férias não aplicam o fator');
+  const sems = SEMESTERS.map((s, i) => ({ ...s, id: `s${i}`, status: 'futuro' }));
+  assert.equal(currentSemester(sems, '2028-03-10').number, 3);
+  assert.equal(currentSemester(sems, '2026-12-01'), null);
+  sems[0].status = 'cursando';
+  assert.equal(currentSemester(sems, '2028-03-10').number, 1, 'o marcado como cursando prevalece');
+});
+
+test('atualização do plano: acrescenta e ajusta sem apagar nem sobrescrever o que você editou', async () => {
+  const { applyPlanUpdates, PLAN_UPDATES, syncCurriculum } = await import('../js/core/seed.js');
+  const storage = memoryStorage();
+  const store = createStore({ storage, seed });
+  const st = store.state;
+  // simula um usuário da versão anterior
+  st.meta.appliedUpdates = [];
+  const ms = (t) => store.list('milestones').find((m) => m.title === t);
+  store.update('milestones', ms('Java + Spring Boot em nível intermediário').id, { due: '2028-06-30', period: '2028/1', description: 'Uma API Spring com testes.' });
+  const icM = ms('Candidatura a iniciação científica na PUC Minas');
+  store.update('milestones', icM.id, { due: '2028-03-31', period: '2028/1', description: 'minha versão' }); // só a descrição foi editada pelo usuário
+  const mathml = store.list('milestones').find((m) => m.title.startsWith('Álgebra Linear I e II'));
+  store.update('milestones', mathml.id, { title: 'Matemática para ML + primeiro curso de ML', phase: 3, due: '2028-12-31', period: '2028', description: 'Álgebra linear, probabilidade e um curso de ML concluído com exercícios.' });
+  for (const t of ['Confirmar a matriz curricular vinculada à matrícula de 2027', '3º período (708 h) concluído sem sobrecarga', 'Matemática Discreta completa (fora da grade)']) store.remove('milestones', ms(t).id);
+  store.remove('skills', store.list('skills').find((s) => s.name === 'Computabilidade e teoria da computação').id);
+  const disc = store.list('skills').find((s) => s.name === 'Matemática discreta');
+  store.update('skills', disc.id, { nextAction: 'Fazer a avaliação diagnóstica correspondente.', targetDate: '2028-06-30', target: 'em_desenvolvimento' });
+  const lin = store.list('skills').find((s) => s.name === 'Álgebra linear');
+  store.update('skills', lin.id, { nextAction: 'Meu próprio plano', level: 'introdutorio', history: [{ date: '2027-01-10', from: 'nao_avaliado', to: 'introdutorio', note: 'teste' }] });
+  store.remove('goals', store.list('goals').find((g) => g.title.startsWith('2028/1 (3º período')).id);
+  store.remove('tasks', store.list('tasks').find((t) => t.title.startsWith('Confirmar a matriz')).id);
+  store.create('studyLogs', { date: '2026-12-01', minutes: 50, kind: 'pratica', aiUse: 'nenhuma' });
+  const counts = Object.fromEntries(Object.entries(st.collections).map(([k, v]) => [k, v.length]));
+
+  assert.deepEqual(applyPlanUpdates(store), PLAN_UPDATES.map((u) => u.id));
+  assert.equal(ms('Java + Spring Boot em nível intermediário').due, '2028-12-15', 'marco original ajustado');
+  const icAfter = ms('Candidatura a iniciação científica na PUC Minas');
+  assert.equal(icAfter.description, 'minha versão', 'marco editado pelo usuário preservado');
+  assert.equal(icAfter.due, '2028-03-31', 'nenhum campo do marco editado é alterado');
+  const newMath = store.list('milestones').find((m) => m.id === mathml.id);
+  assert.equal(newMath.phase, 4);
+  assert.equal(newMath.due, '2029-07-15');
+  assert.ok(ms('3º período (708 h) concluído sem sobrecarga').dependsOn.length === 1, 'dependência resolvida');
+  assert.ok(store.list('skills').some((s) => s.name === 'Computabilidade e teoria da computação'));
+  const d2 = store.get('skills', disc.id);
+  assert.match(d2.nextAction, /Discreta I em 2027\/2/);
+  assert.equal(d2.target, 'intermediario');
+  const l2 = store.get('skills', lin.id);
+  assert.equal(l2.nextAction, 'Meu próprio plano', 'ação editada preservada');
+  assert.equal(l2.level, 'introdutorio', 'nível preservado');
+  assert.equal(l2.history.length, 1, 'histórico preservado');
+  assert.equal(store.list('studyLogs').length, 1, 'sessões preservadas');
+  assert.equal(store.list('milestones').length, counts.milestones + 3);
+  assert.equal(store.list('skills').length, counts.skills + 1);
+  assert.equal(store.list('goals').length, counts.goals + 1);
+  assert.equal(store.list('tasks').length, counts.tasks + 1);
+  // idempotente
+  assert.deepEqual(applyPlanUpdates(store), []);
+  assert.equal(store.list('milestones').length, counts.milestones + 3);
+  // persistido
+  assert.deepEqual(JSON.parse(storage.getItem(STORAGE_KEY)).meta.appliedUpdates, PLAN_UPDATES.map((u) => u.id));
+
+  // revisão do plano não sobrescreve disciplinas editadas pelo usuário
+  const s3 = store.list('semesters').find((s) => s.number === 3);
+  store.update('semesters', s3.id, { disciplines: [{ id: 'mine', name: 'Disciplina da minha matriz', hours: 60, status: 'futura' }], disciplinesEditedAt: '2027-02-01' });
+  st.meta.curriculumPlanRev = 1;
+  assert.equal(syncCurriculum(store), true);
+  const s3b = store.get('semesters', s3.id);
+  assert.equal(s3b.disciplines.length, 1, 'disciplinas editadas mantidas');
+  assert.match(s3b.parallel, /708 h/, 'texto do plano atualizado');
+  const s1 = store.list('semesters').find((s) => s.number === 1);
+  assert.equal(s1.disciplines.length, 7, 'semestre não editado mantém a matriz');
+});

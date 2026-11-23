@@ -1,7 +1,7 @@
 // Configuração inicial com o que é CONHECIDO sobre o Álvaro (informado por ele ou verificado
 // nos repositórios públicos em 23/11/2026). Todos os níveis começam como "não avaliado".
 // Metas, marcos e atividades são PLANO (status planejado/pendente), não resultado.
-import { SEMESTERS, CURRICULUM_VERSION, mergeSemester } from '../data/curriculum.js';
+import { SEMESTERS, CURRICULUM_VERSION, CURRICULUM_PLAN_REV, mergeSemester } from '../data/curriculum.js';
 import { uid } from './store.js';
 
 export const SEED_VERSION = '2026-11-23';
@@ -15,11 +15,104 @@ const S = (name, category, contact, target, priority, extra = {}) => ({
   evidence: extra.evidence || [], history: [], projectIds: [],
 });
 
+
+// ---------- Valores do plano revisado em 24/11/2026 (usados no seed e na atualização) ----------
+const NEXT_DISCRETE = 'Fora da grade: Discreta I em 2027/2 (lógica, provas, indução, conjuntos) e Discreta II nas férias de jul/2028 (contagem, recorrências, grafos), com MIT 6.042J.';
+const NEXT_LINALG = 'Fora da grade: Álgebra Linear I nas férias de jan–fev/2029 e II em 2029/1 (MIT 18.06), antes de Ciência de Dados e IA (6º período).';
+const COMPUTABILITY_SKILL = { name: 'Computabilidade e teoria da computação', next: 'Disciplina Computabilidade (1º período, 72 h). Usa lógica e provas, mas não substitui Matemática Discreta.' };
+const NEW_JAVA = { title: 'Java + Spring Boot em nível intermediário', period: '2028/2', due: '2028-12-15', description: 'Uma API Spring com testes, junto com Projeto de Software (4º). Fora do 3º período, que é o mais pesado.' };
+const NEW_IC = { title: 'Candidatura a iniciação científica na PUC Minas', period: '2028/1 ou 2028/2', due: '2028-08-31', description: 'Prepare em Introdução à Pesquisa em Informática (2º). Candidate-se no 3º só se a carga de 708 h permitir; senão, no 4º.' };
+const NEW_MATHML = { phase: 4, title: 'Álgebra Linear I e II (fora da grade da PUC)', period: 'jan–fev/2029 + 2029/1', due: '2029-07-15', description: 'MIT 18.06 com exercícios: parte I nas férias, parte II com Estatística e Fundamentos de IA. Chegar ao 6º período (Ciência de Dados e IA) com a base de ML.' };
+const NEW_MILESTONES = {
+  matrix: { title: 'Confirmar a matriz curricular vinculada à matrícula de 2027', period: '2027/1', due: '2027-03-15', description: 'Comparar com a referência provisória (página oficial, 21/11/2026) e confirmar em Roadmap › Semestres.' },
+  p3: { title: '3º período (708 h) concluído sem sobrecarga', period: '2028/1', due: '2028-07-15', description: 'Aprovação em todas as disciplinas e Estruturas de Dados sólida. Estudo extra reduzido (fator 0,8), sem matemática complementar, projeto pessoal só em manutenção, TI de 216 h como projeto do semestre.' },
+  discrete: { title: 'Matemática Discreta completa (fora da grade)', period: '2027/2 + jul/2028', due: '2028-08-15', description: 'Discreta I em 2027/2 e Discreta II nas férias de julho, antes de Algoritmos em Grafos.' },
+};
+const NEW_GOAL_P3 = { title: '2028/1 (3º período, 708 h): aprovação em todas as disciplinas sem sobrecarga', periodStart: '2028-02-01', due: '2028-07-15', metric: 'disciplinas aprovadas', target: 6 };
+const NEW_TASK_MATRIX = { title: 'Confirmar a matriz curricular da matrícula de 2027 (Roadmap › Semestres)', due: '2027-03-15' };
+
+// Valores originais das versões anteriores. Um registro só é ajustado se TODOS os campos
+// que vamos mudar ainda forem iguais a uma dessas versões (ou seja, você não os editou).
+const OLD = {
+  discrete: [
+    { nextAction: 'Fazer a avaliação diagnóstica correspondente.', targetDate: '2028-06-30' },
+    { nextAction: 'Não está na grade da PUC: estudar em paralelo (MIT 6.042J) a partir de 2027/2.', targetDate: '2028-06-30' },
+  ],
+  linalg: [
+    { nextAction: 'MIT 18.06 na Fase 3.', targetDate: '2028-12-31' },
+    { nextAction: 'Não está na grade da PUC: MIT 18.06 em paralelo (2028/2), antes de Ciência de Dados e IA (6º período).', targetDate: '2029-06-30' },
+  ],
+  java: [{ title: 'Java + Spring Boot em nível intermediário', period: '2028/1', due: '2028-06-30', description: 'Uma API Spring com testes.' }],
+  ic: [{ title: 'Candidatura a iniciação científica na PUC Minas', period: '2028/1', due: '2028-03-31', description: 'Conversar com professores sobre linhas de pesquisa em IA/ES.' }],
+  mathml: [
+    { title: 'Matemática para ML + primeiro curso de ML', period: '2028', due: '2028-12-31', description: 'Álgebra linear, probabilidade e um curso de ML concluído com exercícios.' },
+    { title: 'Álgebra linear e base de probabilidade (fora da grade da PUC)', period: '2028/2', due: '2029-02-15', description: 'MIT 18.06 com exercícios resolvidos e base de probabilidade antes de Estatística e Fundamentos de IA (5º período).' },
+  ],
+};
+const unchanged = (rec, versions) => !!rec && versions.some((v) => Object.entries(v).every(([k, val]) => rec[k] === val));
+
+/**
+ * Atualizações do plano para quem já usa o sistema. Regras:
+ * - só ACRESCENTAM registros que ainda não existem (pelo título/nome);
+ * - só ALTERAM registros que continuam iguais ao valor original do plano (você não editou);
+ * - nunca apagam nada; cada atualização roda uma única vez (meta.appliedUpdates).
+ */
+export const PLAN_UPDATES = [
+  {
+    id: '2026-11-24-matematica-rotina-3p',
+    apply(store) {
+      const now = new Date().toISOString();
+      const skills = store.list('skills');
+      const byName = (n) => skills.find((x) => x.name === n);
+      if (!byName(COMPUTABILITY_SKILL.name)) {
+        store.create('skills', { name: COMPUTABILITY_SKILL.name, category: 'ciencia_computacao', contact: 'sem_registro', level: 'nao_avaliado', target: 'em_desenvolvimento', priority: 'baixa', targetDate: '2027-07-15', assessedAt: null, nextAction: COMPUTABILITY_SKILL.next, resources: '', notes: '', evidence: [], history: [], projectIds: [] });
+      }
+      const d = byName('Matemática discreta');
+      if (unchanged(d, OLD.discrete)) store.update('skills', d.id, { nextAction: NEXT_DISCRETE, targetDate: '2028-08-15', target: d.target === 'em_desenvolvimento' ? 'intermediario' : d.target, notes: d.notes || 'Computabilidade (1º) não substitui a discreta completa.' });
+      const l = byName('Álgebra linear');
+      if (unchanged(l, OLD.linalg)) store.update('skills', l.id, { nextAction: NEXT_LINALG, targetDate: '2029-07-15', target: l.target === 'em_desenvolvimento' ? 'intermediario' : l.target });
+
+      const ms = () => store.list('milestones');
+      const byTitle = (t) => ms().find((m) => m.title === t);
+      const java = ms().find((m) => unchanged(m, OLD.java));
+      if (java) store.update('milestones', java.id, { period: NEW_JAVA.period, due: NEW_JAVA.due, description: NEW_JAVA.description });
+      const ic = ms().find((m) => unchanged(m, OLD.ic));
+      if (ic) store.update('milestones', ic.id, { period: NEW_IC.period, due: NEW_IC.due, description: NEW_IC.description });
+      const mathml = ms().find((m) => unchanged(m, OLD.mathml) && m.status !== 'concluido');
+      if (mathml) store.update('milestones', mathml.id, { phase: NEW_MATHML.phase, title: NEW_MATHML.title, period: NEW_MATHML.period, due: NEW_MATHML.due, description: NEW_MATHML.description });
+      const skillIds = (...names) => names.map((n) => store.list('skills').find((x) => x.name === n)?.id).filter(Boolean);
+      const depId = (t) => byTitle(t)?.id;
+      if (!byTitle(NEW_MILESTONES.matrix.title)) store.create('milestones', { ...NEW_MILESTONES.matrix, phase: 2, type: 'academico', status: 'planejado', skillIds: [], dependsOn: [] });
+      if (!byTitle(NEW_MILESTONES.p3.title)) store.create('milestones', { ...NEW_MILESTONES.p3, phase: 3, type: 'academico', status: 'planejado', skillIds: skillIds('Estruturas de dados', 'SQL', 'Sistemas operacionais'), dependsOn: [depId('2º período concluído')].filter(Boolean) });
+      if (!byTitle(NEW_MILESTONES.discrete.title)) store.create('milestones', { ...NEW_MILESTONES.discrete, phase: 3, type: 'academico', status: 'planejado', skillIds: skillIds('Matemática discreta'), dependsOn: [depId('1º período da PUC Minas concluído com Introdução a Algoritmos sólida') || depId('1º período da PUC Minas concluído com Introdução à Algoritmos sólida')].filter(Boolean) });
+
+      if (!store.list('goals').some((g) => g.title === NEW_GOAL_P3.title)) store.create('goals', { ...NEW_GOAL_P3, horizon: 'semestre', area: 'academico', current: 0, status: 'ativa', skillIds: skillIds('Estruturas de dados'), notes: '' });
+      if (!store.list('tasks').some((t) => t.title === NEW_TASK_MATRIX.title)) store.create('tasks', { ...NEW_TASK_MATRIX, status: 'a_fazer', area: 'academico', priority: 'media', skillId: null, projectId: null, notes: '' });
+      return now;
+    },
+  },
+];
+
+export function applyPlanUpdates(store) {
+  const done = new Set(store.state.meta.appliedUpdates || []);
+  const applied = [];
+  for (const u of PLAN_UPDATES) {
+    if (done.has(u.id)) continue;
+    store.state.meta.appliedUpdates = [...done, u.id];
+    done.add(u.id);
+    u.apply(store);
+    applied.push(u.id);
+  }
+  return applied;
+}
+
 export function seed(state) {
   const c = state.collections;
   const now = new Date().toISOString();
   state.meta.seededAt = now;
   state.meta.seedVersion = SEED_VERSION;
+  state.meta.appliedUpdates = PLAN_UPDATES.map((u) => u.id); // a configuração inicial já inclui as atualizações
+  state.meta.curriculumPlanRev = CURRICULUM_PLAN_REV;
 
   state.profile = {
     name: 'Álvaro Pires',
@@ -68,15 +161,16 @@ export function seed(state) {
     S('Linux e terminal', 'ciencia_computacao', 'declarado', 'intermediario', 'media', { next: 'Avaliação 9.' }),
     S('Redes de computadores', 'ciencia_computacao', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31', next: 'Avaliação 9.', evidence: [{ date: null, text: 'Cursos Cisco NetAcad concluídos (Packet Tracer, Fundamentos do Hardware) — certificado não equivale a nível.' }] }),
     S('Arquitetura de computadores', 'ciencia_computacao', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2027-12-31' }),
+    S(COMPUTABILITY_SKILL.name, 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2027-07-15', next: COMPUTABILITY_SKILL.next }),
     S('Sistemas operacionais', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-07-15', next: 'Fundamentos de Sistemas Operacionais na PUC (3º período, 2028/1), com OSTEP em paralelo.' }),
     S('Concorrência', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
     S('Sistemas distribuídos', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31' }),
 
     S('Matemática básica e álgebra', 'matematica', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-02-15', next: 'Avaliação 7 (Khan Academy).' }),
     S('Funções', 'matematica', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-02-15', next: 'Avaliação 7.' }),
-    S('Matemática discreta', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30', next: 'Não está na grade da PUC: estudar em paralelo (MIT 6.042J) a partir de 2027/2.' }),
+    S('Matemática discreta', 'matematica', 'sem_registro', 'intermediario', 'media', { targetDate: '2028-08-15', next: NEXT_DISCRETE, notes: 'Computabilidade (1º) não substitui a discreta completa.' }),
     S('Cálculo', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30', next: 'Cálculo I e II na PUC (2º e 3º períodos).' }),
-    S('Álgebra linear', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2029-06-30', next: 'Não está na grade da PUC: MIT 18.06 em paralelo (2028/2), antes de Ciência de Dados e IA (6º período).' }),
+    S('Álgebra linear', 'matematica', 'sem_registro', 'intermediario', 'media', { targetDate: '2029-07-15', next: NEXT_LINALG }),
     S('Probabilidade e estatística', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2029-07-15', next: 'Estatística e Probabilidade na PUC (5º período, 2029/1).' }),
 
     S('SQL', 'dados', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-12-31', next: 'Avaliação 3.' }),
@@ -259,15 +353,18 @@ export function seed(state) {
     M('dsa150', 2, 'tecnico', '150 problemas aceitos sem IA (beecrowd/LeetCode fácil)', '2027', '2027-12-15', 'Inclui explicar cada solução em voz alta.', ['Algoritmos e complexidade'], ['logic60']),
     M('engB2', 2, 'ingles', 'Inglês B2 medido', '2027', '2027-12-15', 'EF SET ou teste equivalente.', ['Inglês — listening', 'Inglês — reading técnico'], ['eng0']),
     M('enem', 2, 'academico', 'Decisão sobre ENEM 2027 / UFMG com critérios escritos', '2027', '2027-04-30', 'Ver Guia › Faculdade. Confirmar datas no edital do INEP.'),
+    M('matrix', 2, 'academico', NEW_MILESTONES.matrix.title, NEW_MILESTONES.matrix.period, NEW_MILESTONES.matrix.due, NEW_MILESTONES.matrix.description),
     M('hack1', 2, 'profissional', '1 hackathon + 2 eventos de comunidade no ano', '2027', '2027-12-31', 'Registrados em Experiências.'),
     M('p2', 2, 'academico', '2º período concluído', '2027/2', '2027-12-20', '', [], ['p1']),
     M('intern', 3, 'profissional', 'Estágio em desenvolvimento ou dados', '2028', '2028-12-31', 'Meta da Fase 3.', [], ['job1', 'proj1']),
     M('dsa250', 3, 'tecnico', 'Estruturas de dados e grafos: 250 problemas por padrão', '2028', '2028-12-15', 'Padrões NeetCode + disciplinas de ED e Grafos.', ['Estruturas de dados', 'Algoritmos e complexidade'], ['dsa150']),
     M('proj2', 3, 'projeto', 'Projeto #2: fila, cache e observabilidade', '2028/2', '2028-11-30', '', ['Sistemas distribuídos'], ['proj1']),
-    M('java', 3, 'tecnico', 'Java + Spring Boot em nível intermediário', '2028/1', '2028-06-30', 'Uma API Spring com testes.', ['Java'], ['p2']),
+    M('java', 3, 'tecnico', NEW_JAVA.title, NEW_JAVA.period, NEW_JAVA.due, NEW_JAVA.description, ['Java'], ['p2']),
     M('oss', 3, 'profissional', 'Primeira contribuição open source aceita', '2028', '2028-10-31', 'PR aceito em projeto que outras pessoas usam.', ['Git e GitHub'], ['proj1']),
-    M('mathml', 3, 'tecnico', 'Álgebra linear e base de probabilidade (fora da grade da PUC)', '2028/2', '2029-02-15', 'MIT 18.06 com exercícios resolvidos e base de probabilidade antes de Estatística e Fundamentos de IA (5º período).', ['Álgebra linear', 'Probabilidade e estatística'], ['p2']),
-    M('ic', 3, 'pesquisa', 'Candidatura a iniciação científica na PUC Minas', '2028/1', '2028-03-31', 'Conversar com professores sobre linhas de pesquisa em IA/ES.', [], ['p2']),
+    M('p3', 3, 'academico', NEW_MILESTONES.p3.title, NEW_MILESTONES.p3.period, NEW_MILESTONES.p3.due, NEW_MILESTONES.p3.description, ['Estruturas de dados', 'SQL', 'Sistemas operacionais'], ['p2']),
+    M('discrete', 3, 'academico', NEW_MILESTONES.discrete.title, NEW_MILESTONES.discrete.period, NEW_MILESTONES.discrete.due, NEW_MILESTONES.discrete.description, ['Matemática discreta'], ['p1']),
+    M('mathml', NEW_MATHML.phase, 'tecnico', NEW_MATHML.title, NEW_MATHML.period, NEW_MATHML.due, NEW_MATHML.description, ['Álgebra linear', 'Probabilidade e estatística'], ['p2']),
+    M('ic', 3, 'pesquisa', NEW_IC.title, NEW_IC.period, NEW_IC.due, NEW_IC.description, [], ['p2']),
     M('bigintern', 4, 'profissional', 'Candidaturas a estágios de grande porte (inclui Google BH)', '2029', '2029-08-31', 'Ver requisitos na página de cada empresa.', ['Entrevistas técnicas', 'Inglês — speaking'], ['dsa250', 'intern']),
     M('proj3', 4, 'projeto', 'Projeto #3: IA aplicada com avaliação medida', '2029/2', '2029-10-31', '', ['LLMs, RAG e agentes', 'Machine Learning'], ['mathml', 'proj2']),
     M('sysdesign', 4, 'tecnico', 'System design básico', '2029/1', '2029-06-30', '', ['Sistemas distribuídos'], ['proj2']),
@@ -304,6 +401,7 @@ export function seed(state) {
     G('Fase 1: 60 problemas aceitos sem IA', 'trimestre', 'tecnico', '2026-11-30', '2027-02-10', 'problemas aceitos', 60, ['Lógica de programação']),
     G('2027: primeira experiência profissional em TI', 'ano', 'profissional', '2027-01-01', '2027-12-31', 'experiências', 1),
     G('2027/1: média de 70%+ do tempo técnico sem IA gerar código', 'semestre', 'tecnico', '2027-02-15', '2027-07-15', '% do tempo sem IA', 70, ['Desenvolvimento independente (sem IA gerando código)']),
+    G(NEW_GOAL_P3.title, 'semestre', 'academico', NEW_GOAL_P3.periodStart, NEW_GOAL_P3.due, NEW_GOAL_P3.metric, NEW_GOAL_P3.target, ['Estruturas de dados']),
   );
 
   // ---------- Atividades da primeira semana ----------
@@ -318,6 +416,7 @@ export function seed(state) {
     T('Avaliação 6: Git na prática', '2026-12-04', 'tecnico', 'media', 'Git e GitHub'),
     T('CS50x: assistir Lecture 0 e fazer o Problem Set 0 (Scratch)', '2026-12-05', 'tecnico', 'media', 'Lógica de programação'),
     T('Primeira revisão semanal no CAREER OS', '2026-12-06', 'pessoal', 'alta'),
+    T(NEW_TASK_MATRIX.title, NEW_TASK_MATRIX.due, 'academico', 'media'),
   );
 
   // ---------- Hábitos (sugestões, editáveis) ----------
@@ -387,11 +486,16 @@ export function seed(state) {
  */
 export function syncCurriculum(store) {
   const st = store.state;
-  if (st.meta.curriculumVersion === CURRICULUM_VERSION) return false;
-  st.meta.curriculumVersion = CURRICULUM_VERSION; // gravado junto com as atualizações abaixo
+  const matrixChanged = st.meta.curriculumVersion !== CURRICULUM_VERSION;
+  const planChanged = st.meta.curriculumPlanRev !== CURRICULUM_PLAN_REV;
+  if (!matrixChanged && !planChanged) return false;
+  // Matriz igual ou confirmada por você: só os textos do plano mudam; disciplinas ficam intactas.
+  const keepDisciplines = !matrixChanged || !!st.settings.curriculumConfirmedAt;
+  st.meta.curriculumVersion = CURRICULUM_VERSION; // gravados junto com as atualizações abaixo
+  st.meta.curriculumPlanRev = CURRICULUM_PLAN_REV;
   for (const official of SEMESTERS) {
     const saved = store.list('semesters').find((x) => Number(x.number) === official.number);
-    const merged = mergeSemester(saved, official, () => uid('dis'));
+    const merged = mergeSemester(saved, official, () => uid('dis'), { keepDisciplines: keepDisciplines && !!saved });
     if (saved) store.update('semesters', saved.id, merged);
     else store.create('semesters', { number: official.number, status: 'futuro', ...merged });
   }

@@ -141,7 +141,7 @@ export const CAREER_GROUPS = [
         growth: 'Sênior/Staff MLE, ML platform, research engineer.',
         salary: NO_SALARY,
         bigtech: 'Google "Software Engineer, Machine Learning"; Meta "Machine Learning Engineer".',
-        path: 'Especialização de longo prazo recomendada (após base matemática da Fase 3).',
+        path: 'Especialização de longo prazo recomendada (após álgebra linear em jan–fev/2029 + 2029/1 e as disciplinas de IA do 5º e 6º períodos).',
       },
       {
         id: 'applied_ai', name: 'Applied AI Engineer',
@@ -383,8 +383,8 @@ export const TRACKS = [
   {
     kind: 'Especialização de longo prazo',
     title: 'Engenharia de IA / Machine Learning Engineering',
-    why: 'É sua área de maior interesse, mas exige base matemática (álgebra linear, probabilidade) e de engenharia que só estará pronta por volta do 3º ano. Começar por IA antes disso tende a produzir projetos de "chamar API" sem diferencial.',
-    focus: 'Matemática para ML (Fase 3) → ML clássico → deep learning → LLMs, RAG, agentes com avaliação → MLOps. Pesquisa (IC/mestrado) como ramo opcional.',
+    why: 'É sua área de maior interesse, mas exige base matemática (álgebra linear, probabilidade) e de engenharia que só estará pronta por volta do 3º ano (álgebra linear fora da grade em jan–fev/2029 + 2029/1; IA na PUC no 5º e 6º períodos). Começar por IA antes disso tende a produzir projetos de "chamar API" sem diferencial.',
+    focus: 'Álgebra linear (férias de jan/2029 + 2029/1) → Estatística e Fundamentos de IA (5º) → ML clássico e Ciência de Dados (6º) → deep learning → LLMs, RAG, agentes com avaliação → MLOps. Pesquisa (IC/mestrado) como ramo opcional.',
   },
 ];
 
@@ -398,7 +398,7 @@ export const STACK = {
     { tech: 'Docker', why: 'Ambiente reproduzível e deploy dos projetos.', when: 'Fase 2' },
     { tech: 'Java + Spring Boot', why: 'Muito presente no mercado brasileiro (bancos, grandes empresas) e no ciclo da faculdade. Segunda linguagem.', when: 'Fase 2–3' },
     { tech: 'Redis, filas, observabilidade', why: 'Passo para sistemas distribuídos.', when: 'Fase 3' },
-    { tech: 'PyTorch e ecossistema de ML', why: 'Especialização em IA, só depois da matemática.', when: 'Fase 3–4' },
+    { tech: 'PyTorch e ecossistema de ML', why: 'Especialização em IA, só depois da matemática.', when: 'Fase 4 (2029/2+)' },
   ],
   later: [
     { tech: 'TypeScript + React', why: 'Só o suficiente para montar interfaces dos seus projetos. Não é foco.' },

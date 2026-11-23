@@ -1,7 +1,7 @@
 // CAREER OS — ponto de entrada: shell, navegação por hash, tema e re-renderização.
 import { h, clear } from './core/dom.js';
 import { createStore } from './core/store.js';
-import { seed, syncCurriculum } from './core/seed.js';
+import { seed, syncCurriculum, applyPlanUpdates } from './core/seed.js';
 import { icon, BRAND_MARK } from './ui/icons.js';
 import { btn, notice } from './ui/components.js';
 import { closeModal } from './ui/modal.js';
@@ -54,7 +54,14 @@ function safeStorage() {
 }
 
 const store = createStore({ storage: safeStorage(), seed });
-if (!store.loadError && syncCurriculum(store)) setTimeout(() => toast('Grade da PUC Minas atualizada para a matriz oficial (Coração Eucarístico, noturno). Seus registros foram mantidos.'), 600);
+// Atualizações do plano: acrescentam ou ajustam só o que você não editou; nada é apagado.
+function upgrade() {
+  if (store.loadError) return false;
+  const synced = syncCurriculum(store);
+  const applied = applyPlanUpdates(store);
+  return synced || applied.length > 0;
+}
+if (upgrade()) setTimeout(() => toast('Plano atualizado: rotinas com e sem estágio, trilha de matemática e 3º período. Seus registros e seu histórico foram mantidos.'), 600);
 
 const root = document.getElementById('app');
 const content = h('main', { id: 'conteudo', class: 'content', tabindex: '-1' });
@@ -152,7 +159,7 @@ function render({ focus = false } = {}) {
 window.addEventListener('hashchange', () => { closeModal(); render(); });
 store.subscribe((change) => {
   if (change.type === 'settings') applyTheme();
-  if (change.type === 'import' || change.type === 'reset') { syncCurriculum(store); applyTheme(); render({ focus: true }); return; }
+  if (change.type === 'import' || change.type === 'reset') { upgrade(); applyTheme(); render({ focus: true }); return; }
   render();
 });
 window.addEventListener('storage', (e) => {

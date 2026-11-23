@@ -82,6 +82,7 @@ function data({ store }) {
   const days = daysSinceExport(store.state);
   const counts = Object.entries(store.state.collections).reduce((a, [, v]) => a + v.length, 0);
   const doExport = () => {
+    store.markExported(); // antes de exportar, para o arquivo já levar a data do backup
     const json = store.exportJSON();
     let downloaded = false;
     try {
@@ -94,7 +95,6 @@ function data({ store }) {
       setTimeout(() => URL.revokeObjectURL(url), 2000);
       downloaded = true;
     } catch { downloaded = false; }
-    store.markExported();
     showJSON(json, downloaded);
   };
   return h('div', { class: 'stack' },

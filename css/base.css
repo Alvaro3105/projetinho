@@ -1,0 +1,58 @@
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--glow), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  line-height: 1.55;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; text-wrap: balance; font-weight: 650; letter-spacing: -0.01em; }
+h1 { font-size: var(--fs-xl); }
+h2 { font-size: var(--fs-lg); }
+h3 { font-size: var(--fs-md); font-weight: 600; }
+p { margin: 0; }
+p + p { margin-top: var(--sp-3); }
+a { color: var(--primary-text); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+ul, ol { margin: 0; padding-left: 1.2em; }
+li + li { margin-top: 4px; }
+img, svg { max-width: 100%; }
+small { font-size: var(--fs-sm); }
+code, kbd, .mono { font-family: var(--font-mono); font-size: 0.92em; }
+hr { border: 0; border-top: 1px solid var(--border); margin: var(--sp-5) 0; }
+[hidden] { display: none !important; }
+::selection { background: var(--primary-soft); }
+
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; top: -60px; left: 16px; z-index: 100;
+  background: var(--primary-strong); color: var(--on-primary);
+  padding: 10px 14px; border-radius: var(--r-md); text-decoration: none; font-weight: 600;
+  transition: top var(--dur) var(--ease);
+}
+.skip-link:focus { top: calc(12px + env(safe-area-inset-top, 0px)); color: var(--on-primary); }
+
+.num { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Foco programático em títulos/regiões (troca de página) não mostra anel. */
+#page-title:focus, main:focus, [tabindex="-1"]:focus { outline: none; }

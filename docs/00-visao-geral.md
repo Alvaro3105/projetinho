@@ -69,6 +69,6 @@ Ao longo dos documentos:
 
 ## Limitações conhecidas
 
-- O site da PUC Minas estava bloqueado no ambiente em que o sistema foi construído. A grade foi montada a partir do conteúdo indexado das páginas oficiais e está marcada como parcial. Confirme após a matrícula.
+- A grade da PUC Minas (Coração Eucarístico, noturno) é a matriz oficial atualizada em 21/11/2026, informada por você. A PUC avisa que ela pode mudar: confira a matriz vinculada à matrícula de 2027.
 - Os repositórios dos projetos acadêmicos menores (Helpdesk, CRUDs, provas) não foram analisados em profundidade; só o ExplAIner e o Portfólio.
 - Salários no exterior não têm números no sistema: sem fonte consultada, preferimos não inventar. Use Levels.fyi.

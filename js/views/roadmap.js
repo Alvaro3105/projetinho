@@ -6,7 +6,7 @@ import { card, badge, optBadge, btn, pageHead, tabs, refNames, kv, notice, chips
 import { crud } from '../ui/form.js';
 import { confirmDialog, openModal, closeModal } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
-import { CURRICULUM_SOURCE } from '../data/curriculum.js';
+import { CURRICULUM_SOURCE, CURRICULUM_GAPS } from '../data/curriculum.js';
 import { extLink } from '../core/dom.js';
 
 let tab = 'timeline';
@@ -69,9 +69,12 @@ function milestoneRow(store, m, all, now) {
 
 function semesters({ store }) {
   const list = [...store.list('semesters')].sort((a, b) => a.number - b.number);
+  const total = list.reduce((a, s) => a + s.disciplines.reduce((x, d) => x + (d.hours || 0), 0), 0);
   return h('div', { class: 'stack', style: { gap: '16px' } },
-    notice(h('span', {}, 'Grade montada a partir das páginas oficiais da PUC Minas lidas por busca em 23/11/2026 (o site estava bloqueado no ambiente de desenvolvimento). Disciplinas marcadas como "a confirmar" têm período ou carga não verificados. Fontes: ',
-      extLink(CURRICULUM_SOURCE.lourdes, 'campus Lourdes'), ' e ', extLink(CURRICULUM_SOURCE.coracao, 'campus Coração Eucarístico'), '. Confirme a matriz do seu campus na matrícula e edite aqui.'), 'warn'),
+    notice(h('span', {}, `Matriz oficial de Engenharia de Software — PUC Minas, campus ${CURRICULUM_SOURCE.campus}, turno ${CURRICULUM_SOURCE.shift.toLowerCase()}, atualizada pela PUC em ${fmtDate(CURRICULUM_SOURCE.updated)} (${total.toLocaleString('pt-BR')} h em disciplinas). A PUC avisa que a matriz pode mudar: confira a vinculada à sua matrícula de 2027 e edite aqui se necessário. `,
+      extLink(CURRICULUM_SOURCE.url, 'Página oficial')), 'info'),
+    card({ title: 'O que a grade não cobre (estudar em paralelo)', iconName: 'alert' },
+      h('div', { class: 'list' }, CURRICULUM_GAPS.map((g) => h('div', { class: 'list-item' }, h('div', { class: 'grow' }, h('div', { class: 'title' }, g.topic), h('div', { class: 'sub' }, `${g.why} Quando: ${g.when}`)))))),
     h('div', { class: 'grid cols-2' }, list.map((s) => semesterCard(store, s))));
 }
 
@@ -80,7 +83,7 @@ function semesterCard(store, s) {
   statusSel.value = s.status;
   statusSel.style.width = 'auto';
   const total = s.disciplines.reduce((a, d) => a + (d.hours || 0), 0);
-  return card({ title: `${s.number}º período · ${s.term}`, meta: total ? `${total} h listadas` : null, actions: h('div', { class: 'row' }, statusSel, btn('Disciplinas', () => editDisciplines(store, s), { size: 'sm', iconName: 'edit' })) },
+  return card({ title: `${s.number}º período · ${s.term}${s.theme ? ` · ${s.theme}` : ''}`, meta: total ? `${total} h` : null, actions: h('div', { class: 'row' }, statusSel, btn('Disciplinas', () => editDisciplines(store, s), { size: 'sm', iconName: 'edit' })) },
     h('div', { class: 'list' }, s.disciplines.map((d) => h('div', { class: 'list-item' },
       h('button', { type: 'button', class: 'check', 'aria-pressed': d.status === 'concluida' ? 'true' : 'false', 'aria-label': `Marcar ${d.name} como concluída`, onclick: () => {
         store.update('semesters', s.id, { disciplines: s.disciplines.map((x) => x.id === d.id ? { ...x, status: x.status === 'concluida' ? 'futura' : 'concluida' } : x) });

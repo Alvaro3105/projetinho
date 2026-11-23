@@ -12,7 +12,7 @@
 | 6. Internacional | 2031–2034 | Empresa internacional (remoto ou presencial) | Mestrado no exterior como ponte |
 | 7. Big Tech | horizonte | Big Tech ou laboratório de IA | Empresas de alto nível fora do grupo "Big Tech" |
 
-**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você.
+**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você. Como o turno é **noturno**, você pode estagiar durante o dia já a partir do 1º período.
 
 ## 2. Competências profissionais
 

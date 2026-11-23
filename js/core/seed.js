@@ -1,10 +1,11 @@
 // Configuração inicial com o que é CONHECIDO sobre o Álvaro (informado por ele ou verificado
 // nos repositórios públicos em 23/11/2026). Todos os níveis começam como "não avaliado".
 // Metas, marcos e atividades são PLANO (status planejado/pendente), não resultado.
-import { SEMESTERS } from '../data/curriculum.js';
+import { SEMESTERS, CURRICULUM_VERSION, mergeSemester } from '../data/curriculum.js';
 import { uid } from './store.js';
 
 export const SEED_VERSION = '2026-11-23';
+export const UNIVERSITY = 'Engenharia de Software — PUC Minas, Coração Eucarístico, noturno (2027–2030)';
 
 const S = (name, category, contact, target, priority, extra = {}) => ({
   id: uid('ski'), name, category, contact, level: 'nao_avaliado', target, priority,
@@ -26,7 +27,7 @@ export function seed(state) {
     age: 17,
     city: 'Região de Belo Horizonte, MG',
     school: 'Ensino Médio Técnico em TI — COTEMIG (conclusão prevista: dez/2026)',
-    university: 'Engenharia de Software — PUC Minas (início em 2027; campus a confirmar)',
+    university: UNIVERSITY,
     startDate: '2026-11-30',
     github: 'https://github.com/Alvaro3105',
     portfolio: 'https://alvaro3105.github.io/Portfolio/',
@@ -59,7 +60,7 @@ export function seed(state) {
     S('Git e GitHub', 'eng_software', 'declarado', 'intermediario', 'alta', { targetDate: '2027-03-31', next: 'Avaliação 6 (branches, conflito, PR).' }),
     S('Clean Code, SOLID e padrões', 'eng_software', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31' }),
     S('Engenharia de requisitos', 'eng_software', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2028-06-30', next: 'Coberta no 3º período da PUC.' }),
-    S('CI/CD', 'eng_software', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2028-06-30' }),
+    S('CI/CD', 'eng_software', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31', next: 'GitHub Actions no Projeto #1; Cultura e Práticas DevOps na PUC (4º período).' }),
     S('Desenvolvimento independente (sem IA gerando código)', 'eng_software', 'dificuldade', 'intermediario', 'alta', { next: 'Registrar o uso de IA em toda sessão de estudo. Meta: 70%+ do tempo técnico sem IA gerar código.' }),
 
     S('Estruturas de dados', 'ciencia_computacao', 'dificuldade', 'intermediario', 'alta', { targetDate: '2028-06-30', next: 'Avaliação 4 (implementar do zero).' }),
@@ -67,23 +68,23 @@ export function seed(state) {
     S('Linux e terminal', 'ciencia_computacao', 'declarado', 'intermediario', 'media', { next: 'Avaliação 9.' }),
     S('Redes de computadores', 'ciencia_computacao', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31', next: 'Avaliação 9.', evidence: [{ date: null, text: 'Cursos Cisco NetAcad concluídos (Packet Tracer, Fundamentos do Hardware) — certificado não equivale a nível.' }] }),
     S('Arquitetura de computadores', 'ciencia_computacao', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2027-12-31' }),
-    S('Sistemas operacionais', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
+    S('Sistemas operacionais', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-07-15', next: 'Fundamentos de Sistemas Operacionais na PUC (3º período, 2028/1), com OSTEP em paralelo.' }),
     S('Concorrência', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
     S('Sistemas distribuídos', 'ciencia_computacao', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31' }),
 
     S('Matemática básica e álgebra', 'matematica', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-02-15', next: 'Avaliação 7 (Khan Academy).' }),
     S('Funções', 'matematica', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-02-15', next: 'Avaliação 7.' }),
-    S('Matemática discreta', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30' }),
+    S('Matemática discreta', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30', next: 'Não está na grade da PUC: estudar em paralelo (MIT 6.042J) a partir de 2027/2.' }),
     S('Cálculo', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30', next: 'Cálculo I e II na PUC (2º e 3º períodos).' }),
-    S('Álgebra linear', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-12-31', next: 'MIT 18.06 na Fase 3.' }),
-    S('Probabilidade e estatística', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2028-12-31' }),
+    S('Álgebra linear', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2029-06-30', next: 'Não está na grade da PUC: MIT 18.06 em paralelo (2028/2), antes de Ciência de Dados e IA (6º período).' }),
+    S('Probabilidade e estatística', 'matematica', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2029-07-15', next: 'Estatística e Probabilidade na PUC (5º período, 2029/1).' }),
 
     S('SQL', 'dados', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-12-31', next: 'Avaliação 3.' }),
     S('Modelagem relacional', 'dados', 'dificuldade', 'intermediario', 'alta', { targetDate: '2027-12-31', next: 'Avaliação 3.' }),
     S('Python para dados (pandas)', 'dados', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31' }),
 
-    S('Fundamentos de IA', 'ia', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31', next: 'CS50 AI na Fase 3.', evidence: [{ date: null, text: 'Curso "Introdução à IA Moderna" (Cisco NetAcad) concluído.' }] }),
-    S('Machine Learning', 'ia', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
+    S('Fundamentos de IA', 'ia', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2029-07-15', next: 'Fundamentos de IA na PUC (5º período, 2029/1); CS50 AI em paralelo.', evidence: [{ date: null, text: 'Curso "Introdução à IA Moderna" (Cisco NetAcad) concluído.' }] }),
+    S('Machine Learning', 'ia', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31', next: 'Ciência de Dados e IA na PUC (6º período, 2029/2).' }),
     S('Deep Learning', 'ia', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31' }),
     S('LLMs, RAG e agentes', 'ia', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31', next: 'Só depois de ML básico. Hoje: entender como o ExplAIner chama o Gemini.', evidence: [{ date: null, text: 'ExplAIner (equipe) gera questões com a API do Google Gemini, com validação e fallback.' }] }),
     S('IA como ferramenta de produtividade', 'ia', 'dificuldade', 'intermediario', 'alta', { next: 'Seguir a política de uso de IA do CAREER OS (Guia › Uso de IA).' }),
@@ -91,7 +92,7 @@ export function seed(state) {
     S('Docker e deploy', 'cloud', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2027-12-31', evidence: [{ date: null, text: 'ExplAIner tem render.yaml e deploy citado no README (contribuição pessoal não verificada).' }] }),
     S('Cloud computing', 'cloud', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
 
-    S('Segurança de aplicações web', 'seguranca', 'declarado', 'em_desenvolvimento', 'media', { targetDate: '2028-06-30', next: 'Ler OWASP Top 10 e mapear o que o ExplAIner já faz.' }),
+    S('Segurança de aplicações web', 'seguranca', 'declarado', 'em_desenvolvimento', 'media', { targetDate: '2029-12-31', next: 'Ler OWASP Top 10 e mapear o que o ExplAIner já faz; Segurança em Desenvolvimento de Software na PUC (6º).' }),
     S('Fundamentos de cibersegurança', 'seguranca', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2028-12-31', evidence: [{ date: null, text: 'Curso "Introdução à Cibersegurança" (Cisco NetAcad).' }] }),
 
     S('Inglês — reading técnico', 'ingles', null, 'avancado', 'alta', { targetDate: '2029-12-31', next: 'EF SET (Avaliação 8).' }),
@@ -251,7 +252,7 @@ export function seed(state) {
     M('math0', 1, 'academico', 'Revisão de matemática para Cálculo I', 'fev/2027', '2027-02-10', '80%+ nos desafios de Álgebra e Funções.', ['Matemática básica e álgebra', 'Funções'], ['diag']),
     M('explainer', 1, 'projeto', 'ExplAIner: explicar 100% do que você assina + README em inglês + ADRs', 'jan/2027', '2027-01-31', 'Passar na Avaliação 5 em nível Intermediário.', ['Depuração e leitura de código', 'Arquitetura de software'], ['diag']),
     M('cv', 1, 'profissional', 'Currículo e LinkedIn revisados + 10 candidaturas (Jovem Aprendiz/estágio)', 'jan/2027', '2027-01-31', 'Registradas no Career Tracker.'),
-    M('p1', 2, 'academico', '1º período da PUC Minas concluído com Introdução à Algoritmos sólida', '2027/1', '2027-07-15', 'Aprovação + conseguir resolver as listas sem IA.', ['Lógica de programação'], ['logic60', 'cs50a']),
+    M('p1', 2, 'academico', '1º período da PUC Minas concluído com Introdução a Algoritmos sólida', '2027/1', '2027-07-15', 'Aprovação + conseguir resolver as listas sem IA.', ['Lógica de programação'], ['logic60', 'cs50a']),
     M('cs50b', 2, 'tecnico', 'CS50x completo com projeto final', '2027/1', '2027-06-30', 'Certificado gratuito do CS50.', [], ['cs50a']),
     M('job1', 2, 'profissional', 'Primeira experiência profissional em TI (meta, não garantia)', '2027', '2027-12-31', 'Jovem Aprendiz, estágio ou equivalente.', [], ['cv']),
     M('proj1', 2, 'projeto', 'Projeto #1: API backend completa, feita sozinho', '2027/2', '2027-11-30', 'FastAPI + PostgreSQL + Docker + testes + CI + deploy + README em inglês.', ['APIs REST', 'SQL', 'Docker e deploy', 'Testes automatizados'], ['explainer', 'cs50b']),
@@ -265,7 +266,7 @@ export function seed(state) {
     M('proj2', 3, 'projeto', 'Projeto #2: fila, cache e observabilidade', '2028/2', '2028-11-30', '', ['Sistemas distribuídos'], ['proj1']),
     M('java', 3, 'tecnico', 'Java + Spring Boot em nível intermediário', '2028/1', '2028-06-30', 'Uma API Spring com testes.', ['Java'], ['p2']),
     M('oss', 3, 'profissional', 'Primeira contribuição open source aceita', '2028', '2028-10-31', 'PR aceito em projeto que outras pessoas usam.', ['Git e GitHub'], ['proj1']),
-    M('mathml', 3, 'tecnico', 'Matemática para ML + primeiro curso de ML', '2028', '2028-12-31', 'Álgebra linear, probabilidade e um curso de ML concluído com exercícios.', ['Álgebra linear', 'Probabilidade e estatística', 'Machine Learning'], ['p2']),
+    M('mathml', 3, 'tecnico', 'Álgebra linear e base de probabilidade (fora da grade da PUC)', '2028/2', '2029-02-15', 'MIT 18.06 com exercícios resolvidos e base de probabilidade antes de Estatística e Fundamentos de IA (5º período).', ['Álgebra linear', 'Probabilidade e estatística'], ['p2']),
     M('ic', 3, 'pesquisa', 'Candidatura a iniciação científica na PUC Minas', '2028/1', '2028-03-31', 'Conversar com professores sobre linhas de pesquisa em IA/ES.', [], ['p2']),
     M('bigintern', 4, 'profissional', 'Candidaturas a estágios de grande porte (inclui Google BH)', '2029', '2029-08-31', 'Ver requisitos na página de cada empresa.', ['Entrevistas técnicas', 'Inglês — speaking'], ['dsa250', 'intern']),
     M('proj3', 4, 'projeto', 'Projeto #3: IA aplicada com avaliação medida', '2029/2', '2029-10-31', '', ['LLMs, RAG e agentes', 'Machine Learning'], ['mathml', 'proj2']),
@@ -285,13 +286,9 @@ export function seed(state) {
 
   // ---------- Semestres (a partir da grade pesquisada) ----------
   for (const s of SEMESTERS) {
-    c.semesters.push({
-      id: uid('sem'), number: s.number, term: s.term, status: 'futuro',
-      disciplines: s.disciplines.map((d) => ({ id: uid('dis'), name: d.name, hours: d.hours, verified: d.verified, note: d.note || '', status: 'futura', grade: null })),
-      gradeNote: s.gradeNote, prior: s.prior, fundamentals: s.fundamentals, parallel: s.parallel, project: s.project, professional: s.professional,
-      createdAt: now, updatedAt: now,
-    });
+    c.semesters.push({ id: uid('sem'), number: s.number, status: 'futuro', ...mergeSemester(null, s, () => uid('dis')), createdAt: now, updatedAt: now });
   }
+  state.meta.curriculumVersion = CURRICULUM_VERSION;
 
   // ---------- Metas dos primeiros 30 dias e do ano ----------
   const G = (title, horizon, area, periodStart, due, metric, target, skillNames = []) => ({ id: uid('goa'), title, horizon, area, periodStart, due, metric, target, current: 0, status: 'ativa', skillIds: sks(...skillNames), notes: '', createdAt: now, updatedAt: now });
@@ -382,4 +379,22 @@ export function seed(state) {
     O('NASA Space Apps Challenge', 'hackathon', 'NASA e parceiros', 'https://www.spaceappschallenge.org/', null,
       'Hackathon global anual, com edições locais. Equipes multidisciplinares.', 'Conhecimento geral; confirmar edição e local.'),
   );
+}
+
+/**
+ * Para quem já usa o sistema: atualiza a grade salva para a matriz oficial mais recente,
+ * preservando status e notas das disciplinas. Retorna true se algo mudou.
+ */
+export function syncCurriculum(store) {
+  const st = store.state;
+  if (st.meta.curriculumVersion === CURRICULUM_VERSION) return false;
+  st.meta.curriculumVersion = CURRICULUM_VERSION; // gravado junto com as atualizações abaixo
+  for (const official of SEMESTERS) {
+    const saved = store.list('semesters').find((x) => Number(x.number) === official.number);
+    const merged = mergeSemester(saved, official, () => uid('dis'));
+    if (saved) store.update('semesters', saved.id, merged);
+    else store.create('semesters', { number: official.number, status: 'futuro', ...merged });
+  }
+  if (!st.profile.university || /campus a confirmar/.test(st.profile.university)) store.setProfile({ university: UNIVERSITY });
+  return true;
 }

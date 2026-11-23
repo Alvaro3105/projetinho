@@ -21,7 +21,7 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | Módulo | O que faz |
 |---|---|
 | Dashboard | Saudação, fase atual, progresso acadêmico/técnico/profissional/pessoal (só com dados medidos), metas da semana, pendências, projetos, marcos, competências prioritárias, alertas |
-| Roadmap | 6 fases com 34 marcos, dependências e status; 8 semestres da PUC Minas com disciplinas e plano complementar |
+| Roadmap | 6 fases com 34 marcos, dependências e status; 8 semestres da PUC Minas (Coração Eucarístico, noturno) com as 62 disciplinas oficiais, lacunas da grade e plano complementar |
 | Estudos | Materiais (CRUD), sessões com registro de uso de IA, horas, biblioteca com 48 recursos |
 | Competências | Skill Tracker com 57 competências: nível atual × desejado, evidências, histórico, materiais, projetos, próxima ação; 10 avaliações diagnósticas |
 | Projetos | Kanban de ideias a concluídos, tarefas, melhorias, competências, links |
@@ -103,6 +103,6 @@ Cobrem datas, dados iniciais (nenhum nível inventado, referências válidas), p
 ## Limitações
 
 - Sem sincronização entre dispositivos (só backup manual).
-- A grade da PUC Minas é parcial (lida por busca; o site estava bloqueado no ambiente de construção). Confirme e edite no Roadmap.
+- A grade da PUC Minas segue a matriz oficial do campus Coração Eucarístico, turno noturno, atualizada em 21/11/2026. Ela pode mudar: confira a matriz da matrícula de 2027 e edite no Roadmap.
 - Oportunidades e requisitos de empresas mudam: o sistema marca o que não foi confirmado na fonte oficial.
 - Construído com apoio de IA. Ver [docs/11-uso-de-ia.md](docs/11-uso-de-ia.md) sobre como torná-lo um projeto seu.

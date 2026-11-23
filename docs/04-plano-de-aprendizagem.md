@@ -18,41 +18,44 @@ Inglês: contínuo, do primeiro ao último dia.
 
 ## 2. Matriz de conhecimentos da graduação
 
-Onde cada assunto será aprendido: **PUC** (disciplina da grade encontrada), **Paralelo** (estudo próprio) ou **Ambos**.
+Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coração Eucarístico, noturno), **Paralelo** (estudo próprio) ou **Ambos**. Período = período da PUC; Fase = fase do CAREER OS.
 
 ### Fundamentos de Ciência da Computação
 
 | Assunto | Fonte principal | Fase | Recurso complementar |
 |---|---|---|---|
-| Lógica de programação | Paralelo → PUC (Introdução à Algoritmos) | 1–2 | CS50x, beecrowd |
-| Algoritmos | Ambos | 1–5 | MIT 6.006, CLRS |
-| Estruturas de dados | PUC (Estruturas de Dados, 3º) + paralelo | 3 | MIT 6.006, implementação do zero |
-| Complexidade e análise | PUC (Análise e Projeto de Algoritmos, 5º) | 3–5 | 6.006 |
-| Matemática discreta | Paralelo (verificar se há disciplina) | 2–3 | MIT 6.042J |
-| Teoria da computação | PUC (Computabilidade, 1º) | 2 | — |
-| Sistemas operacionais | Paralelo (não apareceu na grade encontrada) | 3–4 | OSTEP |
-| Arquitetura de computadores | PUC (2º) | 2 | CS50x (memória) |
+| Lógica de programação | Paralelo → PUC (Introdução a Algoritmos, 1º) | 1–2 | CS50x, beecrowd |
+| Algoritmos | Ambos (Introdução a Algoritmos 1º, Grafos 4º, Análise e Projeto de Algoritmos 5º) | 1–4 | MIT 6.006, CLRS |
+| Estruturas de dados | PUC (Estruturas de Dados, 3º, 144 h) + paralelo | 3 | MIT 6.006, implementação do zero |
+| Complexidade e análise | PUC (Estruturas de Dados 3º; Análise e Projeto de Algoritmos 5º) | 3–4 | 6.006 |
+| Matemática discreta | **Paralelo — não está na grade** | 2–3 | MIT 6.042J |
+| Teoria da computação | PUC (Computabilidade, 1º; Métodos Formais, 7º) | 2, 5 | — |
+| Sistemas operacionais | PUC (Fundamentos de Sistemas Operacionais, 3º) + paralelo | 3 | OSTEP |
+| Arquitetura de computadores | PUC (2º, 42 h) | 2 | CS50x (memória) |
 | Redes | PUC (4º) | 3 | Cisco NetAcad (seletivo) |
-| Concorrência e paralelismo | Paralelo + PUC (Sistemas Distribuídos) | 4 | OSTEP parte 2 |
-| Sistemas distribuídos | PUC (5º) | 4 | DDIA, System Design Primer |
-| Compiladores | Paralelo, opcional | 4+ | Crafting Interpreters |
-| Segurança computacional | Paralelo | 3+ | OWASP Top 10, CTFs |
+| Concorrência e paralelismo | PUC (Sistemas Operacionais 3º; Sistemas Distribuídos 5º) + paralelo | 3–4 | OSTEP parte 2 |
+| Sistemas distribuídos e nuvem | PUC (Sistemas Distribuídos e Computação em Nuvem, 5º) | 4 | DDIA, System Design Primer |
+| Compiladores | **Paralelo, opcional — não está na grade** | 4+ | Crafting Interpreters |
+| Segurança computacional | PUC (Segurança em Desenvolvimento de Software, 6º) + paralelo desde já | 2+ | OWASP Top 10, CTFs |
 
 ### Engenharia de Software
 
 | Assunto | Fonte | Fase |
 |---|---|---|
 | POO, programação funcional | PUC (Programação Modular) + paralelo | 2 |
-| Clean Code, SOLID, padrões | PUC (Projeto de Software) + leitura crítica | 3 |
-| Requisitos | PUC (3º) | 3 |
+| Clean Code, SOLID, padrões | PUC (Projeto de Software, 4º) + leitura crítica | 3 |
+| Requisitos | PUC (Engenharia de Requisitos 3º; Gerência de Requisitos 4º) | 3 |
 | Arquitetura e arquitetura limpa | PUC (Arquitetura de Software, 6º) + ADRs nos projetos | 4 |
 | Testes unitários e de integração | PUC (Teste de Software, 6º) — **mas comece na Fase 1** | 1+ |
 | APIs REST | Paralelo (FastAPI) | 2 |
 | Microsserviços e mensageria | Paralelo (Projeto #2) | 3–4 |
 | Observabilidade | Paralelo (Projeto #2) | 3–4 |
-| Segurança de aplicações | Paralelo (OWASP) | 2+ |
-| CI/CD e DevOps | Paralelo (GitHub Actions nos projetos) | 2 |
-| Escalabilidade e performance | PUC (5º) + system design | 4–5 |
+| Segurança de aplicações | Paralelo (OWASP) → PUC (6º) | 2+ |
+| CI/CD e DevOps | Paralelo (GitHub Actions nos projetos) → PUC (Cultura e Práticas DevOps, 4º) | 2–3 |
+| Escalabilidade e performance | PUC (Sistemas Distribuídos 5º; Modelagem e Avaliação de Desempenho 6º) + system design | 4 |
+| Confiabilidade (SRE) | PUC (Site Reliability Engineering, 7º) | 5 |
+| Qualidade, manutenção e processos | PUC (Qualidade, Manutenção e Evolução, Engenharia de Processos, 8º) | 5 |
+| IA e ciência de dados | PUC (Estatística e Probabilidade 5º; Fundamentos de IA 5º; Ciência de Dados e IA 6º) + paralelo | 4 |
 
 ## 3. Stack: o que aprender e em que ordem
 
@@ -72,10 +75,10 @@ Onde cada assunto será aprendido: **PUC** (disciplina da grade encontrada), **P
 |---|---|---|---|---|---|
 | Matemática básica, álgebra, funções | Indispensável | Indispensável | Indispensável | Indispensável | Fase 1 |
 | Geometria analítica | Útil | Útil | Útil (vetores) | Indispensável | Fase 2 |
-| Matemática discreta (lógica, indução, grafos, contagem) | **Indispensável** | Útil | Útil | Indispensável | Fase 2–3 |
-| Cálculo diferencial e integral | Desejável | Desejável | **Indispensável** (gradientes) | Indispensável | Fase 2–3 (PUC) |
-| Álgebra linear | Desejável | Útil | **Indispensável** | Indispensável | Fase 3 |
-| Probabilidade e estatística | Útil (métricas, SLOs, A/B) | **Indispensável** | **Indispensável** | Indispensável | Fase 3 |
+| Matemática discreta (lógica, indução, grafos, contagem) | **Indispensável** | Útil | Útil | Indispensável | **Paralelo** (não está na grade): 2027/2–2028/1 |
+| Cálculo diferencial e integral | Desejável | Desejável | **Indispensável** (gradientes) | Indispensável | PUC: Cálculo I (2º) e II (3º) |
+| Álgebra linear | Desejável | Útil | **Indispensável** | Indispensável | **Paralelo** (não está na grade): 2028/2–2029/1 |
+| Probabilidade e estatística | Útil (métricas, SLOs, A/B) | **Indispensável** | **Indispensável** | Indispensável | PUC: Estatística e Probabilidade (5º); base em paralelo antes |
 | Otimização | — | Útil | Importante | Indispensável | Fase 4 |
 | Métodos numéricos | — | Útil | Útil | Importante | Fase 4+ |
 

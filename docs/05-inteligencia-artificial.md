@@ -2,15 +2,19 @@
 
 IA é a sua área de maior interesse. Por isso mesmo, ela entra **na ordem certa**: sem base de programação, matemática e engenharia, estudar IA vira usar APIs sem entender o que acontece por dentro, e isso não diferencia ninguém em 2030.
 
+## Como a trilha se encaixa na faculdade
+
+Na matriz oficial, IA chega no **5º período** (Estatística e Probabilidade, Fundamentos de Inteligência Artificial) e no **6º** (Ciência de Dados e Inteligência Artificial). A estratégia é chegar lá com a matemática pronta: **álgebra linear em paralelo** (não está na grade) em 2028/2–2029/1 e uma base de probabilidade antes do 5º. Assim as disciplinas viram aprofundamento, e o restante da trilha (deep learning, LLMs, MLOps) é estudo próprio a partir do 6º.
+
 ## A trilha em 17 etapas
 
 | # | Etapa | Pré-requisitos | Fase | Recursos | Evidência esperada |
 |---|---|---|---|---|---|
-| 1 | Fundamentos de IA (busca, conhecimento, incerteza) | Python intermediário | 3 | CS50 AI | Problem sets do CS50 AI |
-| 2 | Python para ciência de dados | Python, SQL | 3 | Documentação de NumPy e pandas | Análise de um conjunto de dados público com conclusões honestas |
-| 3 | Matemática para ML | Cálculo I, álgebra | 3 | MIT 18.06, *Mathematics for Machine Learning* | Exercícios resolvidos; derivar o gradiente da regressão linear à mão |
-| 4 | Estatística aplicada | Probabilidade | 3 | *An Introduction to Statistical Learning* | Teste de hipótese e intervalo de confiança explicados |
-| 5 | Machine Learning clássico | 2, 3, 4 | 3–4 | ML Crash Course, ISLP, scikit-learn | Modelo com validação correta e análise de erros |
+| 1 | Fundamentos de IA (busca, conhecimento, incerteza) | Python intermediário | 4 (PUC 5º) | Fundamentos de IA (PUC) + CS50 AI | Problem sets do CS50 AI |
+| 2 | Python para ciência de dados | Python, SQL | 3–4 | Documentação de NumPy e pandas | Análise de um conjunto de dados público com conclusões honestas |
+| 3 | Matemática para ML | Cálculo I e II (PUC) | 3–4 (paralelo) | MIT 18.06, *Mathematics for Machine Learning* | Exercícios resolvidos; derivar o gradiente da regressão linear à mão |
+| 4 | Estatística aplicada | Probabilidade | 4 (PUC 5º) | Estatística e Probabilidade (PUC) + *ISLP* | Teste de hipótese e intervalo de confiança explicados |
+| 5 | Machine Learning clássico | 2, 3, 4 | 4 (PUC 6º) | Ciência de Dados e IA (PUC), ML Crash Course, scikit-learn | Modelo com validação correta e análise de erros |
 | 6 | Deep Learning | 5 | 4 | d2l.ai, fast.ai | Rede treinada em PyTorch com curvas de treino explicadas |
 | 7 | Redes neurais por dentro | 3, 6 | 4 | Karpathy *Zero to Hero* | Backpropagation implementado do zero (micrograd) |
 | 8 | Processamento de Linguagem Natural | 6 | 4 | CS224N | Classificador de texto e embeddings |
@@ -46,6 +50,6 @@ IA é a sua área de maior interesse. Por isso mesmo, ela entra **na ordem certa
 ## Onde você entra
 
 - **Até a Fase 2:** nada de trilha de IA formal. Use IA só como ferramenta (ver Política de uso de IA) e entenda como o ExplAIner integra o Gemini.
-- **Fase 3:** etapas 1–5, com a matemática da faculdade.
-- **Fase 4:** etapas 6–10 + Projeto #3.
+- **Fase 3 (2028):** etapas 2–3 em paralelo (álgebra linear, NumPy/pandas).
+- **Fase 4 (2029):** etapas 1, 4 e 5 com o 5º e o 6º períodos; etapas 6–10 + Projeto #3 em paralelo.
 - **Fase 5+:** especialização conforme o que a IC, os estágios e o mercado mostrarem: AI Engineer/MLE (caminho mais provável) ou Research Engineer (se a pesquisa encantar).

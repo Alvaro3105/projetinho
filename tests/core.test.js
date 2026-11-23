@@ -174,3 +174,32 @@ test('roadmap: marco bloqueado enquanto dependência não termina', () => {
   all[0].status = 'concluido';
   assert.ok(!isBlocked(all[1], all));
 });
+
+test('grade oficial: cargas por período e sincronização preserva registros', async () => {
+  const { SEMESTERS, totalHours, mergeSemester, CURRICULUM_VERSION } = await import('../js/data/curriculum.js');
+  const { syncCurriculum } = await import('../js/core/seed.js');
+  assert.deepEqual(SEMESTERS.map(totalHours), [536, 620, 708, 648, 536, 494, 464, 516]);
+  assert.equal(SEMESTERS.length, 8);
+  // nomes antigos com acento diferente casam com o oficial e mantêm o status
+  let n = 0;
+  const merged = mergeSemester({ disciplines: [{ id: 'd1', name: 'Introdução à Algoritmos', status: 'concluida', grade: 9 }] }, SEMESTERS[0], () => `new${n++}`);
+  const intro = merged.disciplines.find((d) => d.name === 'Introdução a Algoritmos');
+  assert.equal(intro.id, 'd1');
+  assert.equal(intro.status, 'concluida');
+  assert.equal(intro.grade, 9);
+  // estado antigo (sem versão de grade) é atualizado; status do semestre é mantido
+  const storage = memoryStorage();
+  const store = createStore({ storage, seed });
+  const s1 = store.list('semesters').find((s) => s.number === 1);
+  store.update('semesters', s1.id, { status: 'cursando', disciplines: [{ id: 'x', name: 'Introdução à Algoritmos', hours: 144, status: 'concluida' }] });
+  store.state.meta.curriculumVersion = 'antiga';
+  store.setProfile({ university: 'Engenharia de Software — PUC Minas (início em 2027; campus a confirmar)' });
+  assert.equal(syncCurriculum(store), true);
+  const after = store.list('semesters').find((s) => s.number === 1);
+  assert.equal(after.status, 'cursando');
+  assert.equal(after.disciplines.length, 7);
+  assert.equal(after.disciplines.find((d) => d.id === 'x').status, 'concluida');
+  assert.match(store.state.profile.university, /Coração Eucarístico, noturno/);
+  assert.equal(syncCurriculum(store), false, 'idempotente');
+  assert.equal(JSON.parse(storage.getItem(STORAGE_KEY)).meta.curriculumVersion, CURRICULUM_VERSION, 'versão persistida');
+});

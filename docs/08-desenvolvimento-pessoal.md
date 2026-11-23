@@ -35,17 +35,19 @@ Técnica: *Engenharia de Software Moderna* (gratuito), *Entendendo Algoritmos*, 
 
 A disponibilidade é configurável por dia em Configurações, e o sistema distribui as horas por frente conforme a fase.
 
-**Exemplo de semana normal em 2027 (aulas pela manhã):**
+**Exemplo de semana normal em 2027 (aulas à noite, turno noturno, sem estágio):**
 
 | Dia | Bloco extra | Inglês |
 |---|---|---|
-| Seg | 1h30 algoritmos sem IA | 20 min listening |
-| Ter | 1h30 projeto | 20 min reading técnico |
-| Qua | 1h30 matemática da faculdade | 20 min listening |
-| Qui | 1h30 projeto | 15 min speaking gravado |
-| Sex | 1h carreira (vagas, LinkedIn) ou descanso | — |
+| Seg | Manhã: 1h30 algoritmos sem IA | 20 min listening |
+| Ter | Manhã: 1h30 projeto | 20 min reading técnico |
+| Qua | Manhã: 1h30 matemática da faculdade | 20 min listening |
+| Qui | Manhã: 1h30 projeto | 15 min speaking gravado |
+| Sex | Manhã: 1h carreira (vagas, LinkedIn) ou descanso | — |
 | Sáb | 2h projeto ou hackathon | 20 min writing |
 | Dom | 20 min revisão semanal | — |
+
+**Com estágio (manhã/tarde) + aula à noite:** o estudo extra cai para a rotina mínima nos dias úteis (30–45 min, de preferência antes do estágio) e se concentra no sábado. Ajuste a disponibilidade em Configurações quando o estágio começar; o 3º período (708 h, o mais pesado) pede cuidado especial.
 
 **Não negociáveis:** sono, atividade física, tempo com família e amigos. Plano que só funciona cortando isso não é sustentável e vai quebrar em algum momento do semestre.
 

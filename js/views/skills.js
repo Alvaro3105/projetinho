@@ -17,7 +17,7 @@ export function renderSkills(ctx) {
   const { store, rerender } = ctx;
   const pending = store.list('assessments').filter((a) => a.status === 'pendente').length;
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Skill Tracker', 'O nível mede o que você consegue fazer sozinho, com evidência. Curso concluído não sobe nível automaticamente.', [
+    pageHead('Competências', 'O nível mede o que você consegue fazer sozinho, com evidência. Curso concluído não sobe nível automaticamente.', [
       btn('Nova competência', () => crud(store, 'skills', { titleNew: 'Nova competência', defaults: { level: 'nao_avaliado', target: 'intermediario', category: 'programacao', priority: 'media', evidence: [], history: [] } }), { kind: 'primary', iconName: 'plus' }),
     ]),
     tabs([['competencias', 'Competências'], ['avaliacoes', `Avaliações diagnósticas${pending ? ` (${pending})` : ''}`], ['escala', 'Escala de níveis']], tab, (k) => { tab = k; rerender(); }),

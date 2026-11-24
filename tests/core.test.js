@@ -291,3 +291,26 @@ test('atualização do plano: acrescenta e ajusta sem apagar nem sobrescrever o 
   const s1 = store.list('semesters').find((s) => s.number === 1);
   assert.equal(s1.disciplines.length, 7, 'semestre não editado mantém a matriz');
 });
+
+test('padrão brasileiro: datas DD/MM/AAAA e horário 24 h', async () => {
+  const { fmtDate, fmtDateTime } = await import('../js/core/dates.js');
+  assert.equal(fmtDate('2026-11-30'), '30/11/2026');
+  assert.equal(fmtDate('2027-03-05', { year: false }), '05/03');
+  assert.equal(fmtDate(null), '—');
+  assert.equal(fmtDateTime(new Date(2026, 11, 1, 21, 7).toISOString()), '01/12/2026 21:07');
+});
+
+test('painel: próximas entregas e agenda do dia vêm só de datas registradas', async () => {
+  const { upcoming, todayAgenda } = await import('../js/core/metrics.js');
+  const s = emptyState();
+  const now = '2026-12-01';
+  s.collections.tasks.push({ id: 't1', title: 'Hoje', status: 'a_fazer', due: '2026-12-01' }, { id: 't2', title: 'Atrasada', status: 'a_fazer', due: '2026-11-28' }, { id: 't3', title: 'Futura', status: 'a_fazer', due: '2026-12-05' }, { id: 't4', title: 'Feita', status: 'feito', due: '2026-12-02' }, { id: 't5', title: 'Sem prazo', status: 'a_fazer' });
+  s.collections.applications.push({ id: 'a1', company: 'X', role: 'Estágio', status: 'entrevista', nextDate: '2026-12-03' }, { id: 'a2', company: 'Y', role: 'Estágio', status: 'reprovado', nextDate: '2026-12-03' });
+  s.collections.milestones.push({ id: 'm1', title: 'Longe', status: 'planejado', due: '2027-06-01' });
+  s.collections.habits.push({ id: 'h1', name: 'Inglês', active: true, checks: ['2026-12-01'] }, { id: 'h2', name: 'Código', active: true, checks: [] });
+  const up = upcoming(s, now, 14);
+  assert.deepEqual(up.map((x) => x.title), ['X — Estágio', 'Futura']);
+  const ag = todayAgenda(s, now);
+  assert.deepEqual(ag.tasks.map((t) => t.title), ['Atrasada', 'Hoje']);
+  assert.deepEqual(ag.habits.map((x) => x.name), ['Código']);
+});

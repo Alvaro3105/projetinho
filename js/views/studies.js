@@ -18,7 +18,7 @@ export function renderStudies(ctx) {
   const { store, rerender } = ctx;
   const now = today();
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Central de estudos', 'Materiais, sessões e biblioteca. Registre o uso de IA em cada sessão: é assim que a independência vira número.', [
+    pageHead('Central de Estudos', 'Materiais, sessões e biblioteca. Registre o uso de IA em cada sessão: é assim que a independência vira número.', [
       btn('Registrar sessão', () => crud(store, 'studyLogs', { titleNew: 'Registrar sessão de estudo', defaults: { date: now, minutes: 50, kind: 'pratica', aiUse: 'nenhuma' } }), { iconName: 'clock' }),
       btn('Novo material', () => crud(store, 'studyItems', { titleNew: 'Novo material de estudo', defaults: { type: 'curso', status: 'planejado' } }), { kind: 'primary', iconName: 'plus' }),
     ]),

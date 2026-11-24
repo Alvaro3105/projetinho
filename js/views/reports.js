@@ -7,7 +7,7 @@ import {
 } from '../core/metrics.js';
 import { card, stat, pct, btn, pageHead, chips, empty, notice, badge } from '../ui/components.js';
 import { barChart, heatmap, fmtHours, fmtNum } from '../ui/charts.js';
-import { BRAND_MARK } from '../ui/icons.js';
+import { BRAND, brandMark } from '../core/brand.js';
 
 let period = 'mes';
 
@@ -55,7 +55,7 @@ export function renderReports({ store, navigate, rerender }) {
   const signals = insights(st, now);
 
   const header = h('div', { class: 'card elevated row between' },
-    h('div', { class: 'row' }, h('span', { html: BRAND_MARK }), h('div', {}, h('div', { class: 'strong' }, 'CAREER OS · Relatório'), h('div', { class: 'small muted' }, `${r.label} · gerado em ${fmtDate(now)} · By Álvaro Pires`))),
+    h('div', { class: 'row' }, h('span', { html: brandMark({ id: 'jvrep' }) }), h('div', {}, h('div', { class: 'strong' }, `${BRAND.name} · Relatório`), h('div', { class: 'small muted' }, `${r.label} · gerado em ${fmtDate(now)} · ${BRAND.signature}`))),
     chips([['mes', 'Este mês'], ['mes_anterior', 'Mês anterior'], ['semestre', 'Semestre'], ['tudo', 'Tudo']], period, (k) => { period = k; rerender(); }, 'Período do relatório'));
 
   const noData = sessions.length === 0 && c.goals.every((g) => g.status === 'ativa') && skillChanges.length === 0;
@@ -71,7 +71,7 @@ export function renderReports({ store, navigate, rerender }) {
       card({}, stat('Progresso técnico', pct(tech.ratio), `${tech.assessed}/${tech.total} competências avaliadas`, { na: tech.ratio === null }))),
     h('div', { class: 'grid cols-2' },
       card({ title: 'Evolução mensal (horas)', iconName: 'chart' }, months.some((m) => m.minutes) ? barChart(months.map((m) => ({ label: fmtMonthShort(m.key), value: Math.round(m.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por mês', height: 170 }) : empty('Sem horas registradas nos últimos 6 meses.')),
-      card({ title: 'Últimas 12 semanas (horas)', iconName: 'chart' }, weeks.some((w) => w.minutes) ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }).slice(0, 6), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por semana', height: 170 }) : empty('Sem horas registradas nas últimas 12 semanas.'))),
+      card({ title: 'Últimas 12 semanas (horas)', iconName: 'chart' }, weeks.some((w) => w.minutes) ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por semana', height: 170 }) : empty('Sem horas registradas nas últimas 12 semanas.'))),
     card({ title: 'Consistência diária (16 semanas)', iconName: 'cycle', sub: 'Cada quadrado é um dia (linhas: segunda a domingo). Mais escuro = mais minutos.' },
       heatmap(dailyMinutes(sessions, 16, now)),
       h('div', { class: 'legend', style: { marginTop: '8px' } }, ['0', '<30 min', '30–60', '60–120', '120+'].map((t, i) => h('span', {}, h('i', { style: { background: ['var(--neutral-soft)', 'color-mix(in srgb, var(--primary) 35%, transparent)', 'color-mix(in srgb, var(--primary) 65%, transparent)', 'var(--primary)', 'var(--accent)'][i] } }), t)))),

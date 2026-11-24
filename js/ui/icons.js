@@ -31,6 +31,7 @@ const P = {
   flag: '<path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/>',
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
   lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
   spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.5 2.5M15.2 15.2l2.5 2.5M6.3 17.7l2.5-2.5M15.2 8.8l2.5-2.5"/>',
 };
 
@@ -39,11 +40,3 @@ export function icon(name, cls = '') {
   span.innerHTML = `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${P[name] || ''}</svg>`;
   return span.firstChild;
 }
-
-/** Marca do CAREER OS: quadrado arredondado com trajetória ascendente até um ponto ciano. */
-export const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-  <defs><linearGradient id="cos-g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs>
-  <rect x="1" y="1" width="38" height="38" rx="10" fill="#12243A" stroke="#263B55"/>
-  <path d="M10 28 L17 21 L22 25 L29 14" fill="none" stroke="url(#cos-g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="29.5" cy="12.5" r="3" fill="#38BDF8"/>
-</svg>`;

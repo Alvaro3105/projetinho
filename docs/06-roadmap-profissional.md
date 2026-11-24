@@ -1,4 +1,4 @@
-# Roadmap profissional e preparação para Big Techs
+# Trajetória profissional e preparação para Big Techs
 
 ## 1. A trajetória (com alternativas)
 
@@ -12,7 +12,7 @@
 | 6. Internacional | 2031–2034 | Empresa internacional (remoto ou presencial) | Mestrado no exterior como ponte |
 | 7. Big Tech | horizonte | Big Tech ou laboratório de IA | Empresas de alto nível fora do grupo "Big Tech" |
 
-**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você. Como o turno é **noturno**, é possível estagiar durante o dia já a partir do 1º período, se a rotina comportar: o CAREER OS tem cenários de 20 h e 30 h semanais com disponibilidades diferentes (ver Desenvolvimento pessoal e rotina).
+**Regras legais que afetam o começo [oficial, legislação brasileira]:** o programa Jovem Aprendiz atende pessoas de 14 a 24 anos (Lei 10.097/2000), então você é elegível agora. Estágio exige matrícula em instituição de ensino (Lei 11.788/2008): com a matrícula na PUC em 2027, estágios abrem para você. Como o turno é **noturno**, é possível estagiar durante o dia já a partir do 1º período, se a rotina comportar: o JARVIS tem cenários de 20 h e 30 h semanais com disponibilidades diferentes (ver Desenvolvimento pessoal e rotina).
 
 ## 2. Competências profissionais
 
@@ -21,7 +21,7 @@
 | Currículo competitivo | Uma página; projetos com problema → decisão → resultado; links; sem lista de tecnologias "vistas". Versão em inglês a partir de 2028. | Dez/2026 e a cada semestre | Versão registrada em cada candidatura |
 | LinkedIn | Título claro ("Estudante de Engenharia de Software · Backend e IA"), sobre em 3 linhas, projetos com links, publicações curtas sobre o que aprendeu (1 por mês) | Dez/2026 | Perfil atualizado |
 | Networking | 1 evento por mês quando possível; follow-up em 48 h; ajudar antes de pedir | Contínuo | Experiências registradas |
-| Encontrar oportunidades | LinkedIn Jobs, páginas de carreira das empresas, Gupy, programas de estágio, grupos da PUC e do GDG BH | Contínuo | Career Tracker |
+| Encontrar oportunidades | LinkedIn Jobs, páginas de carreira das empresas, Gupy, programas de estágio, grupos da PUC e do GDG BH | Contínuo | Oportunidades Profissionais |
 | Processos seletivos | Registrar cada etapa; pedir feedback; revisar o funil por mês | Contínuo | Funil em Relatórios |
 | Entrevistas técnicas | Ver seção 4 | Fase 2+ | Problemas e mocks |
 | Algoritmos | beecrowd → LeetCode fácil → médio por padrão | Fase 1+ | Contagem sem IA |

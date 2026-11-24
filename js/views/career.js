@@ -15,7 +15,7 @@ let statusFilter = 'abertas';
 export function renderCareer(ctx) {
   const { store, rerender } = ctx;
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Career Tracker', 'Vagas, processos, empresas e experiências. Cada competência exigida por uma vaga se liga ao Skill Tracker para mostrar a lacuna.', [
+    pageHead('Oportunidades Profissionais', 'Vagas, processos, empresas e experiências. Cada competência exigida por uma vaga se liga às suas Competências para mostrar a lacuna.', [
       btn('Nova candidatura', () => newApplication(store), { kind: 'primary', iconName: 'plus' }),
     ]),
     tabs([['candidaturas', 'Candidaturas'], ['empresas', 'Empresas'], ['experiencias', 'Experiências'], ['preparacao', 'Preparação para entrevistas']], tab, (k) => { tab = k; rerender(); }),
@@ -65,7 +65,7 @@ function applications({ store, rerender }) {
       })))) : empty('Nenhuma candidatura neste filtro.', 'Registre cada processo seletivo, inclusive os que não avançaram: o funil mostra onde melhorar.', btn('Nova candidatura', () => newApplication(store), { size: 'sm', iconName: 'plus' })));
 }
 
-function applicationDetail(store, id) {
+export function applicationDetail(store, id) {
   const a = store.get('applications', id);
   if (!a) return;
   const gaps = applicationGaps(a, store.list('skills'));

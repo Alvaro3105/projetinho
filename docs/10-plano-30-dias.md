@@ -8,11 +8,11 @@
 2. **25 problemas de lógica** aceitos no beecrowd, sem IA.
 3. **CS50x semanas 0 a 3** com problem sets submetidos.
 4. **Inglês medido** (EF SET) e **20 dias** de prática de 20 min.
-5. **4 revisões semanais + 1 mensal** no CAREER OS.
+5. **4 revisões semanais + 1 mensal** no JARVIS.
 6. **Currículo e LinkedIn revisados** e **5 candidaturas** registradas.
 7. **Primeiro backup** exportado e backup semanal mantido.
 
-Esses objetivos já estão cadastrados como metas (Desenvolvimento pessoal › Metas) e as atividades da semana 1 estão no Dashboard.
+Esses objetivos já estão cadastrados como metas (Desenvolvimento pessoal › Metas) e as atividades da semana 1 estão no Painel Inicial.
 
 ## Semana 1 — 30/11 a 06/12: diagnóstico
 
@@ -29,7 +29,7 @@ Esses objetivos já estão cadastrados como metas (Desenvolvimento pessoal › M
 ## Semana 2 — 07/12 a 13/12: fechar o diagnóstico e começar a base
 
 - **Avaliação 2** (mini-projeto CLI, 3 h), **Avaliação 4** (estruturas de dados, 2 h), **Avaliação 5** (ExplAIner, 1h30), **Avaliação 10** (apresentação, 30 min).
-- Com os resultados, ajuste no Skill Tracker o **nível desejado e a próxima ação** de cada competência prioritária.
+- Com os resultados, ajuste em Competências o **nível desejado e a próxima ação** de cada competência prioritária.
 - CS50x Lecture 1 (C) + Problem Set 1.
 - beecrowd: 5 problemas sem IA. Inglês: 5 dias.
 - Revisão semanal no domingo.
@@ -48,7 +48,7 @@ Esses objetivos já estão cadastrados como metas (Desenvolvimento pessoal › M
 - **Rotina mínima** em 24, 25 e 31/12 (sem culpa).
 - CS50x Lecture 3 (algoritmos) + Problem Set 3.
 - beecrowd: 10 problemas.
-- 5 candidaturas registradas no Career Tracker (Jovem Aprendiz/estágio para 2027).
+- 5 candidaturas registradas em Oportunidades Profissionais (Jovem Aprendiz/estágio para 2027).
 - SQLBolt lições 1–18.
 - Revisão semanal + **primeira revisão mensal** (29/12): compare as metas com as entregas e ajuste janeiro.
 

@@ -19,7 +19,7 @@ Inglês: contínuo, do primeiro ao último dia.
 
 ## 2. Matriz de conhecimentos da graduação
 
-Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coração Eucarístico, noturno), **Paralelo** (estudo próprio) ou **Ambos**. Período = período da PUC; Fase = fase do CAREER OS.
+Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coração Eucarístico, noturno), **Paralelo** (estudo próprio) ou **Ambos**. Período = período da PUC; Fase = fase do JARVIS.
 
 ### Fundamentos de Ciência da Computação
 
@@ -66,7 +66,7 @@ Onde cada assunto será aprendido: **PUC** (disciplina da matriz oficial, Coraç
 
 **Não aprofundar agora:** PHP, C#/.NET. Ficam no currículo como experiência acadêmica.
 
-**Alternativa justificada:** se a faculdade e as vagas de estágio em BH pedirem Java com força, Java/Spring Boot vira a stack principal de backend e Python fica para algoritmos e IA. A decisão entra na revisão mensal de jun/2027 com dados das vagas registradas no Career Tracker.
+**Alternativa justificada:** se a faculdade e as vagas de estágio em BH pedirem Java com força, Java/Spring Boot vira a stack principal de backend e Python fica para algoritmos e IA. A decisão entra na revisão mensal de jun/2027 com dados das vagas registradas em Oportunidades Profissionais.
 
 **Por que Python primeiro:** é a linguagem que você declarou precisar reconstruir, é aceita em entrevistas de todas as Big Techs, é a língua franca de IA e tem sintaxe que deixa você focar no raciocínio.
 

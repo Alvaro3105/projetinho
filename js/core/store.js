@@ -39,9 +39,9 @@ export function emptyState() {
 
 /** Garante que um estado importado tem a forma esperada (sem confiar no arquivo). */
 export function normalizeState(input) {
-  if (!input || typeof input !== 'object') throw new Error('Arquivo sem dados do CAREER OS.');
-  if (typeof input.schemaVersion !== 'number') throw new Error('Arquivo sem versão de esquema. Não parece um backup do CAREER OS.');
-  if (input.schemaVersion > SCHEMA_VERSION) throw new Error('Backup criado por uma versão mais nova do CAREER OS.');
+  if (!input || typeof input !== 'object') throw new Error('Arquivo sem dados do JARVIS.');
+  if (typeof input.schemaVersion !== 'number') throw new Error('Arquivo sem versão de esquema. Não parece um backup do JARVIS (nem do antigo CAREER OS).');
+  if (input.schemaVersion > SCHEMA_VERSION) throw new Error('Backup criado por uma versão mais nova do JARVIS. Atualize o JARVIS antes de importar.');
   const base = emptyState();
   const state = {
     schemaVersion: SCHEMA_VERSION,
@@ -160,13 +160,29 @@ export function createStore({ storage, seed } = {}) {
     },
 
     exportJSON() {
-      const payload = { ...clone(state), exportedAt: new Date().toISOString(), app: 'CAREER OS' };
+      const payload = { app: 'JARVIS', exportedAt: new Date().toISOString(), ...clone(state) };
       return JSON.stringify(payload, null, 2);
     },
 
-    markExported() {
-      state.meta.lastExportAt = new Date().toISOString();
+    /** Registra um backup no histórico (máx. 30 entradas). */
+    markExported(entry = {}) {
+      const at = entry.at || new Date().toISOString();
+      state.meta.lastExportAt = at;
+      state.meta.backupHistory = [{ at, ...entry }, ...(state.meta.backupHistory || [])].slice(0, 30);
       emit({ type: 'meta' });
+    },
+
+    /** Grava mudanças feitas só em state.meta (ex.: atualizações aplicadas). */
+    saveMeta() {
+      emit({ type: 'meta' });
+    },
+
+    /** Substitui todos os dados por um estado já validado (importação ou restauração). */
+    replaceState(next) {
+      state = normalizeState(next);
+      loadError = null;
+      emit({ type: 'import' });
+      return state;
     },
 
     importJSON(text) {

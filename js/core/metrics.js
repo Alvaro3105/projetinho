@@ -301,3 +301,29 @@ export function insights(state, now = todayISO()) {
   if (days === null || days > 14) out.push({ tone: 'warn', text: days === null ? 'Você ainda não fez backup. Os dados ficam só neste navegador.' : `Último backup há ${days} dias. Exporte um novo arquivo.`, route: 'configuracoes' });
   return out;
 }
+
+/**
+ * Próximas entregas de todos os módulos (só itens com data registrada).
+ * Retorna [{date, title, kind, route, overdue}] ordenado por data.
+ */
+export function upcoming(state, now = todayISO(), days = 14) {
+  const c = state.collections;
+  const limit = addDays(now, days);
+  const out = [];
+  const push = (date, title, kind, route) => { if (date && date <= limit) out.push({ date, title, kind, route, overdue: date < now }); };
+  for (const t of c.tasks) if (t.status !== 'feito' && t.due && t.due > now) push(t.due, t.title, 'Atividade', 'painel');
+  for (const g of c.goals) if (g.status === 'ativa' && g.due >= now) push(g.due, g.title, 'Meta', 'pessoal');
+  for (const m of c.milestones) if (m.status !== 'concluido' && m.due >= now) push(m.due, m.title, 'Marco', 'roadmap');
+  for (const a of c.applications) if (!['reprovado', 'desistencia', 'aprovado'].includes(a.status) && a.nextDate >= now) push(a.nextDate, `${a.company} — ${a.role}`, 'Candidatura', 'carreira');
+  for (const o of c.opportunities) if (!['encerrado', 'reprovado', 'aprovado'].includes(o.status) && o.deadline >= now) push(o.deadline, o.title, 'Prazo de oportunidade', 'oportunidades');
+  for (const s of c.studyItems) if (s.status !== 'concluido' && s.dueDate >= now) push(s.dueDate, s.title, 'Material de estudo', 'estudos');
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+/** O que vence hoje ou já venceu (atividades) e hábitos ainda não marcados hoje. */
+export function todayAgenda(state, now = todayISO()) {
+  const c = state.collections;
+  const tasks = c.tasks.filter((t) => t.status !== 'feito' && t.due && t.due <= now).sort((a, b) => a.due.localeCompare(b.due));
+  const habits = c.habits.filter((hb) => hb.active !== false && !(hb.checks || []).includes(now));
+  return { tasks, habits };
+}

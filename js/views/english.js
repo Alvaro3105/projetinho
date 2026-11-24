@@ -21,7 +21,7 @@ const TARGETS = [
 export function renderEnglish(ctx) {
   const { store, rerender } = ctx;
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Inglês', 'Meta: estudar, trabalhar e fazer entrevistas internacionais. Nível atual: só depois da primeira avaliação.', [
+    pageHead('Central de Inglês', 'Meta: estudar, trabalhar e fazer entrevistas internacionais. Nível atual: só depois da primeira avaliação.', [
       btn('Registrar prática', () => crud(store, 'englishLogs', { titleNew: 'Registrar prática de inglês', defaults: { date: today(), minutes: 20, skill: 'listening' } }), { iconName: 'clock' }),
       btn('Nova avaliação', () => crud(store, 'englishAssessments', { titleNew: 'Registrar avaliação de inglês', defaults: { date: today(), instrument: 'EF SET 50 min', cefr: 'nao_informado' } }), { kind: 'primary', iconName: 'plus' }),
     ]),
@@ -44,7 +44,7 @@ function overview({ store }) {
       card({}, stat('Dias com prática (28 dias)', String(days), `${fmtHours(recent.reduce((a, l) => a + Number(l.minutes), 0))} no período`)),
       card({}, stat('Vocabulário dominado', String(store.list('vocab').filter((v) => v.status === 'dominado').length), `${store.list('vocab').length} termos registrados`))),
     h('div', { class: 'grid cols-2' },
-      card({ title: 'Habilidades no Skill Tracker', iconName: 'target' }, h('div', { class: 'list' }, skills.map((s) => h('div', { class: 'list-item' }, h('div', { class: 'grow' }, h('div', { class: 'title' }, s.name)), levelView(s.level, s.target))))),
+      card({ title: 'Habilidades em Competências', iconName: 'target' }, h('div', { class: 'list' }, skills.map((s) => h('div', { class: 'list-item' }, h('div', { class: 'grow' }, h('div', { class: 'title' }, s.name)), levelView(s.level, s.target))))),
       card({ title: 'Minutos por habilidade (28 dias)', iconName: 'chart' }, recent.length ? barChart(bySkill, { label: 'Minutos de prática por habilidade', format: (v) => String(Math.round(v)), height: 170, highlightLast: false }) : empty('Sem prática registrada.'))),
     card({ title: 'Metas de proficiência', iconName: 'flag', sub: 'Metas de plano, revisadas a cada avaliação semestral.' },
       h('div', { class: 'list' }, TARGETS.map((t) => h('div', { class: 'list-item' }, h('span', { class: 'tag', style: { minWidth: '76px', justifyContent: 'center' } }, t.when), h('div', { class: 'grow' }, h('div', { class: 'title' }, t.goal), h('div', { class: 'sub' }, t.how)))))),

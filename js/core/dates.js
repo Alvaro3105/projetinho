@@ -60,11 +60,19 @@ export function monthKey(iso) {
 const MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 const MONTHS_LONG = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
+/** Padrão brasileiro: DD/MM/AAAA (ou DD/MM com { year: false }). */
 export function fmtDate(iso, opts = {}) {
   const date = parseISO(iso);
   if (!date) return '—';
-  const base = `${pad(date.getDate())} ${MONTHS[date.getMonth()]}`;
-  return opts.year === false ? base : `${base} ${date.getFullYear()}`;
+  const base = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
+  return opts.year === false ? base : `${base}/${date.getFullYear()}`;
+}
+
+/** Data e hora locais no padrão brasileiro, 24 horas: DD/MM/AAAA HH:MM. */
+export function fmtDateTime(isoDateTime) {
+  const d = new Date(isoDateTime);
+  if (Number.isNaN(d.getTime())) return '—';
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 export function fmtMonth(key) {

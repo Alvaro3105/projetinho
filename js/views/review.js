@@ -92,9 +92,9 @@ function monthly({ store, navigate }) {
         field('mv-results', 'Resultados do mês (entregas verificáveis)', existing?.results, null, 4),
         field('mv-goals', 'Metas × entregas: o que foi cumprido e o que não', existing?.goalsVsDelivered),
         field('mv-gaps', 'Lacunas identificadas', existing?.gaps, 'Ex.: SQL ainda abaixo do desejado; inglês sem prática de speaking.'),
-        field('mv-road', 'Mudanças no roadmap', existing?.roadmapChanges),
+        field('mv-road', 'Mudanças no Plano de Evolução', existing?.roadmapChanges),
         field('mv-next', 'Plano do próximo mês (3 resultados principais)', existing?.nextPlan),
-        h('div', { class: 'full row' }, btn('Salvar revisão mensal', null, { kind: 'primary', iconName: 'check', type: 'submit' }), btn('Abrir roadmap', () => navigate('roadmap'), { iconName: 'roadmap' }), btn('Relatório do mês', () => navigate('relatorios'), { iconName: 'chart' })))),
+        h('div', { class: 'full row' }, btn('Salvar revisão mensal', null, { kind: 'primary', iconName: 'check', type: 'submit' }), btn('Abrir o Plano de Evolução', () => navigate('roadmap'), { iconName: 'roadmap' }), btn('Relatório do mês', () => navigate('relatorios'), { iconName: 'chart' })))),
     h('div', { class: 'stack' },
       card({ title: 'Dados do mês', iconName: 'chart' }, h('div', { class: 'stack' },
         stat('Tempo registrado', fmtHours(minutes), `${sessions.length} sessões`),
@@ -113,5 +113,5 @@ function history({ store }) {
     actions: btn('', async () => { if (await confirmDialog({ title: 'Excluir revisão', message: 'Excluir esta revisão?', confirmLabel: 'Excluir', danger: true })) { store.remove('reviews', r.id); toast('Revisão excluída.'); } }, { size: 'sm', kind: 'ghost', iconName: 'trash', title: 'Excluir revisão' }),
   }, kv(r.kind === 'semanal'
     ? [['Aprendi', r.learned], ['Dificuldades', r.difficulties], ['Entregas', r.wins], ['Projetos', r.projectsUpdate], ['Prioridades', r.priorities], ['Registro', r.snapshot ? `${fmtHours(r.snapshot.minutes)} · ${r.snapshot.sessions} sessões` : null]]
-    : [['Resultados', r.results], ['Metas × entregas', r.goalsVsDelivered], ['Lacunas', r.gaps], ['Roadmap', r.roadmapChanges], ['Próximo mês', r.nextPlan]])))) : empty('Nenhuma revisão registrada.', 'Faça a primeira no domingo, 06/12/2026.');
+    : [['Resultados', r.results], ['Metas × entregas', r.goalsVsDelivered], ['Lacunas', r.gaps], ['Plano de Evolução', r.roadmapChanges], ['Próximo mês', r.nextPlan]])))) : empty('Nenhuma revisão registrada.', 'Faça a primeira no domingo, 06/12/2026.');
 }

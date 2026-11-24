@@ -53,7 +53,7 @@ Data do diagnóstico: 23/11/2026. Fonte: o que você informou + análise dos rep
 | Comunicação | Escrita técnica, apresentações, ensinar | Contato (READMEs, apresentação, voluntariado) | Média | Intermediário |
 | Autogestão | Tempo, aprender sozinho, equipe, liderança, networking | Parcial | Alta/média | Intermediário |
 
-A matriz completa (58 competências) está no Skill Tracker, com próxima ação para cada uma.
+A matriz completa (58 competências) está em Competências, com próxima ação para cada uma.
 
 ## 3. O que você já conhece (contato confirmado)
 
@@ -84,7 +84,7 @@ Linguagem C e memória, complexidade formal, matemática discreta, cálculo, ál
 
 ## 8. Avaliações práticas para medir seu nível
 
-Dez avaliações cadastradas no Skill Tracker (aba Avaliações diagnósticas), todas **sem IA e cronometradas**:
+Dez avaliações cadastradas em Competências (aba Avaliações diagnósticas), todas **sem IA e cronometradas**:
 
 | # | Avaliação | Mede | Duração |
 |---|---|---|---|
@@ -99,4 +99,4 @@ Dez avaliações cadastradas no Skill Tracker (aba Avaliações diagnósticas), 
 | 9 | Linux no terminal + "o que acontece ao digitar uma URL" | Linux, redes | 60 min |
 | 10 | Apresentação técnica de 5 minutos com notas | Comunicação | 30 min |
 
-Cada uma tem protocolo e critério de nível. O resultado atualiza o Skill Tracker com histórico. **Resultado ruim é informação, não fracasso**: é exatamente o que o plano precisa para ajustar a Fase 1.
+Cada uma tem protocolo e critério de nível. O resultado atualiza Competências com histórico. **Resultado ruim é informação, não fracasso**: é exatamente o que o plano precisa para ajustar a Fase 1.

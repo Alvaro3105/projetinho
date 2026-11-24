@@ -23,8 +23,8 @@
   text-decoration: none; color: inherit;
 }
 .brand-mark { width: 36px; height: 36px; flex: none; }
-.brand-name {
-  font-weight: 750; letter-spacing: 0.14em; font-size: 0.95rem; color: #f1f5f9;
+  .brand-name {
+  font-weight: 750; letter-spacing: 0.22em; font-size: 1rem; color: #f1f5f9;
   display: block; line-height: 1.1;
 }
 .brand-name b { color: #38bdf8; font-weight: 750; }
@@ -60,6 +60,8 @@
   font-size: 0.75rem; color: var(--side-muted);
 }
 .sidebar-foot .sig { color: var(--side-text); font-weight: 600; }
+.sidebar-foot > div + div { margin-top: 2px; }
+.faint-side { opacity: 0.75; }
 
 .main {
   min-width: 0;

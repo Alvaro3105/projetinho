@@ -31,7 +31,7 @@ Análise feita em 23/11/2026 sobre o código público. Só o ExplAIner e o Portf
 
 ## 2. Portfólio (`Alvaro3105/Portfolio`)
 
-**Pontos fortes:** bilíngue (PT/EN), acessibilidade cuidada (foco visível, `prefers-reduced-motion`, link de pular conteúdo), SEO configurado, currículo em PDF, projetos acadêmicos identificados com transparência ("Projeto acadêmico", "Revisão pós-prova"). Identidade escura com azul e roxo, Inter + Space Grotesk + JetBrains Mono. O CAREER OS mantém Inter e JetBrains Mono e o fundo escuro, trocando o roxo pelo azul-marinho que você pediu.
+**Pontos fortes:** bilíngue (PT/EN), acessibilidade cuidada (foco visível, `prefers-reduced-motion`, link de pular conteúdo), SEO configurado, currículo em PDF, projetos acadêmicos identificados com transparência ("Projeto acadêmico", "Revisão pós-prova"). Identidade escura com azul e roxo, Inter + Space Grotesk + JetBrains Mono. O JARVIS mantém Inter e JetBrains Mono e o fundo escuro, trocando o roxo pelo azul-marinho que você pediu.
 
 **Ajustes recomendados:**
 - Mostrar **3 projetos fortes** em vez de 6 equivalentes. Para cada um: problema, sua decisão mais importante, resultado (testes, usuários, métricas).
@@ -43,7 +43,7 @@ Análise feita em 23/11/2026 sobre o código público. Só o ExplAIner e o Portf
 | Projeto | Fase | Objetivo | Critério de "pronto" |
 |---|---|---|---|
 | **ExplAIner (evolução)** | 1 | Transformar o projeto de equipe em evidência individual | Você passa na Avaliação 5; README com sua contribuição; CI; ADRs |
-| **#1 — API backend feita sozinho** | 2 | Provar fundamentos de backend sem IA gerando código | FastAPI + PostgreSQL + Docker + testes (cobertura medida) + CI + deploy + README em inglês. Sugestão de domínio: API de sincronização do próprio CAREER OS. |
+| **#1 — API backend feita sozinho** | 2 | Provar fundamentos de backend sem IA gerando código | FastAPI + PostgreSQL + Docker + testes (cobertura medida) + CI + deploy + README em inglês. Sugestão de domínio: API de sincronização do próprio JARVIS. |
 | **#2 — Sistema com fila, cache e observabilidade** | 3 | Mostrar sistemas além do CRUD | Processamento assíncrono, Redis, métricas, teste de carga com números |
 | **#3 — IA aplicada com avaliação** | 4 | Entrar na especialização com rigor | RAG ou agente com conjunto de avaliação próprio, métricas de qualidade/custo/latência, seção de limitações |
 | **TCC** | 5 | Resultado técnico ou de pesquisa | Alinhado à especialização |

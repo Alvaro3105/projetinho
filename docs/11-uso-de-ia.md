@@ -22,12 +22,12 @@ Objetivo: usar IA para **aprender mais rápido**, sem deixar que ela **pense no 
 5. **Documentação oficial primeiro.** Ela é a fonte de verdade; a IA pode errar com confiança.
 6. **Registre com honestidade.** O indicador só funciona se o registro for verdadeiro. Ninguém mais vê esse número.
 
-## Sobre o próprio CAREER OS
+## Sobre o próprio JARVIS
 
 Este sistema foi gerado com apoio de IA. Ele é uma ferramenta, não uma evidência de competência sua. Para que ele passe a contar como projeto seu:
 
 - leia o código módulo por módulo (comece por `js/core/store.js` e `js/core/metrics.js`);
 - rode os testes (`npm test`) e escreva um teste novo;
-- implemente sozinho uma melhoria por mês e registre no projeto "CAREER OS".
+- implemente sozinho uma melhoria por mês e registre no projeto "JARVIS".
 
-Só coloque o CAREER OS no portfólio quando conseguir explicar a arquitetura sem consultar nada.
+Só coloque o JARVIS no portfólio quando conseguir explicar a arquitetura sem consultar nada.

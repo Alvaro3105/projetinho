@@ -29,7 +29,7 @@ const PRACTICES = [
 export function renderPersonal(ctx) {
   const { store, rerender } = ctx;
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Desenvolvimento pessoal', 'Hábitos, metas e reflexões medidos por comportamento, não por intenção.', [
+    pageHead('Desenvolvimento Pessoal', 'Hábitos, metas e reflexões medidos por comportamento, não por intenção.', [
       btn('Nova meta', () => crud(store, 'goals', { titleNew: 'Nova meta', defaults: { horizon: 'mes', area: 'pessoal', status: 'ativa', periodStart: today() } }), { iconName: 'flag' }),
       btn('Novo hábito', () => crud(store, 'habits', { titleNew: 'Novo hábito', defaults: { targetPerWeek: 3, active: true, checks: [] } }), { kind: 'primary', iconName: 'plus' }),
     ]),

@@ -27,7 +27,7 @@ Técnica: *Engenharia de Software Moderna* (gratuito), *Entendendo Algoritmos*, 
 
 ## 4. Rotina: modo, cenário de trabalho e carga do semestre
 
-A rotina do CAREER OS combina três escolhas, todas em Configurações › Rotina e disponibilidade.
+A rotina do JARVIS combina três escolhas, todas em Configurações › Rotina e disponibilidade.
 
 **1. Modo da semana**
 

@@ -13,7 +13,7 @@ export function renderOpportunities({ store, rerender }) {
   const list = store.list('opportunities').filter((o) => cat === 'all' || o.category === cat)
     .sort((a, b) => (a.deadline || '9999').localeCompare(b.deadline || '9999'));
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Research & Opportunities', 'Bolsas, intercâmbios, IC, hackathons, eventos, certificações e programas. Cada item diz se a informação foi confirmada na fonte oficial.', [
+    pageHead('Oportunidades e Pesquisa', 'Bolsas, intercâmbios, IC, hackathons, eventos, certificações e programas. Cada item diz se a informação foi confirmada na fonte oficial.', [
       btn('Nova oportunidade', () => crud(store, 'opportunities', { titleNew: 'Nova oportunidade', defaults: { status: 'monitorando', category: 'evento', verified: false } }), { kind: 'primary', iconName: 'plus' }),
     ]),
     notice('Itens sem o selo "Confirmado" foram cadastrados a partir de pesquisa ou conhecimento geral. Antes de se planejar, abra o link oficial, confira requisitos e prazo, e marque como confirmado.', 'warn'),

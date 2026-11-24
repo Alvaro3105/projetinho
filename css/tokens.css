@@ -61,7 +61,7 @@
   --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-pill: 999px;
   --ease: cubic-bezier(.2, .7, .2, 1);
   --dur: 160ms;
-  --sidebar-w: 248px;
+  --sidebar-w: 268px;
 
   color-scheme: dark;
 }

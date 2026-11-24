@@ -1,11 +1,14 @@
-# Design system do CAREER OS
+# Design system do JARVIS
 
 ## Identidade
 
-- **Nome:** CAREER OS · **Subtítulo:** Personal Academic & Career Development System · **Assinatura:** By Álvaro Pires.
-- **Conceito:** trajetória. A marca é um quadrado arredondado azul-petróleo com uma linha ascendente em degraus (azul → ciano) que termina em um ponto ciano: o próximo marco. A mesma linha pontilhada aparece na saudação do Dashboard como "rota" até o objetivo.
-- **Logotipo tipográfico:** "CAREER OS" em Inter 750, caixa alta, espaçamento 0,14em; "OS" em ciano. O monograma AP fica reservado para usos pessoais (avatar, favicon alternativo).
-- **Coerência com o portfólio:** o portfólio usa fundo quase preto, Inter, Space Grotesk, JetBrains Mono, azul e roxo. O CAREER OS mantém Inter e JetBrains Mono e o fundo escuro, e troca o roxo pelo azul-marinho dominante que você pediu.
+- **Nome:** JARVIS · **Descrição:** Seu Assistente Inteligente Pessoal · **Assinatura:** Desenvolvido por Álvaro Pires · **Criação:** 2026.
+- **Conceito:** Conhecimento. Evolução. Carreira. Futuro. Um assistente que conhece seus objetivos, acompanha sua evolução com evidências e ajuda a decidir, sem inventar dados.
+- **Símbolo:** um "J" desenhado como trilha de circuito, dentro de um quadrado arredondado azul-petróleo. O traço principal vai do azul (#2563EB) ao ciano (#38BDF8); o nó ciano no topo representa a inteligência, e o traço superior, mais fraco, uma conexão. É geométrico e abstrato, sem referência a personagens, franquias ou interfaces existentes. Fonte única do desenho: `js/core/brand.js` (também usado no favicon `assets/favicon.svg`).
+- **Logotipo tipográfico:** "JARVIS" em Inter 750, caixa alta, espaçamento 0,22em, ao lado do símbolo; a descrição aparece abaixo, em texto auxiliar.
+- **Animação de inicialização:** o símbolo se desenha, o nome e o conceito aparecem e a tela some em cerca de 1,5 s. Acontece uma vez por sessão, nunca bloqueia cliques, é ignorada por leitores de tela e não aparece para quem ativou "reduzir movimento" no sistema.
+- **Coerência com o portfólio:** o portfólio usa fundo quase preto, Inter, Space Grotesk, JetBrains Mono, azul e roxo. O JARVIS mantém Inter e JetBrains Mono e o fundo escuro, e troca o roxo pelo azul-marinho dominante.
+- **Idioma:** PT-BR nativo. Datas DD/MM/AAAA, horário 24 h, vírgula decimal, moeda R$. Termos técnicos consagrados (Backend, Machine Learning, Deploy, System Design) ficam em inglês.
 
 ## Cores (tokens em `css/tokens.css`)
 
@@ -41,11 +44,11 @@ Fonte única: **Inter** (400, 500, 600, 700). **JetBrains Mono** só para númer
 
 ## Layout
 
-Sidebar fixa de 248 px (vira gaveta abaixo de 860 px) + cabeçalho fixo com trilha de navegação, atalho para a revisão semanal e alternância de tema + conteúdo com largura máxima de 1320 px. Grades de 2, 3 e 4 colunas que caem para 1 coluna no celular. Espaçamento em múltiplos de 4 px.
+Barra lateral fixa de 268 px (vira gaveta abaixo de 860 px), agrupada em Visão geral, Desenvolvimento, Acompanhamento e Sistema + cabeçalho fixo com trilha de navegação, busca global (Ctrl+K), atalho para a revisão semanal e alternância de tema + conteúdo com largura máxima de 1320 px. Grades de 3 e 4 colunas caem para 2 no tablet e para 1 no celular; o quadro de projetos empilha as colunas no celular. Espaçamento em múltiplos de 4 px.
 
 ## Componentes
 
-Card (normal, elevado, plano) · indicador (rótulo, valor, nota de origem) · barra de progresso (com padrão listrado para "não avaliado") · botões (primário, secundário, fantasma, perigo; tamanhos normal e pequeno) · badge de estado (sempre com texto e marcador, nunca só cor) · tag mono · escala de nível em 5 segmentos com marca do nível desejado · abas com navegação por setas · filtros em chips · lista com ações · tabela com rolagem própria · modal com foco preso · confirmação dentro da página · toast · linha do tempo de fases · quadro kanban · gráficos SVG (barras, barras de alvo, mapa de calor).
+Card (normal, elevado, plano) · indicador (rótulo, valor, nota de origem) · barra de progresso (com padrão listrado para "não avaliado") · botões (primário, secundário, fantasma, perigo; tamanhos normal e pequeno) · badge de estado (sempre com texto e marcador, nunca só cor) · tag mono · escala de nível em 5 segmentos com marca do nível desejado · abas com navegação por setas · filtros em chips · lista com ações · tabela com rolagem própria · modal com foco preso · confirmação dentro da página · confirmação por digitação (operações irreversíveis) · busca global com lista navegável por setas · toast · linha do tempo de fases · quadro kanban · gráficos SVG (barras, barras de alvo, mapa de calor).
 
 ## Acessibilidade
 

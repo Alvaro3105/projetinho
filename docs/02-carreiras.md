@@ -30,7 +30,7 @@
 | Data Engineer | Pipelines e plataformas de dados | Estágio em dados | Estatística básica | **Complementar** |
 | Analytics Engineer | Modelos analíticos (dbt) | Análise de dados | Estatística básica | Baixo |
 | Data Scientist | Estatística e experimentos | Pós-graduação ajuda | Forte em estatística | Médio |
-| Data Analyst | Dashboards e análises | Estágio | Descritiva | Aceitável como 1ª vaga |
+| Data Analyst | Painel Inicials e análises | Estágio | Descritiva | Aceitável como 1ª vaga |
 | Cloud Engineer | Infra em nuvem | Suporte/infra | Básica | Complementar |
 | DevOps | CI/CD, containers | Após dev | Básica | Prática transversal |
 | SRE | Confiabilidade em escala | Após backend/infra | Estatística (SLOs) | Opção futura |

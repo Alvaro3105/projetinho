@@ -15,7 +15,7 @@ let typeFilter = 'all';
 export function renderRoadmap(ctx) {
   const { store, rerender } = ctx;
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Roadmap', 'Onde você está, o que vem depois e o que depende do quê. Marcos são planos: o status muda quando há entrega verificável.', [
+    pageHead('Plano de Evolução', 'Onde você está, o que vem depois e o que depende do quê. Marcos são planos: o status muda quando há entrega verificável.', [
       btn('Novo marco', () => crud(store, 'milestones', { titleNew: 'Novo marco', defaults: { phase: currentPhase().value, status: 'planejado', type: 'tecnico' } }), { kind: 'primary', iconName: 'plus' }),
     ]),
     tabs([['timeline', 'Linha do tempo'], ['semestres', 'Semestres (PUC Minas)']], tab, (k) => { tab = k; rerender(); }),

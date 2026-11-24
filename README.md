@@ -1,10 +1,11 @@
-# CAREER OS
+# JARVIS
 
-**Personal Academic & Career Development System — By Álvaro Pires**
+**Seu Assistente Inteligente Pessoal** — Conhecimento. Evolução. Carreira. Futuro.
+Desenvolvido por Álvaro Pires · 2026 (antigo CAREER OS).
 
-Sistema pessoal de desenvolvimento acadêmico, técnico, profissional e pessoal, para acompanhar a graduação em Engenharia de Software (PUC Minas, 2027–2030), a entrada no mercado de tecnologia e a evolução até oportunidades de nível internacional.
+Plataforma pessoal de organização e desenvolvimento acadêmico, técnico, profissional e pessoal, para acompanhar a graduação em Engenharia de Software (PUC Minas, Coração Eucarístico, noturno, 2027–2030), a entrada no mercado de tecnologia e a evolução até oportunidades de nível internacional.
 
-Não é um cronograma estático: é um sistema com **diagnóstico**, **plano**, **execução** e **avaliação**, que começa com tudo "Não avaliado" e só mostra progresso quando há evidência registrada.
+Não é um cronograma estático: é um sistema com **diagnóstico**, **plano**, **execução** e **avaliação**, que começa com tudo "Não avaliado" e só mostra progresso quando há evidência registrada. A evolução por fases (assistente de IA, integrações) está em [docs/13-evolucao-jarvis.md](docs/13-evolucao-jarvis.md); as mudanças, em [CHANGELOG.md](CHANGELOG.md).
 
 ## Começar
 
@@ -20,25 +21,28 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 
 | Módulo | O que faz |
 |---|---|
-| Dashboard | Saudação, fase atual, progresso acadêmico/técnico/profissional/pessoal (só com dados medidos), metas da semana, pendências, projetos, marcos, competências prioritárias, alertas |
-| Roadmap | 6 fases com 37 marcos, dependências e status; 8 semestres da PUC Minas (Coração Eucarístico, noturno) com as 62 disciplinas oficiais, lacunas da grade e plano complementar |
-| Estudos | Materiais (CRUD), sessões com registro de uso de IA, horas, biblioteca com 48 recursos |
-| Competências | Skill Tracker com 58 competências: nível atual × desejado, evidências, histórico, materiais, projetos, próxima ação; 10 avaliações diagnósticas |
-| Projetos | Kanban de ideias a concluídos, tarefas, melhorias, competências, links |
-| Carreira | Candidaturas com funil e lacunas ligadas ao Skill Tracker, empresas, experiências, preparação para entrevistas |
-| Inglês | Avaliações CEFR, vocabulário, prática por habilidade, metas de proficiência |
-| Desenvolvimento pessoal | Hábitos semanais, metas (semana → ano), leitura, reflexões, práticas mensuráveis |
-| Oportunidades | Bolsas, IC, hackathons, eventos, programas, com selo "confirmado na fonte" |
+| Painel Inicial | Saudação, situação acadêmica, "Precisa da sua atenção", agenda de hoje, próximas entregas (14 dias), evolução acadêmica/técnica/profissional e consistência (só com dados medidos), metas da semana, marcos, competências prioritárias, projetos |
+| Plano de Evolução | 6 fases com 37 marcos, dependências e status; 8 semestres da PUC Minas (Coração Eucarístico, noturno) com as 62 disciplinas, lacunas da grade, trilha de matemática e plano complementar |
+| Central de Estudos | Materiais (CRUD), sessões com registro de uso de IA, horas, biblioteca com 48 recursos |
+| Competências | 58 competências: nível atual × desejado, evidências, histórico, materiais, projetos, próxima ação; 10 avaliações diagnósticas |
+| Laboratório de Projetos | Quadro de ideias a concluídos, tarefas, melhorias, competências, links |
+| Oportunidades Profissionais | Candidaturas com funil e lacunas ligadas às Competências, empresas, experiências, preparação para entrevistas |
+| Central de Inglês | Avaliações CEFR, vocabulário, prática por habilidade, metas de proficiência |
+| Desenvolvimento Pessoal | Hábitos semanais, metas (semana → ano), leitura, reflexões, práticas mensuráveis |
+| Oportunidades e Pesquisa | Bolsas, IC, hackathons, eventos, programas, com selo "confirmado na fonte" |
 | Revisões | Ciclo semanal e mensal (Planejar → Estudar → Praticar → Desenvolver → Avaliar → Ajustar) |
 | Relatórios | Evolução mensal/semestral, consistência, independência de IA, metas, aprendizagem, oportunidades, pontos de melhoria |
-| Guia estratégico | Os documentos de `docs/` renderizados no app |
-| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h) com disponibilidade por dia, ajuste automático pela carga do semestre, perfil, tema, backup |
+| Guia Estratégico | Os documentos de `docs/` renderizados no app |
+| Central de Backup | JSON com selo SHA-256, CSV por tipo de dado, importação com prévia, pontos de restauração automáticos, histórico, verificação de integridade |
+| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h), ajuste pela carga do semestre, perfil, tema |
+
+**Busca global:** `Ctrl+K` ou `/`. **Atalhos:** `?`.
 
 ### Integração entre módulos
 
 - Concluir projeto → registrar competências desenvolvidas com evidência e (opcionalmente) novo nível, com histórico.
 - Concluir curso → entra no histórico de aprendizagem e pede evidência prática.
-- Vaga com competências exigidas → lacunas apontadas a partir do Skill Tracker, com botão para criar atividade.
+- Vaga com competências exigidas → lacunas apontadas a partir das Competências, com botão para criar atividade.
 - Competência abaixo do desejado → "Criar atividade" gera tarefa ligada a ela.
 - Avaliação diagnóstica → atualiza níveis com histórico.
 - Excluir um registro remove as referências a ele nos demais (integridade).
@@ -53,13 +57,14 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | [03 Faculdade](docs/03-faculdade-puc-minas.md) | 8 semestres, IC, monitoria, extensão, UFMG/ENEM, pós-graduação |
 | [04 Aprendizagem](docs/04-plano-de-aprendizagem.md) | Dependências, matriz CC/ES, stack, matemática por especialização, recursos |
 | [05 IA](docs/05-inteligencia-artificial.md) | Trilha em 17 etapas e diferenças entre cargos de IA |
-| [06 Roadmap profissional](docs/06-roadmap-profissional.md) | Trajetória, competências profissionais, preparação por empresa e nível |
+| [06 Trajetória profissional](docs/06-roadmap-profissional.md) | Trajetória, competências profissionais, preparação por empresa e nível |
 | [07 Inglês](docs/07-ingles-internacionalizacao.md) | Metas CEFR, trilha por habilidade, internacionalização |
 | [08 Pessoal e rotina](docs/08-desenvolvimento-pessoal.md) | Habilidades mensuráveis, níveis de rotina, metas por horizonte |
 | [09 Projetos](docs/09-analise-de-projetos.md) | Análise do ExplAIner e do Portfólio; estratégia de 3 projetos |
 | [10 Plano de 30 dias](docs/10-plano-30-dias.md) | 30/11 a 29/12/2026, semana a semana |
 | [11 Uso de IA](docs/11-uso-de-ia.md) | Política de uso de IA sem perder independência |
 | [12 Design system](docs/12-design-system.md) | Identidade, tokens, tipografia, componentes, acessibilidade |
+| [13 Evolução do JARVIS](docs/13-evolucao-jarvis.md) | Arquitetura, decisões e Fases 2–5 (IA, integrações) |
 | [Fontes](docs/fontes.md) | O que foi verificado, onde e quando |
 
 ## Dados e backup

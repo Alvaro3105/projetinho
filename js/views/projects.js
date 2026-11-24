@@ -13,7 +13,7 @@ export function renderProjects({ store }) {
   const projects = store.list('projects');
   const cols = PROJECT_STATUS.map((s) => ({ ...s, items: projects.filter((p) => p.status === s.value) }));
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Projetos', 'Poucos projetos excelentes. Cada um precisa de objetivo claro, decisões documentadas, testes e algo que prove o que você aprendeu.', [
+    pageHead('Laboratório de Projetos', 'Poucos projetos excelentes. Cada um precisa de objetivo claro, decisões documentadas, testes e algo que prove o que você aprendeu.', [
       btn('Registrar ideia', () => crud(store, 'projects', { titleNew: 'Nova ideia de projeto', defaults: { status: 'ideia', tech: [], tasks: [], improvements: [] } }), { iconName: 'spark' }),
       btn('Novo projeto', () => crud(store, 'projects', { titleNew: 'Novo projeto', defaults: { status: 'planejado', tech: [], tasks: [], improvements: [], startDate: today() } }), { kind: 'primary', iconName: 'plus' }),
     ]),

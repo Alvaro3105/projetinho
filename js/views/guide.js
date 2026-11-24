@@ -11,17 +11,20 @@ export const DOCS = [
   { id: '03-faculdade-puc-minas', title: 'Faculdade: 8 semestres na PUC Minas' },
   { id: '04-plano-de-aprendizagem', title: 'Plano de aprendizagem e recursos' },
   { id: '05-inteligencia-artificial', title: 'Trilha de Inteligência Artificial' },
-  { id: '06-roadmap-profissional', title: 'Roadmap profissional e Big Techs' },
+  { id: '06-roadmap-profissional', title: 'Trajetória profissional e Big Techs' },
   { id: '07-ingles-internacionalizacao', title: 'Inglês e internacionalização' },
   { id: '08-desenvolvimento-pessoal', title: 'Desenvolvimento pessoal e rotina' },
   { id: '09-analise-de-projetos', title: 'Análise dos seus projetos' },
   { id: '10-plano-30-dias', title: 'Plano de ação: primeiros 30 dias' },
   { id: '11-uso-de-ia', title: 'Política de uso de IA' },
-  { id: '12-design-system', title: 'Design system do CAREER OS' },
+  { id: '12-design-system', title: 'Design system do JARVIS' },
+  { id: '13-evolucao-jarvis', title: 'Evolução do JARVIS: arquitetura e fases' },
   { id: 'fontes', title: 'Fontes e datas de consulta' },
 ];
 
 let current = '00-visao-geral';
+/** Abre um documento específico na próxima renderização do Guia (usado pela busca global). */
+export function selectDoc(id) { if (DOCS.some((d) => d.id === id)) current = id; }
 const cache = new Map();
 
 export function renderGuide() {
@@ -55,14 +58,14 @@ export function renderGuide() {
   load();
 
   return h('div', { class: 'stack', style: { gap: '20px' } },
-    pageHead('Guia estratégico', 'O planejamento completo: diagnóstico, carreiras, faculdade, aprendizagem, IA, Big Techs, inglês, rotina e plano de 30 dias. Os mesmos textos estão na pasta docs/ do repositório.'),
+    pageHead('Guia Estratégico', 'O planejamento completo: diagnóstico, carreiras, faculdade, aprendizagem, IA, Big Techs, inglês, rotina e plano de 30 dias. Os mesmos textos estão na pasta docs/ do repositório.'),
     h('div', { class: 'grid guide-grid', style: { gridTemplateColumns: 'minmax(200px, 260px) minmax(0, 1fr)' } }, nav, host));
 }
 
 function careerAppendix() {
   return h('div', { class: 'stack', style: { marginTop: '28px' } },
     h('h2', {}, 'Referência rápida por cargo'),
-    h('p', { class: 'small muted' }, 'Mesmo conteúdo usado no Career Tracker. [oficial] = fonte oficial consultada; [mercado] = requisito frequente; [estimativa] = número de pesquisa salarial com fonte.'),
+    h('p', { class: 'small muted' }, 'Mesmo conteúdo usado em Oportunidades Profissionais. [oficial] = fonte oficial consultada; [mercado] = requisito frequente; [estimativa] = número de pesquisa salarial com fonte.'),
     CAREER_GROUPS.map((g) => h('div', { class: 'stack' },
       h('h3', {}, g.group),
       g.roles.map((r) => h('details', { class: 'acc' },

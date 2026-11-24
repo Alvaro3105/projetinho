@@ -24,12 +24,12 @@ const NEW_JAVA = { title: 'Java + Spring Boot em nível intermediário', period:
 const NEW_IC = { title: 'Candidatura a iniciação científica na PUC Minas', period: '2028/1 ou 2028/2', due: '2028-08-31', description: 'Prepare em Introdução à Pesquisa em Informática (2º). Candidate-se no 3º só se a carga de 708 h permitir; senão, no 4º.' };
 const NEW_MATHML = { phase: 4, title: 'Álgebra Linear I e II (fora da grade da PUC)', period: 'jan–fev/2029 + 2029/1', due: '2029-07-15', description: 'MIT 18.06 com exercícios: parte I nas férias, parte II com Estatística e Fundamentos de IA. Chegar ao 6º período (Ciência de Dados e IA) com a base de ML.' };
 const NEW_MILESTONES = {
-  matrix: { title: 'Confirmar a matriz curricular vinculada à matrícula de 2027', period: '2027/1', due: '2027-03-15', description: 'Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Roadmap › Semestres.' },
+  matrix: { title: 'Confirmar a matriz curricular vinculada à matrícula de 2027', period: '2027/1', due: '2027-03-15', description: 'Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Plano de Evolução › Semestres.' },
   p3: { title: '3º período (708 h) concluído sem sobrecarga', period: '2028/1', due: '2028-07-15', description: 'Aprovação em todas as disciplinas e Estruturas de Dados sólida. Estudo extra reduzido (fator 0,8), sem matemática complementar, projeto pessoal só em manutenção, TI de 216 h como projeto do semestre.' },
   discrete: { title: 'Matemática Discreta completa (fora da grade)', period: '2027/2 + jul/2028', due: '2028-08-15', description: 'Discreta I em 2027/2 e Discreta II nas férias de julho, antes de Algoritmos em Grafos.' },
 };
 const NEW_GOAL_P3 = { title: '2028/1 (3º período, 708 h): aprovação em todas as disciplinas sem sobrecarga', periodStart: '2028-02-01', due: '2028-07-15', metric: 'disciplinas aprovadas', target: 6 };
-const NEW_TASK_MATRIX = { title: 'Confirmar a matriz curricular da matrícula de 2027 (Roadmap › Semestres)', due: '2027-03-15' };
+const NEW_TASK_MATRIX = { title: 'Confirmar a matriz curricular da matrícula de 2027 (Plano de Evolução › Semestres)', due: '2027-03-15' };
 
 // Valores originais das versões anteriores. Um registro só é ajustado se TODOS os campos
 // que vamos mudar ainda forem iguais a uma dessas versões (ou seja, você não os editou).
@@ -50,6 +50,29 @@ const OLD = {
   ],
 };
 const unchanged = (rec, versions) => !!rec && versions.some((v) => Object.entries(v).every(([k, val]) => rec[k] === val));
+
+// ---------- Identidade JARVIS (24/11/2026): textos do plano que citavam nomes antigos ----------
+const JARVIS_PROJECT = {
+  name: 'JARVIS',
+  objective: 'Plataforma pessoal de inteligência e de desenvolvimento acadêmico, profissional e pessoal (antigo CAREER OS).',
+  description: 'SPA em JavaScript puro (módulos ES), sem dependências, com persistência local, Central de Backup, busca global e testes com node:test.',
+};
+const OLD_JARVIS_PROJECT = { name: 'CAREER OS', objective: 'Sistema pessoal de desenvolvimento acadêmico e de carreira.', description: 'SPA em JavaScript puro (módulos ES), sem dependências, com persistência local, backup JSON e testes com node:test.' };
+/** [texto antigo, texto novo]: só é trocado onde o valor continua EXATAMENTE igual ao original. */
+const RENAMED_TEXTS = [
+  ['Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Roadmap › Semestres.', 'Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Plano de Evolução › Semestres.'],
+  ['Confirmar a matriz curricular da matrícula de 2027 (Roadmap › Semestres)', 'Confirmar a matriz curricular da matrícula de 2027 (Plano de Evolução › Semestres)'],
+  ['Seguir a política de uso de IA do CAREER OS (Guia › Uso de IA).', 'Seguir a política de uso de IA do JARVIS (Guia Estratégico › Política de uso de IA).'],
+  ['Incluir o CAREER OS como projeto quando você conseguir explicá-lo inteiro.', 'Incluir o JARVIS como projeto quando você conseguir explicá-lo inteiro.'],
+  ['Listado no portfólio. Código ainda não analisado pelo CAREER OS.', 'Listado no portfólio. Código ainda não analisado pelo JARVIS.'],
+  ['Refazer do zero, sozinho, uma API real com FastAPI + PostgreSQL + Docker + testes + CI + deploy. Sugestão: API de registro de estudos que o próprio CAREER OS poderia sincronizar no futuro.', 'Refazer do zero, sozinho, uma API real com FastAPI + PostgreSQL + Docker + testes + CI + deploy. Sugestão: API de registro de estudos que o próprio JARVIS poderia sincronizar no futuro.'],
+  ['Todas as avaliações registradas e níveis atualizados no Skill Tracker.', 'Todas as avaliações registradas e níveis atualizados em Competências.'],
+  ['Registradas no Career Tracker.', 'Registradas em Oportunidades Profissionais.'],
+  ['Dezembro: 5 candidaturas registradas no Career Tracker', 'Dezembro: 5 candidaturas registradas em Oportunidades Profissionais'],
+  ['Exportar o primeiro backup do CAREER OS', 'Exportar o primeiro backup do JARVIS (Central de Backup)'],
+  ['Primeira revisão semanal no CAREER OS', 'Primeira revisão semanal no JARVIS'],
+  ['Comparar com a referência provisória (página oficial, 21/11/2026) e confirmar em Roadmap › Semestres.', 'Comparar a matriz consultada na página oficial em 21/11/2026 com a documentação da matrícula de 2027 e confirmar em Plano de Evolução › Semestres.'],
+];
 
 /**
  * Atualizações do plano para quem já usa o sistema. Regras:
@@ -93,6 +116,30 @@ export const PLAN_UPDATES = [
   },
 ];
 
+PLAN_UPDATES.push({
+  id: '2026-11-24-jarvis-identidade',
+  apply(store) {
+    const swap = new Map(RENAMED_TEXTS);
+    const fieldsByCollection = { skills: ['nextAction'], projects: ['description', 'objective'], milestones: ['description'], goals: ['title'], tasks: ['title'] };
+    for (const [collection, fields] of Object.entries(fieldsByCollection)) {
+      for (const it of store.list(collection)) {
+        const patch = {};
+        for (const f of fields) if (swap.has(it[f])) patch[f] = swap.get(it[f]);
+        if (Array.isArray(it.improvements) && it.improvements.some((x) => swap.has(x.text))) patch.improvements = it.improvements.map((x) => (swap.has(x.text) ? { ...x, text: swap.get(x.text) } : x));
+        if (Object.keys(patch).length) store.update(collection, it.id, patch);
+      }
+    }
+    const p = store.list('projects').find((x) => x.name === OLD_JARVIS_PROJECT.name && x.objective === OLD_JARVIS_PROJECT.objective);
+    if (p) store.update('projects', p.id, { name: JARVIS_PROJECT.name, objective: JARVIS_PROJECT.objective, ...(p.description === OLD_JARVIS_PROJECT.description ? { description: JARVIS_PROJECT.description } : {}) });
+  },
+});
+
+/** Há atualização de plano ou de grade por aplicar? (usado para criar o ponto de restauração antes) */
+export function upgradeIsPending(state) {
+  const done = new Set(state.meta.appliedUpdates || []);
+  return state.meta.curriculumVersion !== CURRICULUM_VERSION || state.meta.curriculumPlanRev !== CURRICULUM_PLAN_REV || PLAN_UPDATES.some((u) => !done.has(u.id));
+}
+
 export function applyPlanUpdates(store) {
   const done = new Set(store.state.meta.appliedUpdates || []);
   const applied = [];
@@ -103,6 +150,7 @@ export function applyPlanUpdates(store) {
     u.apply(store);
     applied.push(u.id);
   }
+  if (applied.length) store.saveMeta(); // grava o registro mesmo quando nada precisou mudar
   return applied;
 }
 
@@ -181,7 +229,7 @@ export function seed(state) {
     S('Machine Learning', 'ia', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31', next: 'Ciência de Dados e IA na PUC (6º período, 2029/2).' }),
     S('Deep Learning', 'ia', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31' }),
     S('LLMs, RAG e agentes', 'ia', 'declarado', 'em_desenvolvimento', 'baixa', { targetDate: '2029-12-31', next: 'Só depois de ML básico. Hoje: entender como o ExplAIner chama o Gemini.', evidence: [{ date: null, text: 'ExplAIner (equipe) gera questões com a API do Google Gemini, com validação e fallback.' }] }),
-    S('IA como ferramenta de produtividade', 'ia', 'dificuldade', 'intermediario', 'alta', { next: 'Seguir a política de uso de IA do CAREER OS (Guia › Uso de IA).' }),
+    S('IA como ferramenta de produtividade', 'ia', 'dificuldade', 'intermediario', 'alta', { next: 'Seguir a política de uso de IA do JARVIS (Guia Estratégico › Política de uso de IA).' }),
 
     S('Docker e deploy', 'cloud', 'sem_registro', 'em_desenvolvimento', 'media', { targetDate: '2027-12-31', evidence: [{ date: null, text: 'ExplAIner tem render.yaml e deploy citado no README (contribuição pessoal não verificada).' }] }),
     S('Cloud computing', 'cloud', 'sem_registro', 'em_desenvolvimento', 'baixa', { targetDate: '2029-06-30' }),
@@ -273,7 +321,7 @@ export function seed(state) {
     skillIds: sks('HTML e CSS', 'JavaScript', 'Comunicação técnica escrita'),
     improvements: [
       { id: uid('imp'), text: 'Reduzir a lista a 3 projetos fortes e explicar o problema, decisões e resultado de cada um.', done: false },
-      { id: uid('imp'), text: 'Incluir o CAREER OS como projeto quando você conseguir explicá-lo inteiro.', done: false },
+      { id: uid('imp'), text: 'Incluir o JARVIS como projeto quando você conseguir explicá-lo inteiro.', done: false },
     ],
   });
   const academic = [
@@ -283,11 +331,11 @@ export function seed(state) {
     ['CRUD de Veículos com PHP & PDO', 'Aplicação web PHP/PDO com consultas parametrizadas.', ['PHP', 'PDO', 'MySQL'], 'https://github.com/Alvaro3105/CRUD-em-PHP-PDO'],
     ['Prova de Python — MVC e Repository', 'Refatoração pós-prova de API Flask com testes de regressão.', ['Python', 'Flask', 'pytest'], 'https://github.com/Alvaro3105/Prova-de-python'],
     ['Prova de TPA — API de Pedidos', 'Revisão pós-prova de API Laravel com testes PHPUnit.', ['PHP', 'Laravel', 'PHPUnit'], 'https://github.com/Alvaro3105/Prova-final-de-TPA-2etapa'],
-  ].map(([name, objective, tech, repoUrl]) => P({ name, status: 'concluido', objective, tech, repoUrl, team: 'Projeto acadêmico (COTEMIG)', description: 'Listado no portfólio. Código ainda não analisado pelo CAREER OS.' }));
+  ].map(([name, objective, tech, repoUrl]) => P({ name, status: 'concluido', objective, tech, repoUrl, team: 'Projeto acadêmico (COTEMIG)', description: 'Listado no portfólio. Código ainda não analisado pelo JARVIS.' }));
   const careeros = P({
-    name: 'CAREER OS', status: 'em_andamento',
-    objective: 'Sistema pessoal de desenvolvimento acadêmico e de carreira.',
-    description: 'SPA em JavaScript puro (módulos ES), sem dependências, com persistência local, backup JSON e testes com node:test.',
+    name: JARVIS_PROJECT.name, status: 'em_andamento',
+    objective: JARVIS_PROJECT.objective,
+    description: JARVIS_PROJECT.description,
     tech: ['JavaScript', 'HTML', 'CSS', 'node:test'], team: 'Individual (gerado com apoio de IA)',
     skillIds: sks('JavaScript', 'Arquitetura de software'),
     improvements: [
@@ -296,7 +344,7 @@ export function seed(state) {
     ],
   });
   const ideas = [
-    ['Projeto #1 — API backend de portfólio (Fase 2)', 'Refazer do zero, sozinho, uma API real com FastAPI + PostgreSQL + Docker + testes + CI + deploy. Sugestão: API de registro de estudos que o próprio CAREER OS poderia sincronizar no futuro.', ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'pytest', 'GitHub Actions']],
+    ['Projeto #1 — API backend de portfólio (Fase 2)', 'Refazer do zero, sozinho, uma API real com FastAPI + PostgreSQL + Docker + testes + CI + deploy. Sugestão: API de registro de estudos que o próprio JARVIS poderia sincronizar no futuro.', ['Python', 'FastAPI', 'PostgreSQL', 'Docker', 'pytest', 'GitHub Actions']],
     ['Projeto #2 — Sistema com fila, cache e observabilidade (Fase 3)', 'Evoluir o Projeto #1 ou criar um sistema com processamento assíncrono (fila), cache Redis, métricas e testes de carga.', ['Java ou Python', 'Redis', 'RabbitMQ', 'OpenTelemetry']],
     ['Projeto #3 — IA aplicada com avaliação (Fase 4)', 'Sistema de RAG ou agente com conjunto de avaliação próprio, métricas de qualidade, custo e latência, e relatório honesto de limitações.', ['Python', 'PyTorch', 'Embeddings', 'Avaliação de LLM']],
   ].map(([name, objective, tech]) => P({ name, status: 'ideia', objective, tech, description: 'Sugestão do plano. Três projetos excelentes valem mais que dez superficiais.' }));
@@ -338,14 +386,14 @@ export function seed(state) {
   // ---------- Roadmap: marcos com dependências ----------
   const M = (key, phase, type, title, period, due, description, skillNames = [], deps = []) => ({ key, id: uid('mil'), phase, type, title, period, due, description, status: 'planejado', skillIds: sks(...skillNames), deps });
   const ms = [
-    M('diag', 1, 'tecnico', 'Concluir as 10 avaliações diagnósticas', 'dez/2026', '2026-12-13', 'Todas as avaliações registradas e níveis atualizados no Skill Tracker.'),
+    M('diag', 1, 'tecnico', 'Concluir as 10 avaliações diagnósticas', 'dez/2026', '2026-12-13', 'Todas as avaliações registradas e níveis atualizados em Competências.'),
     M('eng0', 1, 'ingles', 'Medir o inglês (EF SET) e fixar rotina diária de 20 min', 'dez/2026', '2026-12-07', 'CEFR registrado; 20 min/dia em pelo menos 5 dias por semana.'),
     M('cotemig', 1, 'academico', 'Concluir o Ensino Médio Técnico em TI (COTEMIG)', 'dez/2026', '2026-12-31', 'Formatura.'),
     M('cs50a', 1, 'tecnico', 'CS50x semanas 0–5 com problem sets próprios', 'jan/2027', '2027-01-31', 'Problem sets submetidos e aceitos, sem IA.', ['Linguagem C', 'Lógica de programação'], ['diag']),
     M('logic60', 1, 'tecnico', '60 problemas de lógica aceitos sem IA', 'fev/2027', '2027-02-10', 'Contagem no beecrowd.', ['Lógica de programação', 'Python'], ['diag']),
     M('math0', 1, 'academico', 'Revisão de matemática para Cálculo I', 'fev/2027', '2027-02-10', '80%+ nos desafios de Álgebra e Funções.', ['Matemática básica e álgebra', 'Funções'], ['diag']),
     M('explainer', 1, 'projeto', 'ExplAIner: explicar 100% do que você assina + README em inglês + ADRs', 'jan/2027', '2027-01-31', 'Passar na Avaliação 5 em nível Intermediário.', ['Depuração e leitura de código', 'Arquitetura de software'], ['diag']),
-    M('cv', 1, 'profissional', 'Currículo e LinkedIn revisados + 10 candidaturas (Jovem Aprendiz/estágio)', 'jan/2027', '2027-01-31', 'Registradas no Career Tracker.'),
+    M('cv', 1, 'profissional', 'Currículo e LinkedIn revisados + 10 candidaturas (Jovem Aprendiz/estágio)', 'jan/2027', '2027-01-31', 'Registradas em Oportunidades Profissionais.'),
     M('p1', 2, 'academico', '1º período da PUC Minas concluído com Introdução a Algoritmos sólida', '2027/1', '2027-07-15', 'Aprovação + conseguir resolver as listas sem IA.', ['Lógica de programação'], ['logic60', 'cs50a']),
     M('cs50b', 2, 'tecnico', 'CS50x completo com projeto final', '2027/1', '2027-06-30', 'Certificado gratuito do CS50.', [], ['cs50a']),
     M('job1', 2, 'profissional', 'Primeira experiência profissional em TI (meta, não garantia)', '2027', '2027-12-31', 'Jovem Aprendiz, estágio ou equivalente.', [], ['cv']),
@@ -397,7 +445,7 @@ export function seed(state) {
     G('Dezembro: CS50x semanas 0 a 3 com problem sets', 'mes', 'tecnico', '2026-11-30', '2026-12-29', 'semanas concluídas', 4, ['Linguagem C']),
     G('Dezembro: 4 revisões semanais e 1 revisão mensal', 'mes', 'pessoal', '2026-11-30', '2026-12-31', 'revisões', 5, ['Gestão de tempo e organização']),
     G('Dezembro: 20 dias com inglês (20 min)', 'mes', 'ingles', '2026-11-30', '2026-12-29', 'dias', 20, ['Inglês — listening']),
-    G('Dezembro: 5 candidaturas registradas no Career Tracker', 'mes', 'profissional', '2026-11-30', '2026-12-29', 'candidaturas', 5),
+    G('Dezembro: 5 candidaturas registradas em Oportunidades Profissionais', 'mes', 'profissional', '2026-11-30', '2026-12-29', 'candidaturas', 5),
     G('Fase 1: 60 problemas aceitos sem IA', 'trimestre', 'tecnico', '2026-11-30', '2027-02-10', 'problemas aceitos', 60, ['Lógica de programação']),
     G('2027: primeira experiência profissional em TI', 'ano', 'profissional', '2027-01-01', '2027-12-31', 'experiências', 1),
     G('2027/1: média de 70%+ do tempo técnico sem IA gerar código', 'semestre', 'tecnico', '2027-02-15', '2027-07-15', '% do tempo sem IA', 70, ['Desenvolvimento independente (sem IA gerando código)']),
@@ -408,14 +456,14 @@ export function seed(state) {
   const T = (title, due, area, priority, skillName = null) => ({ id: uid('tas'), title, status: 'a_fazer', due, area, priority, skillId: skillName ? sk(skillName) : null, projectId: null, notes: '', createdAt: now, updatedAt: now });
   c.tasks.push(
     T('Ler o Guia › Plano de 30 dias e ajustar a disponibilidade em Configurações', '2026-11-30', 'pessoal', 'alta'),
-    T('Exportar o primeiro backup do CAREER OS', '2026-11-30', 'pessoal', 'media'),
+    T('Exportar o primeiro backup do JARVIS (Central de Backup)', '2026-11-30', 'pessoal', 'media'),
     T('Avaliação 8: EF SET + gravação + texto', '2026-11-30', 'ingles', 'alta', 'Inglês — listening'),
     T('Avaliação 1: 10 problemas beecrowd sem IA', '2026-12-01', 'tecnico', 'alta', 'Lógica de programação'),
     T('Avaliação 7: desafios Khan Academy (Álgebra e Funções)', '2026-12-02', 'academico', 'alta', 'Matemática básica e álgebra'),
     T('Avaliação 3: SQL e modelagem', '2026-12-03', 'tecnico', 'alta', 'SQL'),
     T('Avaliação 6: Git na prática', '2026-12-04', 'tecnico', 'media', 'Git e GitHub'),
     T('CS50x: assistir Lecture 0 e fazer o Problem Set 0 (Scratch)', '2026-12-05', 'tecnico', 'media', 'Lógica de programação'),
-    T('Primeira revisão semanal no CAREER OS', '2026-12-06', 'pessoal', 'alta'),
+    T('Primeira revisão semanal no JARVIS', '2026-12-06', 'pessoal', 'alta'),
     T(NEW_TASK_MATRIX.title, NEW_TASK_MATRIX.due, 'academico', 'media'),
   );
 

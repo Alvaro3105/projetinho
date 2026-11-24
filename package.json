@@ -1,8 +1,8 @@
 {
-  "name": "career-os",
+  "name": "jarvis",
   "version": "1.0.0",
   "private": true,
-  "description": "CAREER OS — Personal Academic & Career Development System. By Álvaro Pires.",
+  "description": "JARVIS — Seu Assistente Inteligente Pessoal. Desenvolvido por Álvaro Pires.",
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 8000",

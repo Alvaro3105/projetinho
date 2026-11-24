@@ -2,6 +2,13 @@
 
 Mudanças importantes do JARVIS (antigo CAREER OS). Datas em DD/MM/AAAA.
 
+## 24/11/2026 — Painel Inicial revisado com a skill design-autoral
+
+- Régua das 6 fases da trajetória na saudação, com a posição atual (substitui a linha decorativa).
+- "Hoje" e "Precisa da sua atenção" no topo; indicadores em uma faixa única com divisórias;
+  blocos de consulta sem sombra, para dar hierarquia; rótulo de marca repetido removido.
+- Correção: a classe da régua colidia com a linha do tempo do Plano de Evolução (renomeada).
+
 ## 24/11/2026 — JARVIS, Fase 1: identidade e consolidação
 
 - **Novo nome:** CAREER OS → JARVIS — Seu Assistente Inteligente Pessoal. Desenvolvido por Álvaro Pires, 2026.

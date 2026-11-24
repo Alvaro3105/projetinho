@@ -5,15 +5,13 @@ import {
   goalsInWindow, goalProgress, insights, TECH_CATEGORIES, PERSONAL_CATEGORIES, isBlocked, allSessions, minutesByWeek,
   consistency, aiIndependence, upcoming, todayAgenda, currentSemester,
 } from '../core/metrics.js';
-import { BRAND } from '../core/brand.js';
 import { CURRICULUM_SOURCE } from '../data/curriculum.js';
-import { optionLabel, TASK_STATUS, PROJECT_STATUS, PRIORITY, AREAS } from '../core/schema.js';
+import { optionLabel, PROJECT_STATUS, PRIORITY, AREAS, PHASES } from '../core/schema.js';
 import { card, stat, progressBar, pct, badge, optBadge, empty, btn, levelView } from '../ui/components.js';
 import { barChart, fmtHours, fmtNum } from '../ui/charts.js';
 import { crud } from '../ui/form.js';
 import { icon } from '../ui/icons.js';
 
-const TRACE = `<svg viewBox="0 0 220 92" fill="none" aria-hidden="true"><path d="M6 80 C 40 78, 52 60, 78 58 S 118 40, 140 36 S 184 18, 208 10" stroke="currentColor" stroke-width="2" stroke-dasharray="3 6" stroke-linecap="round"/><circle cx="78" cy="58" r="4" fill="currentColor"/><circle cx="140" cy="36" r="4" fill="currentColor" opacity=".6"/><circle cx="208" cy="10" r="5" fill="#38BDF8"/></svg>`;
 
 export function renderDashboard({ store, navigate }) {
   const st = store.state;
@@ -37,17 +35,24 @@ export function renderDashboard({ store, navigate }) {
     return `Nenhum período marcado como "cursando". Marque o período atual em Plano de Evolução › Semestres.`;
   }
 
+  // Gesto principal da tela: a régua das 6 fases da trajetória, com a posição atual.
+  const rail = h('ol', { class: 'journey-rail', 'aria-label': 'Fases da trajetória' },
+    PHASES.map((p) => {
+      const state = p.value < phase.value ? 'past' : p.value === phase.value ? 'now' : '';
+      return h('li', { class: `journey-seg ${state}`, 'aria-current': state === 'now' ? 'step' : null },
+        h('span', { class: 'journey-num' }, `Fase ${p.value}`),
+        h('span', { class: 'journey-name' }, p.label.split(' — ')[1] || ''),
+        h('span', { class: 'journey-when' }, p.period));
+    }));
+
   const hero = h('section', { class: 'hero', 'aria-labelledby': 'page-title' },
-    h('div', {},
-      h('p', { class: 'eyebrow' }, BRAND.name),
+    h('div', { style: { minWidth: 0 } },
       h('h1', { id: 'page-title', tabindex: '-1' }, `${greeting()}, ${(st.profile.name || 'Álvaro').split(' ')[0]}.`),
       h('p', { class: 'lede' }, st.profile.mission || ''),
       h('div', { class: 'row phase-chip' },
-        badge(phase.label, 'info'),
-        badge(phase.period, 'plain'),
         startDays > 0 ? badge(`Retomada estruturada em ${startDays} dia(s) — ${fmtDate(st.profile.startDate)}`, 'accent') : badge(`Dia ${-startDays + 1} desde a retomada`, 'accent')),
-      h('p', { class: 'small muted', style: { marginTop: '10px' } }, h('strong', {}, 'Situação acadêmica: '), academicSituation())),
-    h('div', { class: 'hero-trace', html: TRACE }));
+      h('p', { class: 'small muted', style: { marginTop: '10px' } }, h('strong', {}, 'Situação acadêmica: '), academicSituation()),
+      rail));
 
   // Indicadores — cada um diz de onde vem
   const academicNote = acad.current ? `Cursando o ${acad.current.number}º período` : `${acad.done} de ${acad.total} semestres concluídos · graduação começa em 2027`;
@@ -55,17 +60,17 @@ export function renderDashboard({ store, navigate }) {
     const cons = consistency(allSessions(st), 28, now);
     const indep = aiIndependence(c.studyLogs, 30, now);
     const personal = habits.ratio !== null ? `Hábitos (4 semanas): ${pct(habits.ratio)}` : 'Hábitos: ainda sem marcações';
-    return card({ cls: 'elevated' },
+    return h('div', { class: 'metric' },
       stat('Consistência', cons.ratio === null ? 'Não avaliado' : `${cons.activeDays}/28 dias`, cons.ratio === null ? 'Sem sessões registradas ainda' : `Dias com estudo nas últimas 4 semanas${indep.ratio !== null ? ` · ${pct(indep.ratio)} sem IA` : ''}`, { na: cons.ratio === null }),
       progressBar(cons.ratio, 'Consistência'),
       h('p', { class: 'small muted', style: { marginTop: '8px' } }, `Evolução pessoal · ${personal}`));
   }
-  const indicators = h('div', { class: 'grid cols-4' },
-    card({ cls: 'elevated' }, stat('Evolução acadêmica', `${acad.done}/${acad.total}`, academicNote), progressBar(acad.ratio, 'Evolução acadêmica')),
-    card({ cls: 'elevated' },
+  const indicators = h('section', { class: 'card metric-strip', 'aria-label': 'Indicadores de evolução' },
+    h('div', { class: 'metric' }, stat('Evolução acadêmica', `${acad.done}/${acad.total}`, academicNote), progressBar(acad.ratio, 'Evolução acadêmica')),
+    h('div', { class: 'metric' },
       stat('Evolução técnica', pct(tech.ratio), tech.ratio === null ? `0 de ${tech.total} competências técnicas avaliadas` : `Média nível atual/desejado em ${tech.assessed} de ${tech.total} avaliadas`, { na: tech.ratio === null }),
       progressBar(tech.ratio, 'Evolução técnica')),
-    card({ cls: 'elevated' },
+    h('div', { class: 'metric' },
       stat('Evolução profissional', prof.ratio === null ? 'Não avaliado' : `${prof.done}/${prof.total}`, 'Marcos profissionais do Plano de Evolução concluídos', { na: prof.ratio === null }),
       progressBar(prof.ratio, 'Evolução profissional')),
     consistencyCard());
@@ -104,7 +109,7 @@ export function renderDashboard({ store, navigate }) {
 
   // Projetos em andamento
   const activeProjects = c.projects.filter((p) => p.status === 'em_andamento');
-  const projectsCard = card({ title: 'Projetos em andamento', iconName: 'folder', actions: btn('Ver todos', () => navigate('projetos'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
+  const projectsCard = card({ title: 'Projetos em andamento', cls: 'flat', iconName: 'folder', actions: btn('Ver todos', () => navigate('projetos'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
     activeProjects.length ? h('div', { class: 'list' }, activeProjects.map((p) => {
       const open = (p.improvements || []).filter((i) => !i.done).length + (p.tasks || []).filter((t) => !t.done).length;
       return h('div', { class: 'list-item' },
@@ -114,14 +119,14 @@ export function renderDashboard({ store, navigate }) {
 
   // Próximos marcos
   const nextMilestones = c.milestones.filter((m) => m.status !== 'concluido').sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999')).slice(0, 5);
-  const milestonesCard = card({ title: 'Próximos marcos', iconName: 'roadmap', actions: btn('Plano de Evolução', () => navigate('roadmap'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
+  const milestonesCard = card({ title: 'Próximos marcos', cls: 'flat', iconName: 'roadmap', actions: btn('Plano de Evolução', () => navigate('roadmap'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
     h('div', { class: 'list' }, nextMilestones.map((m) => h('div', { class: 'list-item' },
       h('div', { class: 'grow' }, h('div', { class: 'title' }, m.title), h('div', { class: 'sub' }, `${m.period || ''}${m.due ? ` · ${fmtDate(m.due)}` : ''}`)),
       isBlocked(m, c.milestones) ? badge('Depende de outro marco', 'plain') : badge('Liberado', 'info')))));
 
   // Competências prioritárias
   const priority = [...below.filter((s) => s.priority === 'alta'), ...unassessed.filter((s) => s.priority === 'alta')].slice(0, 8);
-  const skillsCard = card({ title: 'Competências prioritárias', iconName: 'target', meta: `${unassessed.length} não avaliadas`, actions: btn('Competências', () => navigate('competencias'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
+  const skillsCard = card({ title: 'Competências prioritárias', cls: 'flat', iconName: 'target', meta: `${unassessed.length} não avaliadas`, actions: btn('Competências', () => navigate('competencias'), { size: 'sm', kind: 'ghost', iconName: 'arrow' }) },
     h('div', { class: 'list' }, priority.map((s) => h('div', { class: 'list-item' },
       h('div', { class: 'grow' }, h('div', { class: 'title' }, s.name), h('div', { class: 'sub' }, s.nextAction || '')),
       levelView(s.level, s.target, { compact: true })))));
@@ -134,7 +139,7 @@ export function renderDashboard({ store, navigate }) {
       : empty('Nenhuma sessão registrada.', 'As horas aparecem aqui assim que você registrar a primeira sessão. Horas medem esforço; resultados aparecem em Competências.'));
 
   // Objetivos principais
-  const objectives = card({ title: 'Objetivos principais', iconName: 'spark' },
+  const objectives = card({ title: 'Objetivos de longo prazo', cls: 'flat' },
     h('ul', { class: 'stack', style: { paddingLeft: '1.1em', gap: '6px' } }, (st.profile.objectives || []).map((o) => h('li', {}, o))));
 
   // Precisa da sua atenção (regras sobre os seus dados, não opinião)
@@ -142,13 +147,14 @@ export function renderDashboard({ store, navigate }) {
   const toneLabel = { bad: 'Urgente', warn: 'Atenção', info: 'Sugestão' };
   const attention = signals.length ? card({ title: 'Precisa da sua atenção', iconName: 'alert', sub: 'Gerado a partir dos seus registros.' },
     h('div', { class: 'list' }, signals.map((sg) => h('div', { class: 'list-item' },
-      badge(toneLabel[sg.tone] || 'Sugestão', sg.tone === 'info' ? 'info' : sg.tone),
-      h('div', { class: 'grow' }, h('div', { class: 'title', style: { fontWeight: 500 } }, sg.text)),
-      btn('Abrir', () => navigate(sg.route), { size: 'sm', kind: 'ghost', iconName: 'arrow' }))))) : null;
+      h('div', { class: 'grow stack', style: { gap: '4px' } },
+        h('div', {}, badge(toneLabel[sg.tone] || 'Sugestão', sg.tone === 'info' ? 'info' : sg.tone)),
+        h('div', { class: 'title', style: { fontWeight: 500 } }, sg.text)),
+      btn('', () => navigate(sg.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${sg.text}` }))))) : null;
 
   // Hoje: atividades vencendo/atrasadas e hábitos ainda não marcados
   const agenda = todayAgenda(st, now);
-  const todayCard = card({ title: `Hoje · ${fmtDate(now)}`, iconName: 'clock' },
+  const todayCard = card({ title: `Hoje · ${fmtDate(now)}`, iconName: 'clock', cls: 'elevated today-card' },
     agenda.tasks.length || agenda.habits.length ? h('div', { class: 'list' },
       agenda.tasks.map((t) => h('div', { class: 'list-item' },
         h('button', { type: 'button', class: 'check', 'aria-pressed': 'false', 'aria-label': `Concluir: ${t.title}`, onclick: () => store.update('tasks', t.id, { status: 'feito', doneAt: now }) }, icon('check')),
@@ -172,9 +178,11 @@ export function renderDashboard({ store, navigate }) {
 
   return h('div', { class: 'stack', style: { gap: '24px' } },
     hero,
-    attention,
+    h('div', { class: 'grid dash-grid' },
+      h('div', { class: 'stack', style: { gap: '16px' } }, todayCard, upcomingCard, goalsCard),
+      h('div', { class: 'stack', style: { gap: '16px' } }, attention, milestonesCard)),
     indicators,
     h('div', { class: 'grid dash-grid' },
-      h('div', { class: 'stack', style: { gap: '16px' } }, todayCard, goalsCard, upcomingCard, hoursCard, tasksCard),
-      h('div', { class: 'stack', style: { gap: '16px' } }, objectives, milestonesCard, skillsCard, projectsCard)));
+      h('div', { class: 'stack', style: { gap: '16px' } }, hoursCard, tasksCard),
+      h('div', { class: 'stack', style: { gap: '16px' } }, skillsCard, projectsCard, objectives)));
 }

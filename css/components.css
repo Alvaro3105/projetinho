@@ -38,8 +38,43 @@
 .hero h1 { font-size: var(--fs-2xl); font-weight: 700; letter-spacing: -0.02em; }
 .hero .lede { color: var(--text-2); margin-top: var(--sp-2); max-width: 64ch; }
 .hero .phase-chip { margin-top: var(--sp-4); }
-.hero-trace { width: 220px; height: 92px; color: var(--primary); opacity: 0.9; }
-@media (max-width: 700px) { .hero { grid-template-columns: 1fr; } .hero-trace { display: none; } }
+@media (max-width: 700px) { .hero { grid-template-columns: 1fr; } }
+
+/* Régua das 6 fases (gesto principal do Painel Inicial) */
+.journey-rail { list-style: none; margin: var(--sp-5) 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.journey-rail li + li { margin-top: 0; }
+.journey-seg { display: flex; flex-direction: column; gap: 2px; padding-top: 8px; border-top: 3px solid var(--border-strong); color: var(--text-3); min-width: 0; }
+.journey-seg.past { border-top-color: var(--primary); color: var(--text-2); }
+.journey-seg.now { border-top-color: var(--accent); color: var(--text); }
+.journey-num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; }
+.journey-seg.now .journey-num::after { content: " · você está aqui"; color: var(--accent); font-family: var(--font-sans); font-weight: 600; }
+.journey-name { font-size: var(--fs-sm); font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+.journey-when { font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .journey-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 12px; }
+}
+@media (max-width: 480px) {
+  .journey-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .journey-seg.now .journey-num::after { content: " · agora"; }
+}
+
+/* Faixa única de indicadores, separados por divisórias (não quatro cartões iguais) */
+.metric-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0; }
+.metric { padding: var(--sp-5); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.metric + .metric { border-left: 1px solid var(--border); }
+@media (max-width: 1100px) {
+  .metric-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric:nth-child(3) { border-left: 0; }
+  .metric:nth-child(n+3) { border-top: 1px solid var(--border); }
+}
+@media (max-width: 600px) {
+  .metric-strip { grid-template-columns: minmax(0, 1fr); }
+  .metric + .metric { border-left: 0; border-top: 1px solid var(--border); }
+}
+
+/* Hierarquia: "Hoje" é o objeto principal; blocos de consulta ficam planos */
+.today-card { border-color: var(--border-strong); }
+.today-card .card-head h2 { font-size: var(--fs-xl); }
 
 /* ---------- Indicadores ---------- */
 .stat { display: flex; flex-direction: column; gap: 6px; }

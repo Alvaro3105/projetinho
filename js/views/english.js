@@ -1,7 +1,7 @@
 import { h } from '../core/dom.js';
 import { fmtDate, today, addDays } from '../core/dates.js';
 import { CEFR, ENGLISH_SKILLS, VOCAB_STATUS, VOCAB_CONTEXT, optionLabel } from '../core/schema.js';
-import { card, badge, optBadge, btn, pageHead, tabs, empty, stat, chips, levelView } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, empty, stat, chips, levelView, statStrip } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -38,11 +38,22 @@ function overview({ store }) {
   const days = new Set(recent.map((l) => l.date)).size;
   const bySkill = ENGLISH_SKILLS.map((s) => ({ label: s.label.split(' ')[0], value: Math.round(recent.filter((l) => l.skill === s.value).reduce((a, l) => a + Number(l.minutes), 0)) }));
   const skills = store.list('skills').filter((s) => s.category === 'ingles');
+  // Escada CEFR: o degrau medido (só se houver avaliação) e a meta de médio prazo (C1, ver Metas de proficiência).
+  const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const measured = last && LEVELS.includes(last.cefr) ? LEVELS.indexOf(last.cefr) : -1;
+  const ladder = card({ title: 'Escada CEFR', cls: 'hud', meta: measured >= 0 ? `Medido: ${LEVELS[measured]} · ${fmtDate(last.date)}` : 'Nível ainda não medido' },
+    h('ol', { class: 'cefr', 'aria-label': measured >= 0 ? `Nível medido ${LEVELS[measured]}; meta C1` : 'Nível não medido; meta C1' },
+      LEVELS.map((lv, i) => h('li', { class: i === measured ? 'now' : i < measured ? 'past' : lv === 'C1' ? 'goal' : '', style: `--i:${i}` },
+        h('div', { class: 'step', 'aria-hidden': 'true' }),
+        h('b', {}, lv),
+        h('span', {}, i === measured ? 'medido' : lv === 'C1' ? 'meta 2029' : '')))),
+    measured < 0 ? h('p', { class: 'small muted', style: { marginTop: '12px' } }, 'Faça o EF SET (Avaliação 8) e registre em Avaliações: o degrau medido acende aqui.') : null);
   return h('div', { class: 'stack' },
-    h('div', { class: 'grid cols-3' },
-      card({}, stat('Nível geral (CEFR)', last && last.cefr !== 'nao_informado' ? last.cefr : 'Não avaliado', last ? `${last.instrument} · ${fmtDate(last.date)}` : 'Faça o EF SET (Avaliação 8)', { na: !last || last.cefr === 'nao_informado' })),
-      card({}, stat('Dias com prática (28 dias)', String(days), `${fmtHours(recent.reduce((a, l) => a + Number(l.minutes), 0))} no período`)),
-      card({}, stat('Vocabulário dominado', String(store.list('vocab').filter((v) => v.status === 'dominado').length), `${store.list('vocab').length} termos registrados`))),
+    ladder,
+    statStrip(
+      stat('Nível geral (CEFR)', last && last.cefr !== 'nao_informado' ? last.cefr : 'Não avaliado', last ? `${last.instrument} · ${fmtDate(last.date)}` : 'Faça o EF SET (Avaliação 8)', { na: !last || last.cefr === 'nao_informado' }),
+      stat('Dias com prática (28 dias)', String(days), `${fmtHours(recent.reduce((a, l) => a + Number(l.minutes), 0))} no período`),
+      stat('Vocabulário dominado', String(store.list('vocab').filter((v) => v.status === 'dominado').length), `${store.list('vocab').length} termos registrados`)),
     h('div', { class: 'grid cols-2' },
       card({ title: 'Habilidades em Competências', iconName: 'target' }, h('div', { class: 'list' }, skills.map((s) => h('div', { class: 'list-item' }, h('div', { class: 'grow' }, h('div', { class: 'title' }, s.name)), levelView(s.level, s.target))))),
       card({ title: 'Minutos por habilidade (28 dias)', iconName: 'chart' }, recent.length ? barChart(bySkill, { label: 'Minutos de prática por habilidade', format: (v) => String(Math.round(v)), height: 170, highlightLast: false }) : empty('Sem prática registrada.'))),

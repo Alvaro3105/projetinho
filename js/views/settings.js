@@ -3,7 +3,7 @@ import { today, fmtDate } from '../core/dates.js';
 import { PHASES } from '../core/schema.js';
 import { routinePlan, currentPhase, WORK_SCENARIOS, VACATION_DEFAULTS, scenarioOf, currentSemester, semesterHours, AVERAGE_SEMESTER_HOURS } from '../core/metrics.js';
 import { daysSinceExport } from '../core/store.js';
-import { card, btn, pageHead, notice, chips, stat, tabs } from '../ui/components.js';
+import { card, btn, pageHead, notice, chips, stat, tabs, statStrip } from '../ui/components.js';
 import { typedConfirm, snapshotNow } from './backup.js';
 import { toast } from '../ui/toast.js';
 
@@ -94,10 +94,10 @@ function data({ store, navigate }) {
   return h('div', { class: 'stack' },
     notice(h('span', {}, h('strong', {}, 'Onde ficam seus dados: '), 'somente neste navegador, neste dispositivo. Não há servidor nem sincronização. Limpar os dados do navegador, usar janela anônima ou trocar de computador apaga ou esconde tudo. Faça backup semanal na Central de Backup e guarde o arquivo em um lugar seu.'), 'warn'),
     !store.persistent ? notice('O navegador não está conseguindo salvar (armazenamento bloqueado ou espaço cheio). As alterações desta sessão serão perdidas ao fechar a página. Exporte um backup antes de sair.', 'bad') : null,
-    h('div', { class: 'grid cols-3' },
-      card({}, stat('Registros', String(counts), 'em todas as coleções')),
-      card({}, stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDate(store.state.meta.lastExportAt.slice(0, 10)) : 'Exporte agora', { na: days === null })),
-      card({}, stat('Configuração inicial', store.state.meta.seedVersion ? fmtDate(store.state.meta.seedVersion) : '—', 'versão dos dados iniciais'))),
+    statStrip(
+      stat('Registros', String(counts), 'em todas as coleções'),
+      stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDate(store.state.meta.lastExportAt.slice(0, 10)) : 'Exporte agora', { na: days === null }),
+      stat('Configuração inicial', store.state.meta.seedVersion ? fmtDate(store.state.meta.seedVersion) : '—', 'versão dos dados iniciais')),
     card({ title: 'Backup e restauração', iconName: 'lock', sub: 'Exportação (JSON com selo de integridade e CSV), importação com prévia, pontos de restauração automáticos, histórico e verificação de integridade ficam na Central de Backup.' },
       btn('Abrir a Central de Backup', () => navigate('backup'), { kind: 'primary', iconName: 'arrow' })),
     card({ title: 'Zona de risco', iconName: 'alert', sub: 'Operações irreversíveis sem backup. Antes de qualquer uma delas, o JARVIS cria um ponto de restauração automático (quando o navegador permite).' },
@@ -117,6 +117,17 @@ function data({ store, navigate }) {
 }
 
 function appearance({ store }) {
-  return card({ title: 'Tema', sub: 'O escuro é o padrão do JARVIS. O claro preserva a barra lateral azul-marinho.' },
-    chips([['dark', 'Escuro'], ['light', 'Claro'], ['system', 'Seguir o sistema']], store.state.settings.theme, (k) => store.setSettings({ theme: k }), 'Tema'));
+  const st = store.state.settings;
+  const row = (title, text, control) => h('div', { class: 'list-item' },
+    h('div', { class: 'grow' }, h('div', { class: 'title' }, title), h('div', { class: 'sub' }, text)), control);
+  return card({ title: 'Aparência', sub: 'Preferências desta interface. Ficam salvas junto com os seus dados (e entram no backup).' },
+    h('div', { class: 'list' },
+      row('Tema', 'Escuro é o padrão. "Gelo" é o tema claro.',
+        chips([['dark', 'Escuro'], ['light', 'Gelo (claro)'], ['system', 'Seguir o sistema']], st.theme || 'dark', (k) => store.setSettings({ theme: k }), 'Tema')),
+      row('Modo do Painel Inicial', 'Assistente: núcleo, busca e ações rápidas. Produtividade: todos os indicadores e blocos.',
+        chips([['assistente', 'Assistente'], ['produtividade', 'Produtividade']], st.uiMode === 'produtividade' ? 'produtividade' : 'assistente', (k) => store.setSettings({ uiMode: k }), 'Modo do Painel')),
+      row('Menu lateral', 'Recolhido mostra só os ícones, com o nome ao passar o mouse.',
+        chips([['aberto', 'Expandido'], ['recolhido', 'Recolhido']], st.sidebarCollapsed ? 'recolhido' : 'aberto', (k) => store.setSettings({ sidebarCollapsed: k === 'recolhido' }), 'Menu lateral')),
+      row('Animações', 'Reduzir desliga a abertura, a rotação do núcleo e as transições. O JARVIS também respeita a preferência do sistema.',
+        chips([['system', 'Seguir o sistema'], ['reduced', 'Reduzir']], st.motion === 'reduced' ? 'reduced' : 'system', (k) => store.setSettings({ motion: k }), 'Animações'))));
 }

@@ -2,7 +2,7 @@ import { h, extLink } from '../core/dom.js';
 import { fmtDate, today } from '../core/dates.js';
 import { SKILL_CATEGORIES, LEVELS, LEVEL_DESCRIPTIONS, PRIORITY, CONTACT, ASSESSMENT_STATUS, optionLabel, levelScore } from '../core/schema.js';
 import { skillGaps, isBlocked } from '../core/metrics.js';
-import { card, badge, optBadge, btn, pageHead, tabs, chips, empty, levelView, refNames, kv, notice, stat } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, chips, empty, levelView, refNames, kv, notice, stat, statStrip } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { openModal, closeModal, confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -37,10 +37,10 @@ function skillList({ store, rerender }) {
     rangeBars(assessed.slice(0, 14).map((s) => ({ label: s.name, value: levelScore(s.level), target: levelScore(s.target), max: 4 })), { label: 'Nível atual e desejado', format: (v) => String(v) }),
     h('div', { class: 'legend', style: { marginTop: '8px' } }, h('span', {}, h('i', { style: { background: 'var(--primary)' } }), 'atual (0–4)'), h('span', {}, h('i', { style: { background: 'var(--accent)', width: '2px' } }), 'desejado'))) : null;
   return h('div', { class: 'stack' },
-    h('div', { class: 'grid cols-3' },
-      card({}, stat('Competências', String(all.length), `${assessed.length} avaliadas`)),
-      card({}, stat('Abaixo do desejado', String(below.length), 'Entre as avaliadas')),
-      card({}, stat('Não avaliadas', String(unassessed.length), 'Faça as avaliações diagnósticas'))),
+    statStrip(
+      stat('Competências', String(all.length), `${assessed.length} avaliadas`),
+      stat('Abaixo do desejado', String(below.length), 'Entre as avaliadas'),
+      stat('Não avaliadas', String(unassessed.length), 'Faça as avaliações diagnósticas')),
     unassessed.length === all.length ? notice('Todas as competências estão como "Não avaliado". Isso é intencional: contato com uma tecnologia não define nível. Comece pelas avaliações diagnósticas.', 'info', btn('Ver avaliações', () => { tab = 'avaliacoes'; rerender(); }, { size: 'sm' })) : null,
     chart,
     h('div', { class: 'row between' },

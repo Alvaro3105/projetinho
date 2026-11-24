@@ -47,6 +47,13 @@ export function stat(label, value, note, { na = false } = {}) {
     note ? h('span', { class: 'stat-note' }, note) : null);
 }
 
+/** Faixa de indicadores: uma superfície com divisórias finas, em vez de N cartões iguais. */
+export function statStrip(...items) {
+  const list = items.flat().filter(Boolean);
+  return h('section', { class: 'metric-strip', style: `--n:${Math.min(list.length, 4)}`, 'aria-label': 'Indicadores' },
+    list.map((el) => (el.classList?.contains('metric') ? el : h('div', { class: 'metric' }, el))));
+}
+
 export function card({ title, iconName, meta, actions, sub, cls = '' } = {}, ...body) {
   return h('section', { class: `card ${cls}` },
     title ? h('div', { class: 'card-head' },
@@ -94,9 +101,12 @@ export function tabs(items, active, onChange, label = 'Seções') {
     }, text)));
 }
 
+// Id estável para o foco voltar ao mesmo chip depois do redesenho da tela.
+function slug(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
 export function chips(items, active, onChange, label) {
   return h('div', { class: 'filters', role: 'group', 'aria-label': label },
-    items.map(([key, text]) => h('button', { type: 'button', class: 'chip', 'aria-pressed': key === active ? 'true' : 'false', onclick: () => onChange(key) }, text)));
+    items.map(([key, text]) => h('button', { type: 'button', class: 'chip', id: label ? `chip-${slug(label)}-${slug(String(key))}` : null, 'aria-pressed': key === active ? 'true' : 'false', onclick: () => onChange(key) }, text)));
 }
 
 export function kv(pairs) {

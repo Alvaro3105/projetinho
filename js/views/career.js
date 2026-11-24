@@ -2,7 +2,7 @@ import { h, extLink } from '../core/dom.js';
 import { fmtDate, today } from '../core/dates.js';
 import { APP_STATUS, APP_TYPES, APP_FUNNEL, EXPERIENCE_TYPES, PRIORITY, optionLabel } from '../core/schema.js';
 import { applicationGaps, applicationFunnel } from '../core/metrics.js';
-import { card, badge, optBadge, btn, pageHead, tabs, empty, refNames, kv, stat, notice, chips } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, empty, refNames, kv, stat, notice, chips, statStrip } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { openModal, closeModal, confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -37,7 +37,7 @@ function applications({ store, rerender }) {
   for (const a of apps) for (const s of applicationGaps(a, skills)) gapCount.set(s.id, (gapCount.get(s.id) || 0) + 1);
   const topGaps = [...gapCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id, n]) => ({ skill: store.get('skills', id), n }));
   return h('div', { class: 'stack' },
-    h('div', { class: 'grid cols-4' }, APP_FUNNEL.slice(0, 4).map((s) => card({}, stat(optionLabel(APP_STATUS, s), String(funnel[s]), 'chegaram a esta etapa')))),
+    statStrip(APP_FUNNEL.slice(0, 4).map((s) => stat(optionLabel(APP_STATUS, s), String(funnel[s]), 'chegaram a esta etapa'))),
     topGaps.length ? card({ title: 'Lacunas que mais aparecem nas vagas', iconName: 'target', sub: 'Competências exigidas que estão abaixo do desejado ou não avaliadas.' },
       h('div', { class: 'list' }, topGaps.map(({ skill, n }) => h('div', { class: 'list-item' },
         h('div', { class: 'grow' }, h('div', { class: 'title' }, skill.name), h('div', { class: 'sub' }, `Exigida em ${n} vaga(s) · ${skill.level === 'nao_avaliado' ? 'não avaliada' : 'abaixo do desejado'}`)),

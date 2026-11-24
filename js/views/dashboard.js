@@ -11,9 +11,109 @@ import { card, stat, progressBar, pct, badge, optBadge, empty, btn, levelView } 
 import { barChart, fmtHours, fmtNum } from '../ui/charts.js';
 import { crud } from '../ui/form.js';
 import { icon } from '../ui/icons.js';
+import { coreView, coreLegend } from '../ui/core.js';
+import { BRAND, brandMark } from '../core/brand.js';
 
 
-export function renderDashboard({ store, navigate }) {
+const MODULE_HINTS = {
+  roadmap: 'Fases, marcos e semestres', estudos: 'Sessões, materiais e trilhas', competencias: 'Níveis e diagnósticos',
+  projetos: 'Portfólio e melhorias', carreira: 'Candidaturas e empresas', ingles: 'Nível e prática', pessoal: 'Metas e hábitos',
+  oportunidades: 'Bolsas, eventos, pesquisa', revisoes: 'Semanal e mensal', relatorios: 'Horas e evolução', guia: 'Estratégia e fontes',
+  backup: 'Exportar e restaurar', configuracoes: 'Rotina, perfil, aparência',
+};
+
+/** Ações rápidas compartilhadas pelos dois modos. */
+function quickActions(store, navigate, now) {
+  return [
+    { label: 'Registrar sessão', icon: 'clock', run: () => crud(store, 'studyLogs', { titleNew: 'Registrar sessão de estudo', defaults: { date: now, minutes: 50, kind: 'pratica', aiUse: 'nenhuma' } }) },
+    { label: 'Nova meta', icon: 'flag', run: () => crud(store, 'goals', { titleNew: 'Nova meta', defaults: { horizon: 'semana', status: 'ativa', area: 'tecnico', periodStart: now, due: addDays(now, 6) } }) },
+    { label: 'Nova atividade', icon: 'check', run: () => crud(store, 'tasks', { titleNew: 'Nova atividade', defaults: { status: 'a_fazer', due: now } }) },
+    { label: 'Nova candidatura', icon: 'briefcase', run: () => crud(store, 'applications', { titleNew: 'Nova candidatura', defaults: { status: 'interesse', type: 'estagio', appliedAt: now, stageHistory: [], events: [] } }) },
+    { label: 'Revisão semanal', icon: 'cycle', run: () => navigate('revisoes') },
+    { label: 'Fazer backup', icon: 'lock', run: () => navigate('backup') },
+  ];
+}
+
+export function renderDashboard(ctx) {
+  return ctx.store.state.settings.uiMode === 'produtividade' ? renderProductivity(ctx) : renderAssistant(ctx);
+}
+
+/** Modo Assistente: núcleo com dados reais, campo de comando (busca), ações rápidas e prioridades. */
+function renderAssistant({ store, navigate, modules = [], openSearch }) {
+  const st = store.state;
+  const c = st.collections;
+  const now = today();
+  const name = (st.profile.name || 'Álvaro').split(' ')[0];
+  const { el: core, measures, phase } = coreView(st, {
+    now,
+    center: [
+      h('span', { class: 'cc-mark', html: brandMark({ size: 44, id: 'jvcore' }), style: { display: 'block' } }),
+      h('div', { class: 'cc-name' }, BRAND.name),
+      h('div', { class: 'cc-sub' }, fmtDate(now)),
+    ],
+  });
+  const phaseName = phase.label.split(' — ')[1] || phase.label;
+
+  const command = h('button', { type: 'button', class: 'command', onclick: () => openSearch?.(), 'aria-describedby': 'cmd-note' },
+    icon('search'), h('span', { class: 'grow' }, 'Buscar metas, competências, projetos, disciplinas…'), h('kbd', { class: 'hide-sm' }, 'Ctrl K'));
+
+  const assist = h('section', { class: 'card elevated hud assist', 'aria-labelledby': 'page-title' },
+    core,
+    h('div', { class: 'assist-main' },
+      h('div', { class: 'stack', style: { gap: '8px' } },
+        h('span', { class: 'eyebrow' }, `Fase ${phase.value} · ${phaseName} · ${phase.period}`),
+        h('h1', { id: 'page-title', tabindex: '-1' }, `${greeting()}, ${name}.`),
+        st.profile.mission ? h('p', { class: 'muted', style: { maxWidth: '60ch' } }, st.profile.mission) : null),
+      h('div', { class: 'stack', style: { gap: '6px' } },
+        command,
+        h('p', { id: 'cmd-note', class: 'small faint' }, 'Busca em tudo o que você registrou. O assistente com IA ainda não está conectado; quando estiver, este campo será o ponto de conversa.')),
+      h('div', { class: 'quick', role: 'group', 'aria-label': 'Ações rápidas' },
+        quickActions(store, navigate, now).map((a) => h('button', { type: 'button', class: 'quick-btn', onclick: a.run }, icon(a.icon), h('span', {}, a.label)))),
+      h('div', { class: 'stack', style: { gap: '10px', paddingTop: '4px', borderTop: '1px solid var(--border)' } },
+        h('span', { class: 'hud-label', style: { paddingTop: '12px' } }, 'Anéis do núcleo · de fora para dentro'),
+        coreLegend(measures))));
+
+  // Prioridades: o que vence hoje/atrasou + sinais de atenção, em uma só lista ordenada por urgência.
+  const agenda = todayAgenda(st, now);
+  const signals = insights(st, now).filter((s) => s.tone !== 'info').slice(0, 4);
+  const rows = [
+    ...agenda.tasks.map((t) => h('div', { class: 'list-item' },
+      h('button', { type: 'button', class: 'check', 'aria-pressed': 'false', 'aria-label': `Concluir: ${t.title}`, onclick: () => store.update('tasks', t.id, { status: 'feito', doneAt: now }) }, icon('check')),
+      h('div', { class: 'grow' }, h('div', { class: 'title' }, t.title), h('div', { class: 'sub' }, t.due < now ? `Atrasada desde ${fmtDate(t.due)}` : 'Vence hoje')),
+      t.due < now ? badge('Atrasada', 'bad') : badge('Hoje', 'warn'))),
+    ...agenda.habits.slice(0, 3).map((hb) => h('div', { class: 'list-item' },
+      h('button', { type: 'button', class: 'check', 'aria-pressed': 'false', 'aria-label': `Marcar hábito de hoje: ${hb.name}`, onclick: () => store.update('habits', hb.id, { checks: [...(hb.checks || []), now] }) }, icon('check')),
+      h('div', { class: 'grow' }, h('div', { class: 'title' }, hb.name), h('div', { class: 'sub' }, 'Hábito · ainda não marcado hoje')),
+      badge('Hábito', 'plain'))),
+    ...signals.map((sg) => h('div', { class: 'list-item' },
+      h('div', { class: 'grow' }, h('div', { class: 'title', style: { fontWeight: 400 } }, sg.text)),
+      h('div', { class: 'side' }, badge(sg.tone === 'bad' ? 'Urgente' : 'Atenção', sg.tone),
+        btn('', () => navigate(sg.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${sg.text}` })))),
+  ];
+  const priorities = card({ title: `Prioridades de hoje`, meta: fmtDate(now), cls: 'today-card' },
+    rows.length ? h('div', { class: 'list' }, rows) : empty('Nada vencendo hoje.', 'Use o tempo da rotina para o item mais importante das metas da semana.'));
+
+  const next = upcoming(st, now, 14).slice(0, 6);
+  const upcomingCard = card({ title: 'Próximas entregas', meta: '14 dias', cls: 'flat' },
+    next.length ? h('div', { class: 'list' }, next.map((u) => h('div', { class: 'list-item' },
+      h('span', { class: 'tag', style: { minWidth: '52px', justifyContent: 'center' } }, fmtDate(u.date, { year: false })),
+      h('div', { class: 'grow' }, h('div', { class: 'title' }, u.title), h('div', { class: 'sub' }, u.kind)),
+      btn('', () => navigate(u.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${u.title}` })))) : empty('Nenhuma entrega com prazo nos próximos 14 dias.'));
+
+  const access = h('section', { 'aria-labelledby': 'acesso-modulos', class: 'stack', style: { gap: '12px' } },
+    h('div', { class: 'row between' }, h('h2', { id: 'acesso-modulos' }, 'Módulos'), h('span', { class: 'hud-label' }, `${modules.length - 1} áreas`)),
+    h('nav', { class: 'module-grid', 'aria-label': 'Acesso rápido aos módulos' },
+      modules.filter((m) => m.id !== 'painel').map((m) => h('a', { class: 'module-link', href: `#${m.id}` }, icon(m.icon), h('b', {}, m.label), h('span', {}, MODULE_HINTS[m.id] || '')))));
+
+  return h('div', { class: 'stack', style: { gap: '24px' } },
+    assist,
+    h('div', { class: 'grid dash-grid' }, priorities, upcomingCard),
+    access,
+    h('p', { class: 'small faint' }, 'Modo Assistente. Para ver todos os indicadores, metas, horas e competências, troque para Produtividade no topo da tela.'));
+}
+
+/** Modo Produtividade: o painel detalhado. */
+function renderProductivity({ store, navigate }) {
   const st = store.state;
   const c = st.collections;
   const now = today();

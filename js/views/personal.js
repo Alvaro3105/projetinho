@@ -2,7 +2,7 @@ import { h, extLink } from '../core/dom.js';
 import { fmtDate, today, weekStart, addDays } from '../core/dates.js';
 import { AREAS, HORIZONS, GOAL_STATUS, READING_STATUS, optionLabel } from '../core/schema.js';
 import { habitWeek, goalProgress, goalsSummary } from '../core/metrics.js';
-import { card, badge, optBadge, btn, pageHead, tabs, empty, progressBar, chips, stat, pct } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, empty, progressBar, chips, stat, pct, statStrip } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -72,11 +72,11 @@ function goals({ store, rerender }) {
   const sum = goalsSummary(all, now);
   const list = all.filter((g) => horizon === 'all' || g.horizon === horizon).sort((a, b) => (a.due || '').localeCompare(b.due || ''));
   return h('div', { class: 'stack' },
-    h('div', { class: 'grid cols-4' },
-      card({}, stat('Ativas', String(sum.active))),
-      card({}, stat('Cumpridas', String(sum.done))),
-      card({}, stat('Atrasadas', String(sum.late.length), 'Ativas com prazo vencido')),
-      card({}, stat('Taxa de cumprimento', pct(sum.hitRate), 'Entre metas encerradas', { na: sum.hitRate === null }))),
+    statStrip(
+      stat('Ativas', String(sum.active)),
+      stat('Cumpridas', String(sum.done)),
+      stat('Atrasadas', String(sum.late.length), 'Ativas com prazo vencido'),
+      stat('Taxa de cumprimento', pct(sum.hitRate), 'Entre metas encerradas', { na: sum.hitRate === null })),
     chips([['all', 'Todos os horizontes'], ...HORIZONS.map((x) => [x.value, x.label])], horizon, (k) => { horizon = k; rerender(); }, 'Filtrar por horizonte'),
     list.length ? h('div', { class: 'list card' }, list.map((g) => {
       const p = goalProgress(g);

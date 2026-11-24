@@ -2,7 +2,7 @@ import { h, extLink } from '../core/dom.js';
 import { today, fmtDate } from '../core/dates.js';
 import { STUDY_STATUS, STUDY_TYPES, LOG_KINDS, AI_USE, optionLabel } from '../core/schema.js';
 import { aiIndependence } from '../core/metrics.js';
-import { card, badge, optBadge, btn, pageHead, tabs, chips, empty, refNames, stat, pct, tagList } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, chips, empty, refNames, stat, pct, tagList, statStrip } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -61,10 +61,10 @@ function sessions({ store }) {
   const total = logs.reduce((a, l) => a + Number(l.minutes || 0), 0);
   const indep = aiIndependence(store.list('studyLogs'), 30);
   return h('div', { class: 'stack' },
-    h('div', { class: 'grid cols-3' },
-      card({}, stat('Tempo total registrado', total ? fmtHours(total) : '0h', `${logs.length} sessões`)),
-      card({}, stat('Sem IA (30 dias)', pct(indep.ratio), indep.total ? `${fmtHours(indep.noAI)} de ${fmtHours(indep.total)}` : 'Registre sessões com o campo de uso de IA', { na: indep.ratio === null })),
-      card({}, stat('IA gerou código (30 dias)', indep.total ? pct(indep.generatedRatio) : 'Não avaliado', 'Quanto menor, mais independente', { na: !indep.total }))),
+    statStrip(
+      stat('Tempo total registrado', total ? fmtHours(total) : '0h', `${logs.length} sessões`),
+      stat('Sem IA (30 dias)', pct(indep.ratio), indep.total ? `${fmtHours(indep.noAI)} de ${fmtHours(indep.total)}` : 'Registre sessões com o campo de uso de IA', { na: indep.ratio === null }),
+      stat('IA gerou código (30 dias)', indep.total ? pct(indep.generatedRatio) : 'Não avaliado', 'Quanto menor, mais independente', { na: !indep.total })),
     logs.length ? h('div', { class: 'table-wrap' }, h('table', {},
       h('thead', {}, h('tr', {}, ['Data', 'Min', 'Tipo', 'Uso de IA', 'Material / projeto', 'O que aprendi', ''].map((t, i) => h('th', { class: i === 1 ? 'num' : null, scope: 'col' }, t)))),
       h('tbody', {}, logs.map((l) => h('tr', {},

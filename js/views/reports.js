@@ -5,7 +5,7 @@ import {
   allSessions, minutesByMonth, minutesByWeek, consistency, dailyMinutes, aiIndependence, goalsSummary,
   applicationFunnel, insights, skillProgress, TECH_CATEGORIES,
 } from '../core/metrics.js';
-import { card, stat, pct, btn, pageHead, chips, empty, notice, badge } from '../ui/components.js';
+import { card, stat, pct, btn, pageHead, chips, empty, notice, badge, statStrip } from '../ui/components.js';
 import { barChart, heatmap, fmtHours, fmtNum } from '../ui/charts.js';
 import { BRAND, brandMark } from '../core/brand.js';
 
@@ -64,11 +64,11 @@ export function renderReports({ store, navigate, rerender }) {
     pageHead('Relatórios', 'O que está funcionando e o que precisa mudar. Horas medem esforço; resultados aparecem em competências, projetos e metas.'),
     header,
     noData ? notice('Ainda não há dados suficientes. Os relatórios se preenchem com sessões de estudo, avaliações, metas fechadas e projetos. Nada aqui é estimado.', 'info', btn('Registrar primeira sessão', () => navigate('estudos'), { size: 'sm' })) : null,
-    h('div', { class: 'grid cols-4' },
-      card({}, stat('Horas no período', fmtHours(minutes), `${inP.length} sessões · ${activeDays} dias ativos`)),
-      card({}, stat('Consistência (28 dias)', pct(cons28.ratio), cons28.ratio === null ? 'Sem sessões' : `${cons28.activeDays} de 28 dias com estudo`, { na: cons28.ratio === null })),
-      card({}, stat('Tempo técnico sem IA', pct(indep.ratio), 'Últimos 30 dias', { na: indep.ratio === null })),
-      card({}, stat('Progresso técnico', pct(tech.ratio), `${tech.assessed}/${tech.total} competências avaliadas`, { na: tech.ratio === null }))),
+    statStrip(
+      stat('Horas no período', fmtHours(minutes), `${inP.length} sessões · ${activeDays} dias ativos`),
+      stat('Consistência (28 dias)', pct(cons28.ratio), cons28.ratio === null ? 'Sem sessões' : `${cons28.activeDays} de 28 dias com estudo`, { na: cons28.ratio === null }),
+      stat('Tempo técnico sem IA', pct(indep.ratio), 'Últimos 30 dias', { na: indep.ratio === null }),
+      stat('Progresso técnico', pct(tech.ratio), `${tech.assessed}/${tech.total} competências avaliadas`, { na: tech.ratio === null })),
     h('div', { class: 'grid cols-2' },
       card({ title: 'Evolução mensal (horas)', iconName: 'chart' }, months.some((m) => m.minutes) ? barChart(months.map((m) => ({ label: fmtMonthShort(m.key), value: Math.round(m.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por mês', height: 170 }) : empty('Sem horas registradas nos últimos 6 meses.')),
       card({ title: 'Últimas 12 semanas (horas)', iconName: 'chart' }, weeks.some((w) => w.minutes) ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por semana', height: 170 }) : empty('Sem horas registradas nas últimas 12 semanas.'))),

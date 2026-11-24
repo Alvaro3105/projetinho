@@ -5,6 +5,8 @@ Desenvolvido por Álvaro Pires · 2026 (antigo CAREER OS).
 
 Plataforma pessoal de organização e desenvolvimento acadêmico, técnico, profissional e pessoal, para acompanhar a graduação em Engenharia de Software (PUC Minas, Coração Eucarístico, noturno, 2027–2030), a entrada no mercado de tecnologia e a evolução até oportunidades de nível internacional.
 
+**Interface:** dois modos no Painel Inicial. *Assistente* mostra o núcleo (anéis com dados reais: consistência, metas da semana, diagnóstico), busca e ações rápidas. *Produtividade* mostra o painel detalhado. Design system em [docs/12-design-system.md](docs/12-design-system.md).
+
 Não é um cronograma estático: é um sistema com **diagnóstico**, **plano**, **execução** e **avaliação**, que começa com tudo "Não avaliado" e só mostra progresso quando há evidência registrada. A evolução por fases (assistente de IA, integrações) está em [docs/13-evolucao-jarvis.md](docs/13-evolucao-jarvis.md); as mudanças, em [CHANGELOG.md](CHANGELOG.md).
 
 ## Começar
@@ -34,7 +36,7 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | Relatórios | Evolução mensal/semestral, consistência, independência de IA, metas, aprendizagem, oportunidades, pontos de melhoria |
 | Guia Estratégico | Os documentos de `docs/` renderizados no app |
 | Central de Backup | JSON com selo SHA-256, CSV por tipo de dado, importação com prévia, pontos de restauração automáticos, histórico, verificação de integridade |
-| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h), ajuste pela carga do semestre, perfil, tema |
+| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h), ajuste pela carga do semestre, perfil, aparência (tema, modo do Painel, menu lateral, animações) |
 
 **Busca global:** `Ctrl+K` ou `/`. **Atalhos:** `?`.
 
@@ -82,7 +84,7 @@ SPA em JavaScript puro com módulos ES, sem dependências nem build. Escolhida p
 ```
 index.html            shell, CSP, fontes
 css/                  tokens (tema), base, layout, componentes
-js/app.js             roteamento por hash, sidebar, tema, re-renderização
+js/app.js             roteamento por hash, sidebar recolhível, cabeçalho (modo, notificações, perfil), tema, re-renderização
 js/core/              estado e persistência (store), esquema e validação (schema),
                       indicadores (metrics), datas, DOM seguro, markdown seguro, dados iniciais (seed)
 js/data/              conhecimento: grade da PUC, carreiras, recursos
@@ -97,7 +99,7 @@ Decisões principais:
 - **Esquema único** (`js/core/schema.js`) define campos, rótulos e validação; os formulários são gerados a partir dele.
 - **Métricas puras** (`js/core/metrics.js`) retornam `null` quando não há dado, e a interface mostra "Não avaliado".
 - **Segurança:** conteúdo do usuário nunca vai para `innerHTML` (DOM construído com `textContent`); links digitados só aceitam `http(s)`; CSP restritiva; o Markdown do Guia é renderizado sem HTML.
-- **Acessibilidade:** navegação por teclado, foco visível, modais com foco preso, estados com texto (não só cor), gráficos com descrição textual, `prefers-reduced-motion`, temas escuro (padrão), claro e do sistema.
+- **Acessibilidade:** navegação por teclado, foco visível, modais com foco preso, estados com texto (não só cor), gráficos com descrição textual, `prefers-reduced-motion` e opção "Reduzir animações", temas escuro (padrão), Gelo (claro) e do sistema.
 
 ## Testes
 

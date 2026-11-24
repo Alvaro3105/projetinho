@@ -8,7 +8,7 @@ import {
   COLLECTION_LABELS, countsOf,
 } from '../core/backup.js';
 import { BRAND } from '../core/brand.js';
-import { card, btn, pageHead, notice, stat, tabs, badge, empty } from '../ui/components.js';
+import { card, btn, pageHead, notice, stat, tabs, badge, empty, statStrip } from '../ui/components.js';
 import { openModal, closeModal, confirmDialog } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
 
@@ -90,11 +90,11 @@ export function renderBackup(ctx) {
     pageHead('Central de Backup', `Seus dados ficam somente neste navegador. Aqui você exporta, restaura e verifica tudo o que registrou no ${BRAND.name}.`),
     days === null || days > 7 ? notice(days === null ? 'Você ainda não fez nenhum backup. Exporte agora e guarde o arquivo em um lugar seu (Google Drive, pendrive, repositório privado).' : `Seu último backup foi há ${days} dias. O recomendado é um por semana.`, 'warn') : null,
     !store.persistent ? notice('O navegador não está conseguindo salvar (armazenamento bloqueado ou espaço cheio). Exporte um backup agora: as alterações desta sessão serão perdidas ao fechar a página.', 'bad') : null,
-    h('div', { class: 'grid cols-4' },
-      card({}, stat('Registros', String(total), `${COLLECTIONS.length} tipos de dados`)),
-      card({}, stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDateTime(store.state.meta.lastExportAt) : 'Exporte agora', { na: days === null })),
-      card({}, stat('Backups registrados', String((store.state.meta.backupHistory || []).length), 'Histórico das exportações')),
-      card({}, stat('Pontos de restauração', snapshots ? 'Ativos' : 'Indisponível', snapshots ? 'Automáticos, neste navegador' : 'Este navegador não oferece IndexedDB', { na: !snapshots }))),
+    statStrip(
+      stat('Registros', String(total), `${COLLECTIONS.length} tipos de dados`),
+      stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDateTime(store.state.meta.lastExportAt) : 'Exporte agora', { na: days === null }),
+      stat('Backups registrados', String((store.state.meta.backupHistory || []).length), 'Histórico das exportações'),
+      stat('Pontos de restauração', snapshots ? 'Ativos' : 'Indisponível', snapshots ? 'Automáticos, neste navegador' : 'Este navegador não oferece IndexedDB', { na: !snapshots })),
     tabs([['exportar', 'Exportar'], ['importar', 'Importar e restaurar'], ['pontos', 'Pontos de restauração'], ['historico', 'Histórico'], ['integridade', 'Verificar integridade']], tab, (k) => { tab = k; rerender(); }),
     tab === 'exportar' ? exportTab(ctx) : tab === 'importar' ? importTab(ctx) : tab === 'pontos' ? snapshotsTab(ctx) : tab === 'historico' ? historyTab(ctx) : integrityTab(ctx));
 }
@@ -144,7 +144,7 @@ function showExport({ text, filename, downloaded, hash, onCopy }) {
       h('p', { class: 'small muted' }, downloaded
         ? `Confira se o arquivo ${filename} apareceu nos seus downloads. Alguns ambientes bloqueiam downloads sem avisar (por exemplo, a visualização dentro do claude.ai): nesse caso, copie o conteúdo abaixo e salve como ${filename.endsWith('.csv') ? '.csv' : '.json'}.`
         : `O download foi bloqueado neste ambiente. Copie o conteúdo abaixo e salve como ${filename}.`),
-      hash ? h('p', { class: 'small' }, 'Selo de integridade (SHA-256): ', h('code', {}, `${hash.slice(0, 16)}…`)) : h('p', { class: 'small faint' }, 'Sem selo de integridade: este navegador não oferece criptografia nesta página (abra por https ou localhost).'),
+      hash ? seal('ok', 'Selo de integridade (SHA-256) incluído', h('code', {}, `${hash.slice(0, 24)}…`), SEAL_PATH.ok) : h('p', { class: 'small faint' }, 'Sem selo de integridade: este navegador não oferece criptografia nesta página (abra por https ou localhost).'),
       h('div', { class: 'field' }, h('label', { for: 'bk-json' }, 'Conteúdo'), area)),
     footer: [btn('Fechar', () => closeModal(), { kind: 'ghost' }), btn('Copiar', async () => {
       try { await navigator.clipboard.writeText(text); toast('Conteúdo copiado.'); } catch { area.focus(); area.select(); toast('Texto selecionado: use Ctrl+C para copiar.'); }
@@ -181,14 +181,22 @@ function importTab({ store }) {
       out));
 }
 
+/** Selo visual da verificação: anel + ícone + texto (o estado nunca depende só da cor). */
+function seal(tone, title, detail, path) {
+  return h('div', { class: `seal ${tone}`, role: 'status' },
+    h('span', { html: `<svg class="seal-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle class="s-out" cx="32" cy="32" r="30"/><circle class="s-in" cx="32" cy="32" r="22"/><path d="${path}"/></svg>`, style: { display: 'contents' } }),
+    h('div', { style: { minWidth: 0 } }, h('div', { class: 'seal-title' }, title), detail ? h('div', { class: 'small muted' }, detail) : null));
+}
+const SEAL_PATH = { ok: 'M23 32.5l6 6 12-13', bad: 'M25 25l14 14M39 25L25 39', warn: 'M32 22v13M32 41v.5' };
+
 function previewCard(store, v) {
   const cur = countsOf(store.state);
-  const hashBadge = { ok: badge('Selo de integridade confere', 'ok'), divergente: badge('Selo de integridade NÃO confere', 'bad'), ausente: badge('Sem selo de integridade', 'warn'), indisponivel: badge('Selo não verificado neste navegador', 'warn') }[v.hashStatus];
   return h('div', { class: 'stack' },
     v.errors.map((e) => notice(e, 'bad')),
     v.warnings.map((w) => notice(w, 'warn')),
     v.state ? h('div', { class: 'stack' },
-      h('div', { class: 'row' }, hashBadge, v.exportedAt ? badge(`Exportado em ${fmtDateTime(v.exportedAt)}`, 'plain') : null, v.app ? badge(`Origem: ${v.app}`, 'plain') : null),
+      { ok: seal('ok', 'Selo de integridade confere', 'O arquivo não foi alterado desde a exportação (SHA-256).', SEAL_PATH.ok), divergente: seal('bad', 'Selo de integridade NÃO confere', 'O conteúdo mudou depois da exportação ou o arquivo está corrompido.', SEAL_PATH.bad), ausente: seal('warn', 'Sem selo de integridade', 'Arquivo antigo ou editado à mão: confira a prévia antes de importar.', SEAL_PATH.warn), indisponivel: seal('warn', 'Selo não verificado neste navegador', 'A criptografia não está disponível nesta página (abra por https ou localhost).', SEAL_PATH.warn) }[v.hashStatus],
+      h('div', { class: 'row' }, v.exportedAt ? badge(`Exportado em ${fmtDateTime(v.exportedAt)}`, 'plain') : null, v.app ? badge(`Origem: ${v.app}`, 'plain') : null),
       h('div', { class: 'table-wrap' }, h('table', {},
         h('thead', {}, h('tr', {}, h('th', { scope: 'col' }, 'Tipo de dado'), h('th', { scope: 'col', class: 'num' }, 'No arquivo'), h('th', { scope: 'col', class: 'num' }, 'Atual'))),
         h('tbody', {}, COLLECTIONS.filter((c) => v.counts[c] || cur[c]).map((c) => h('tr', {}, h('td', {}, COLLECTION_LABELS[c]), h('td', { class: 'num' }, String(v.counts[c])), h('td', { class: 'num' }, String(cur[c]))))))),

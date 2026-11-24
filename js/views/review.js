@@ -10,13 +10,20 @@ import { toast } from '../ui/toast.js';
 import { fmtHours } from '../ui/charts.js';
 
 let tab = 'semanal';
-const CYCLE = ['Planejar', 'Estudar', 'Praticar', 'Desenvolver', 'Avaliar', 'Ajustar'];
+const CYCLE = [
+  { name: 'Planejar', hint: 'Metas da semana' },
+  { name: 'Estudar', hint: 'Sessões registradas' },
+  { name: 'Praticar', hint: 'Sem IA gerando código' },
+  { name: 'Desenvolver', hint: 'Projetos e entregas' },
+  { name: 'Avaliar', hint: 'Esta revisão' },
+  { name: 'Ajustar', hint: 'Até 3 prioridades' },
+];
 
 export function renderReview(ctx) {
   const { rerender } = ctx;
   return h('div', { class: 'stack', style: { gap: '20px' } },
     pageHead('Revisões', 'O sistema só funciona vivo: revisão semanal (15–20 min, domingo) e mensal (40 min, último dia do mês).'),
-    h('div', { class: 'row', 'aria-label': 'Ciclo de acompanhamento' }, CYCLE.flatMap((step, i) => [badge(step, i === 4 || i === 5 ? 'accent' : 'info', { class: `badge ${i === 4 || i === 5 ? 'accent' : 'info'} plain` }), i < CYCLE.length - 1 ? h('span', { class: 'faint', 'aria-hidden': 'true' }, '→') : null])),
+    h('ol', { class: 'cycle card flat', style: `--n:${CYCLE.length}`, 'aria-label': 'Ciclo de acompanhamento' }, CYCLE.map((step) => h('li', {}, h('b', {}, step.name), h('span', {}, step.hint)))),
     tabs([['semanal', 'Revisão semanal'], ['mensal', 'Revisão mensal'], ['historico', 'Histórico']], tab, (k) => { tab = k; rerender(); }),
     tab === 'semanal' ? weekly(ctx) : tab === 'mensal' ? monthly(ctx) : history(ctx));
 }

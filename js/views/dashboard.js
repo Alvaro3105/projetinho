@@ -86,8 +86,10 @@ export function renderDashboard({ store, navigate }) {
     })) : empty('Nenhuma meta semanal ativa.', 'Defina 2–4 metas verificáveis para esta semana.'));
 
   // Atividades pendentes
-  const pending = c.tasks.filter((t) => t.status !== 'feito').sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999')).slice(0, 7);
-  const tasksCard = card({ title: 'Atividades abertas', iconName: 'check', meta: `${c.tasks.filter((t) => t.status !== 'feito').length} abertas`, actions: btn('Nova', () => crud(store, 'tasks', { titleNew: 'Nova atividade', defaults: { status: 'a_fazer', due: now } }), { size: 'sm', iconName: 'plus' }) },
+  // Atividades sem prazo nos próximos 14 dias (as outras já aparecem em "Hoje" e "Próximas entregas").
+  const horizon = addDays(now, 14);
+  const pending = c.tasks.filter((t) => t.status !== 'feito' && (!t.due || t.due > horizon)).sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999')).slice(0, 7);
+  const tasksCard = card({ title: 'Outras atividades abertas', iconName: 'check', meta: `${c.tasks.filter((t) => t.status !== 'feito').length} abertas no total`, actions: btn('Nova', () => crud(store, 'tasks', { titleNew: 'Nova atividade', defaults: { status: 'a_fazer', due: now } }), { size: 'sm', iconName: 'plus' }) },
     pending.length ? h('div', { class: 'list' }, pending.map((t) => {
       const skill = t.skillId ? store.get('skills', t.skillId) : null;
       return h('div', { class: 'list-item' },
@@ -98,7 +100,7 @@ export function renderDashboard({ store, navigate }) {
         h('div', { class: 'side' },
           t.due && t.due < now ? badge('Atrasada', 'bad') : null,
           t.priority ? optBadge(PRIORITY, t.priority) : null));
-    })) : empty('Nada pendente.', 'Crie atividades a partir das competências abaixo do nível desejado.'));
+    })) : empty('Nenhuma outra atividade aberta.', 'As atividades com prazo até 14 dias aparecem em "Hoje" e em "Próximas entregas". Crie atividades a partir das competências abaixo do nível desejado.'));
 
   // Projetos em andamento
   const activeProjects = c.projects.filter((p) => p.status === 'em_andamento');
@@ -161,9 +163,12 @@ export function renderDashboard({ store, navigate }) {
   const next = upcoming(st, now, 14).slice(0, 8);
   const upcomingCard = card({ title: 'Próximas entregas', iconName: 'flag', meta: 'próximos 14 dias' },
     next.length ? h('div', { class: 'list' }, next.map((u) => h('div', { class: 'list-item' },
+      u.taskId
+        ? h('button', { type: 'button', class: 'check', 'aria-pressed': 'false', 'aria-label': `Concluir: ${u.title}`, onclick: () => store.update('tasks', u.taskId, { status: 'feito', doneAt: now }) }, icon('check'))
+        : null,
       h('span', { class: 'tag', style: { minWidth: '52px', justifyContent: 'center' } }, fmtDate(u.date, { year: false })),
       h('div', { class: 'grow' }, h('div', { class: 'title' }, u.title), h('div', { class: 'sub' }, u.kind)),
-      btn('', () => navigate(u.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${u.title}` })))) : empty('Nenhuma entrega com prazo nos próximos 14 dias.'));
+      u.taskId ? null : btn('', () => navigate(u.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${u.title}` })))) : empty('Nenhuma entrega com prazo nos próximos 14 dias.'));
 
   return h('div', { class: 'stack', style: { gap: '24px' } },
     hero,

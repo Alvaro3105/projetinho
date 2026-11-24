@@ -310,8 +310,8 @@ export function upcoming(state, now = todayISO(), days = 14) {
   const c = state.collections;
   const limit = addDays(now, days);
   const out = [];
-  const push = (date, title, kind, route) => { if (date && date <= limit) out.push({ date, title, kind, route, overdue: date < now }); };
-  for (const t of c.tasks) if (t.status !== 'feito' && t.due && t.due > now) push(t.due, t.title, 'Atividade', 'painel');
+  const push = (date, title, kind, route, extra = {}) => { if (date && date <= limit) out.push({ date, title, kind, route, overdue: date < now, ...extra }); };
+  for (const t of c.tasks) if (t.status !== 'feito' && t.due && t.due > now) push(t.due, t.title, 'Atividade', 'painel', { taskId: t.id });
   for (const g of c.goals) if (g.status === 'ativa' && g.due >= now) push(g.due, g.title, 'Meta', 'pessoal');
   for (const m of c.milestones) if (m.status !== 'concluido' && m.due >= now) push(m.due, m.title, 'Marco', 'roadmap');
   for (const a of c.applications) if (!['reprovado', 'desistencia', 'aprovado'].includes(a.status) && a.nextDate >= now) push(a.nextDate, `${a.company} — ${a.role}`, 'Candidatura', 'carreira');

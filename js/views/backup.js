@@ -1,7 +1,7 @@
 // Central de Backup: exportação (JSON com selo de integridade e CSV), importação com prévia,
 // pontos de restauração automáticos, histórico e verificação de integridade dos dados.
 import { h, clear } from '../core/dom.js';
-import { today, fmtDate, fmtDateTime } from '../core/dates.js';
+import { today, fmtDate, fmtDateTime, daysAgo } from '../core/dates.js';
 import { COLLECTIONS, daysSinceExport } from '../core/store.js';
 import {
   buildBackup, verifyBackup, toCSV, auditData, repairReferences, createSnapshot, listSnapshots, readSnapshot,
@@ -92,7 +92,7 @@ export function renderBackup(ctx) {
     !store.persistent ? notice('O navegador não está conseguindo salvar (armazenamento bloqueado ou espaço cheio). Exporte um backup agora: as alterações desta sessão serão perdidas ao fechar a página.', 'bad') : null,
     statStrip(
       stat('Registros', String(total), `${COLLECTIONS.length} tipos de dados`),
-      stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDateTime(store.state.meta.lastExportAt) : 'Exporte agora', { na: days === null }),
+      stat('Último backup', daysAgo(days), store.state.meta.lastExportAt ? fmtDateTime(store.state.meta.lastExportAt) : 'Exporte agora', { na: days === null }),
       stat('Backups registrados', String((store.state.meta.backupHistory || []).length), 'Histórico das exportações'),
       stat('Pontos de restauração', snapshots ? 'Ativos' : 'Indisponível', snapshots ? 'Automáticos, neste navegador' : 'Este navegador não oferece IndexedDB', { na: !snapshots })),
     tabs([['exportar', 'Exportar'], ['importar', 'Importar e restaurar'], ['pontos', 'Pontos de restauração'], ['historico', 'Histórico'], ['integridade', 'Verificar integridade']], tab, (k) => { tab = k; rerender(); }),
@@ -137,7 +137,7 @@ function exportTab({ store }) {
 }
 
 function showExport({ text, filename, downloaded, hash, onCopy }) {
-  const area = h('textarea', { id: 'bk-json', readonly: true, style: { minHeight: '200px', fontFamily: 'var(--font-mono)', fontSize: '12px' } }, text);
+  const area = h('textarea', { id: 'bk-json', readonly: true, spellcheck: 'false', style: { minHeight: '200px', fontFamily: 'var(--font-mono)', fontSize: '12px' } }, text);
   openModal({
     title: 'Backup exportado',
     body: h('div', { class: 'stack' },
@@ -156,7 +156,7 @@ function showExport({ text, filename, downloaded, hash, onCopy }) {
 // ---------- Importar / restaurar ----------
 function importTab({ store }) {
   const file = h('input', { type: 'file', id: 'bk-file', accept: 'application/json,.json' });
-  const area = h('textarea', { id: 'bk-paste', placeholder: 'Ou cole aqui o conteúdo do backup', style: { minHeight: '140px', fontFamily: 'var(--font-mono)', fontSize: '12px' } });
+  const area = h('textarea', { id: 'bk-paste', spellcheck: 'false', autocomplete: 'off', autocapitalize: 'off', placeholder: 'Ou cole aqui o conteúdo do backup', style: { minHeight: '140px', fontFamily: 'var(--font-mono)', fontSize: '12px' } });
   const out = h('div', { class: 'stack', 'aria-live': 'polite' });
   file.addEventListener('change', () => {
     const f = file.files?.[0];

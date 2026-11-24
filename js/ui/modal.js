@@ -37,12 +37,18 @@ export function openModal({ title, body, footer, size = '', onClose, labelledBy 
   return { dialog, close: closeModal };
 }
 
+/** Há um diálogo aberto (ignora o que está só terminando a animação de saída)? */
+export function modalIsOpen() { return !!open; }
+
 export function closeModal() {
   if (!open) return;
   const { backdrop, onKey, previous, onClose } = open;
   open = null;
   document.removeEventListener('keydown', onKey);
-  backdrop.remove();
+  // Saída animada: o diálogo some em ~140 ms, sem bloquear cliques nem o foco durante a saída.
+  backdrop.classList.add('closing');
+  backdrop.setAttribute('aria-hidden', 'true');
+  setTimeout(() => backdrop.remove(), 150);
   document.querySelector('.app')?.removeAttribute('aria-hidden');
   if (previous && previous.isConnected) previous.focus();
   if (onClose) onClose();

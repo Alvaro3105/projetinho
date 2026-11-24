@@ -1,5 +1,5 @@
 import { h } from '../core/dom.js';
-import { today, fmtDate, fmtMonth, fmtMonthShort, monthKey, termKey } from '../core/dates.js';
+import { today, fmtDate, fmtMonth, fmtMonthShort, monthKey, termKey, localDay } from '../core/dates.js';
 import { LEVELS, APP_STATUS, OPP_STATUS, optionLabel } from '../core/schema.js';
 import {
   allSessions, minutesByMonth, minutesByWeek, consistency, dailyMinutes, aiIndependence, goalsSummary,
@@ -28,7 +28,7 @@ function range(p, now) {
   return { from: '2000-01-01', to: now, label: 'Todo o histórico' };
 }
 
-const inRange = (d, r) => d && d.slice(0, 10) >= r.from && d.slice(0, 10) <= r.to;
+const inRange = (d, r) => { const day = localDay(d); return !!day && day >= r.from && day <= r.to; };
 
 export function renderReports({ store, navigate, rerender }) {
   const st = store.state;
@@ -74,7 +74,7 @@ export function renderReports({ store, navigate, rerender }) {
       card({ title: 'Últimas 12 semanas (horas)', iconName: 'chart' }, weeks.some((w) => w.minutes) ? barChart(weeks.map((w) => ({ label: fmtDate(w.key, { year: false }), value: Math.round(w.minutes / 6) / 10 })), { format: (v) => `${fmtNum(v)}h`, label: 'Horas por semana', height: 170 }) : empty('Sem horas registradas nas últimas 12 semanas.'))),
     card({ title: 'Consistência diária (16 semanas)', iconName: 'cycle', sub: 'Cada quadrado é um dia (linhas: segunda a domingo). Mais escuro = mais minutos.' },
       heatmap(dailyMinutes(sessions, 16, now)),
-      h('div', { class: 'legend', style: { marginTop: '8px' } }, ['0', '<30 min', '30–60', '60–120', '120+'].map((t, i) => h('span', {}, h('i', { style: { background: ['var(--neutral-soft)', 'color-mix(in srgb, var(--primary) 35%, transparent)', 'color-mix(in srgb, var(--primary) 65%, transparent)', 'var(--primary)', 'var(--accent)'][i] } }), t)))),
+      h('div', { class: 'legend', style: { marginTop: '8px' } }, ['0', '<30 min', '30–60', '60–120', '120+'].map((t, i) => h('span', {}, h('i', { style: { background: ['var(--neutral-soft)', 'color-mix(in srgb, var(--accent) 25%, transparent)', 'color-mix(in srgb, var(--accent) 50%, transparent)', 'color-mix(in srgb, var(--accent) 75%, transparent)', 'var(--accent)'][i] } }), t)))),
     h('div', { class: 'grid cols-3' },
       card({ title: 'Metas do período', iconName: 'flag' },
         h('div', { class: 'stack' }, stat('Cumpridas', String(gsum.done)), stat('Não cumpridas', String(gsum.failed)), stat('Atrasadas (abertas)', String(gsum.late.length)),

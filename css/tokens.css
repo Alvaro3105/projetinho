@@ -47,8 +47,9 @@
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5), var(--edge);
   --shadow-2: 0 18px 48px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.4), var(--edge);
   --ring: 0 0 0 1px var(--accent), 0 0 0 4px var(--accent-soft);
-  --atmosphere: radial-gradient(900px 520px at 78% -12%, rgba(76, 211, 232, 0.06), transparent 62%),
-                radial-gradient(700px 420px at -8% 8%, rgba(59, 130, 246, 0.05), transparent 60%);
+  --atmosphere: radial-gradient(900px 520px at 78% -12%, rgba(76, 211, 232, 0.075), transparent 62%),
+                radial-gradient(700px 420px at -8% 8%, rgba(59, 130, 246, 0.06), transparent 60%),
+                radial-gradient(1100px 700px at 50% 120%, rgba(76, 211, 232, 0.04), transparent 65%);
   --grid-lines: linear-gradient(var(--hairline) 1px, transparent 1px) 0 0 / 48px 48px,
                 linear-gradient(90deg, var(--hairline) 1px, transparent 1px) 0 0 / 48px 48px;
 
@@ -97,9 +98,9 @@
   --text: #0b1016; --text-2: #4a5563; --text-3: #5f6b7a;
   --accent: #08778b; --accent-soft: rgba(8, 119, 139, 0.09); --accent-glow: rgba(8, 119, 139, 0.22);
   --primary: #2563eb; --primary-strong: #1f5fd1; --primary-text: #1f5fd1; --primary-soft: rgba(37, 99, 235, 0.09);
-  --amber: #a35e00; --amber-soft: rgba(163, 94, 0, 0.09);
+  --amber: #8a4f00; --amber-soft: rgba(138, 79, 0, 0.09);
   --success: #167a47; --success-soft: rgba(22, 122, 71, 0.09);
-  --warning: #a35e00; --warning-soft: rgba(163, 94, 0, 0.09);
+  --warning: #8a4f00; --warning-soft: rgba(138, 79, 0, 0.09);
   --danger: #c93535; --danger-soft: rgba(201, 53, 53, 0.08);
   --neutral-soft: rgba(74, 85, 99, 0.07); --overlay: rgba(11, 16, 22, 0.42);
   --edge: inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -118,9 +119,9 @@
     --text: #0b1016; --text-2: #4a5563; --text-3: #5f6b7a;
     --accent: #08778b; --accent-soft: rgba(8, 119, 139, 0.09); --accent-glow: rgba(8, 119, 139, 0.22);
     --primary: #2563eb; --primary-strong: #1f5fd1; --primary-text: #1f5fd1; --primary-soft: rgba(37, 99, 235, 0.09);
-    --amber: #a35e00; --amber-soft: rgba(163, 94, 0, 0.09);
+    --amber: #8a4f00; --amber-soft: rgba(138, 79, 0, 0.09);
     --success: #167a47; --success-soft: rgba(22, 122, 71, 0.09);
-    --warning: #a35e00; --warning-soft: rgba(163, 94, 0, 0.09);
+    --warning: #8a4f00; --warning-soft: rgba(138, 79, 0, 0.09);
     --danger: #c93535; --danger-soft: rgba(201, 53, 53, 0.08);
     --neutral-soft: rgba(74, 85, 99, 0.07); --overlay: rgba(11, 16, 22, 0.42);
     --edge: inset 0 1px 0 rgba(255, 255, 255, 0.8);

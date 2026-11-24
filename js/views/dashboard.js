@@ -5,14 +5,15 @@ import {
   goalsInWindow, goalProgress, insights, TECH_CATEGORIES, PERSONAL_CATEGORIES, isBlocked, allSessions, minutesByWeek,
   consistency, aiIndependence, upcoming, todayAgenda, currentSemester,
 } from '../core/metrics.js';
-import { CURRICULUM_SOURCE } from '../data/curriculum.js';
 import { optionLabel, PROJECT_STATUS, PRIORITY, AREAS, PHASES } from '../core/schema.js';
 import { card, stat, progressBar, pct, badge, optBadge, empty, btn, levelView } from '../ui/components.js';
 import { barChart, fmtHours, fmtNum } from '../ui/charts.js';
 import { crud } from '../ui/form.js';
 import { icon } from '../ui/icons.js';
-import { coreView, coreLegend } from '../ui/core.js';
+import { coreView, coreLegend, phaseClock } from '../ui/core.js';
+import { clockText } from '../ui/fx.js';
 import { BRAND, brandMark } from '../core/brand.js';
+import { selectSettingsTab } from './settings.js';
 
 
 const MODULE_HINTS = {
@@ -34,6 +35,32 @@ function quickActions(store, navigate, now) {
   ];
 }
 
+/** Saudação com o primeiro nome do perfil; sem nome cadastrado, só a saudação. */
+function greetingFor(profile) {
+  const first = (profile?.name || '').trim().split(/\s+/)[0];
+  return first ? `${greeting()}, ${first}.` : `${greeting()}.`;
+}
+
+/**
+ * Dados de exemplo × dados reais: uma instalação nova começa com o plano do autor (Álvaro Pires,
+ * Engenharia de Software). O aviso deixa isso explícito até a pessoa confirmar que o plano é dela,
+ * editar o perfil ou começar do zero. Nada é apagado sem confirmação.
+ */
+function exampleNotice(store, navigate) {
+  const m = store.state.meta;
+  if (!m.seededAt || m.profileReviewedAt) return null;
+  const confirm = () => { store.state.meta.profileReviewedAt = new Date().toISOString(); store.saveMeta(); };
+  return h('section', { class: 'notice example-notice', 'aria-labelledby': 'exemplo-titulo' },
+    icon('info'),
+    h('div', { class: 'grow stack', style: { gap: '8px' } },
+      h('strong', { id: 'exemplo-titulo' }, 'Este JARVIS começou com um plano de exemplo'),
+      h('span', {}, 'Perfil, competências, semestres e marcos vieram do plano do autor (Álvaro Pires, Engenharia de Software na PUC Minas). Se o plano é seu, confirme. Se não é, edite o perfil e os módulos ou comece do zero: um ponto de restauração é criado antes de apagar.'),
+      h('div', { class: 'row' },
+        btn('É o meu plano', confirm, { size: 'sm', kind: 'primary', iconName: 'check' }),
+        btn('Editar perfil', () => { selectSettingsTab('perfil'); navigate('configuracoes'); }, { size: 'sm', iconName: 'person' }),
+        btn('Começar do zero', () => { selectSettingsTab('dados'); navigate('configuracoes'); }, { size: 'sm', kind: 'ghost' }))));
+}
+
 export function renderDashboard(ctx) {
   return ctx.store.state.settings.uiMode === 'produtividade' ? renderProductivity(ctx) : renderAssistant(ctx);
 }
@@ -43,8 +70,8 @@ function renderAssistant({ store, navigate, modules = [], openSearch }) {
   const st = store.state;
   const c = st.collections;
   const now = today();
-  const name = (st.profile.name || 'Álvaro').split(' ')[0];
-  const { el: core, measures, phase } = coreView(st, {
+
+  const { el: core, measures, phase, signals: coreSig, empty: coreEmpty } = coreView(st, {
     now,
     center: [
       h('span', { class: 'cc-mark', html: brandMark({ size: 44, id: 'jvcore' }), style: { display: 'block' } }),
@@ -54,24 +81,38 @@ function renderAssistant({ store, navigate, modules = [], openSearch }) {
   });
   const phaseName = phase.label.split(' — ')[1] || phase.label;
 
-  const command = h('button', { type: 'button', class: 'command', onclick: () => openSearch?.(), 'aria-describedby': 'cmd-note' },
+  const command = h('button', { type: 'button', class: 'command spot', onclick: () => openSearch?.(), 'aria-describedby': 'cmd-note' },
     icon('search'), h('span', { class: 'grow' }, 'Buscar metas, competências, projetos, disciplinas…'), h('kbd', { class: 'hide-sm' }, 'Ctrl K'));
 
-  const assist = h('section', { class: 'card elevated hud assist', 'aria-labelledby': 'page-title' },
-    core,
+  // Faixa técnica do painel: só informação real (data, hora, fase, origem dos dados).
+  // Itens separados por " · " (texto): o leitor de tela lê "24/11/2026 · 23:48", não "24/11/202623:48".
+  const tmItems = [
+    h('span', {}, 'JARVIS CORE'),
+    h('span', {}, fmtDate(now)),
+    h('span', { 'data-clock': '' }, clockText()),
+    h('span', {}, `Fase ${phase.value} · ${phaseClock(phase, now)}`),
+    h('span', { class: 'tm-right' }, coreEmpty ? 'Aguardando os primeiros registros' : 'Dados locais · neste navegador'),
+  ];
+  const telemetry = h('div', { class: 'telemetry', role: 'group', 'aria-label': 'Situação do sistema' },
+    h('span', { class: 'tm-live', 'aria-hidden': 'true' }),
+    tmItems.flatMap((el, i) => (i ? [h('span', { class: 'tm-sep' }, ' · '), el] : [el])));
+
+  const assist = h('section', { class: 'card elevated hud assist spot', 'aria-labelledby': 'page-title' },
+    telemetry,
+    h('div', { class: 'assist-core' }, core),
     h('div', { class: 'assist-main' },
       h('div', { class: 'stack', style: { gap: '8px' } },
         h('span', { class: 'eyebrow' }, `Fase ${phase.value} · ${phaseName} · ${phase.period}`),
-        h('h1', { id: 'page-title', tabindex: '-1' }, `${greeting()}, ${name}.`),
+        h('h1', { id: 'page-title', tabindex: '-1' }, greetingFor(st.profile)),
         st.profile.mission ? h('p', { class: 'muted', style: { maxWidth: '60ch' } }, st.profile.mission) : null),
       h('div', { class: 'stack', style: { gap: '6px' } },
         command,
         h('p', { id: 'cmd-note', class: 'small faint' }, 'Busca em tudo o que você registrou. O assistente com IA ainda não está conectado; quando estiver, este campo será o ponto de conversa.')),
       h('div', { class: 'quick', role: 'group', 'aria-label': 'Ações rápidas' },
-        quickActions(store, navigate, now).map((a) => h('button', { type: 'button', class: 'quick-btn', onclick: a.run }, icon(a.icon), h('span', {}, a.label)))),
-      h('div', { class: 'stack', style: { gap: '10px', paddingTop: '4px', borderTop: '1px solid var(--border)' } },
-        h('span', { class: 'hud-label', style: { paddingTop: '12px' } }, 'Anéis do núcleo · de fora para dentro'),
-        coreLegend(measures))));
+        quickActions(store, navigate, now).map((a) => h('button', { type: 'button', class: 'quick-btn spot', onclick: a.run }, icon(a.icon), h('span', {}, a.label))))),
+    h('div', { class: 'assist-legend' },
+      h('span', { class: 'hud-label' }, 'O que o núcleo mostra · de fora para dentro'),
+      coreLegend(measures, coreSig)));
 
   // Prioridades: o que vence hoje/atrasou + sinais de atenção, em uma só lista ordenada por urgência.
   const agenda = todayAgenda(st, now);
@@ -103,9 +144,10 @@ function renderAssistant({ store, navigate, modules = [], openSearch }) {
   const access = h('section', { 'aria-labelledby': 'acesso-modulos', class: 'stack', style: { gap: '12px' } },
     h('div', { class: 'row between' }, h('h2', { id: 'acesso-modulos' }, 'Módulos'), h('span', { class: 'hud-label' }, `${modules.length - 1} áreas`)),
     h('nav', { class: 'module-grid', 'aria-label': 'Acesso rápido aos módulos' },
-      modules.filter((m) => m.id !== 'painel').map((m) => h('a', { class: 'module-link', href: `#${m.id}` }, icon(m.icon), h('b', {}, m.label), h('span', {}, MODULE_HINTS[m.id] || '')))));
+      modules.filter((m) => m.id !== 'painel').map((m) => h('a', { class: 'module-link spot', href: `#${m.id}` }, icon(m.icon), h('b', {}, m.label), h('span', {}, MODULE_HINTS[m.id] || '')))));
 
   return h('div', { class: 'stack', style: { gap: '24px' } },
+    exampleNotice(store, navigate),
     assist,
     h('div', { class: 'grid dash-grid' }, priorities, upcomingCard),
     access,
@@ -118,7 +160,7 @@ function renderProductivity({ store, navigate }) {
   const c = st.collections;
   const now = today();
   const phase = currentPhase(now);
-  const startDays = diffDays(now, st.profile.startDate || '2026-11-30');
+  const startDays = st.profile.startDate ? diffDays(now, st.profile.startDate) : null;
 
   const tech = skillProgress(c.skills, TECH_CATEGORIES);
   const pers = skillProgress(c.skills, PERSONAL_CATEGORIES);
@@ -127,12 +169,17 @@ function renderProductivity({ store, navigate }) {
   const prof = milestoneProgress(c.milestones, ['profissional']);
   const { below, unassessed } = skillGaps(c.skills);
 
+  // Situação acadêmica a partir do SEU perfil e dos seus semestres (nada fixo na interface).
   function academicSituation() {
+    const p = st.profile;
     const sem = currentSemester(c.semesters, now);
-    const matrix = st.settings.curriculumConfirmedAt ? 'matriz confirmada' : 'matriz pendente de confirmação com a documentação da matrícula';
-    if (sem) return `${sem.number}º período de Engenharia de Software (PUC Minas, Coração Eucarístico, noturno) · ${sem.disciplines.length} disciplinas · ${matrix}.`;
-    if (now < '2027-02-01') return `Ensino Médio Técnico em TI (COTEMIG) em conclusão. Engenharia de Software na PUC Minas começa em 2027/1 · ${matrix} (consultada em ${fmtDate(CURRICULUM_SOURCE.consulted)}).`;
-    return `Nenhum período marcado como "cursando". Marque o período atual em Plano de Evolução › Semestres.`;
+    const matrix = c.semesters.length ? (st.settings.curriculumConfirmedAt ? 'matriz confirmada' : 'matriz pendente de confirmação') : null;
+    if (sem) return [`${sem.number}º período`, p.university, `${(sem.disciplines || []).length} disciplinas`, matrix].filter(Boolean).join(' · ') + '.';
+    const first = [...c.semesters].sort((a, b) => a.number - b.number)[0];
+    const termStart = first?.term && /^\d{4}\/[12]$/.test(first.term) ? `${first.term.slice(0, 4)}-${first.term.endsWith('1') ? '02' : '08'}-01` : null;
+    const next = p.university ? (termStart && now < termStart ? `${p.university} (início em ${first.term})` : p.university) : null;
+    const text = [p.school, next, matrix].filter(Boolean).join(' · ');
+    return text ? `${text}.` : null;
   }
 
   // Gesto principal da tela: a régua das 6 fases da trajetória, com a posição atual.
@@ -147,15 +194,16 @@ function renderProductivity({ store, navigate }) {
 
   const hero = h('section', { class: 'hero', 'aria-labelledby': 'page-title' },
     h('div', { style: { minWidth: 0 } },
-      h('h1', { id: 'page-title', tabindex: '-1' }, `${greeting()}, ${(st.profile.name || 'Álvaro').split(' ')[0]}.`),
+      h('h1', { id: 'page-title', tabindex: '-1' }, greetingFor(st.profile)),
       h('p', { class: 'lede' }, st.profile.mission || ''),
       h('div', { class: 'row phase-chip' },
-        startDays > 0 ? badge(`Retomada estruturada em ${startDays} dia(s) — ${fmtDate(st.profile.startDate)}`, 'accent') : badge(`Dia ${-startDays + 1} desde a retomada`, 'accent')),
-      h('p', { class: 'small muted', style: { marginTop: '10px' } }, h('strong', {}, 'Situação acadêmica: '), academicSituation()),
+        startDays === null ? null : startDays > 0 ? badge(`Início do plano em ${startDays === 1 ? '1 dia' : `${startDays} dias`} — ${fmtDate(st.profile.startDate)}`, 'accent') : badge(`Dia ${-startDays + 1} do plano`, 'accent')),
+      academicSituation() ? h('p', { class: 'small muted', style: { marginTop: '10px' } }, h('strong', {}, 'Situação acadêmica: '), academicSituation()) : null,
       rail));
 
   // Indicadores — cada um diz de onde vem
-  const academicNote = acad.current ? `Cursando o ${acad.current.number}º período` : `${acad.done} de ${acad.total} semestres concluídos · graduação começa em 2027`;
+  const firstTerm = [...c.semesters].sort((a, b) => a.number - b.number)[0]?.term;
+  const academicNote = !c.semesters.length ? 'Nenhum semestre cadastrado (Plano de Evolução › Semestres)' : acad.current ? `Cursando o ${acad.current.number}º período` : `${acad.done} de ${acad.total} semestres concluídos${acad.done === 0 && firstTerm ? ` · início em ${firstTerm}` : ''}`;
   function consistencyCard() {
     const cons = consistency(allSessions(st), 28, now);
     const indep = aiIndependence(c.studyLogs, 30, now);
@@ -277,6 +325,7 @@ function renderProductivity({ store, navigate }) {
       u.taskId ? null : btn('', () => navigate(u.route), { size: 'sm', kind: 'ghost', iconName: 'arrow', title: `Abrir: ${u.title}` })))) : empty('Nenhuma entrega com prazo nos próximos 14 dias.'));
 
   return h('div', { class: 'stack', style: { gap: '24px' } },
+    exampleNotice(store, navigate),
     hero,
     h('div', { class: 'grid dash-grid' },
       h('div', { class: 'stack', style: { gap: '16px' } }, todayCard, upcomingCard, goalsCard),

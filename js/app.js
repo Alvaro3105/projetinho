@@ -1,12 +1,12 @@
 // JARVIS — ponto de entrada: shell, navegação por hash, tema, busca e re-renderização.
 import { h, clear } from './core/dom.js';
-import { createStore, STORAGE_KEY } from './core/store.js';
+import { createStore, STORAGE_KEY, RECOVERY_KEY } from './core/store.js';
 import { seed, syncCurriculum, applyPlanUpdates, upgradeIsPending } from './core/seed.js';
 import { BRAND, brandMark } from './core/brand.js';
 import { createSnapshot, indexedDBBackend } from './core/backup.js';
 import { icon } from './ui/icons.js';
 import { btn, notice } from './ui/components.js';
-import { closeModal } from './ui/modal.js';
+import { closeModal, modalIsOpen } from './ui/modal.js';
 import { toast } from './ui/toast.js';
 import { bootSplash } from './ui/splash.js';
 import { renderDashboard } from './views/dashboard.js';
@@ -21,11 +21,13 @@ import { renderOpportunities } from './views/opportunities.js';
 import { renderReports } from './views/reports.js';
 import { renderReview } from './views/review.js';
 import { renderGuide } from './views/guide.js';
-import { renderSettings } from './views/settings.js';
+import { renderSettings, selectSettingsTab } from './views/settings.js';
 import { renderBackup, setSnapshotBackend } from './views/backup.js';
 import { openSearch, openShortcuts } from './views/search.js';
 import { togglePopover, closePopover } from './ui/popover.js';
 import { installTooltips } from './ui/tooltip.js';
+import { installFx, themeTransition, clockText } from './ui/fx.js';
+import { installSoundGestures, setSoundEnabled, play } from './ui/sound.js';
 import { buildNotifications, unseenCount, markSeen } from './core/notifications.js';
 import { fmtDate } from './core/dates.js';
 
@@ -95,6 +97,10 @@ const modeSeg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Modo de e
 const bellBtn = h('button', { type: 'button', class: 'btn ghost icon', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', onclick: () => openNotifications() });
 const profileBtn = h('button', { type: 'button', class: 'btn ghost profile-btn', 'aria-haspopup': 'dialog', 'aria-expanded': 'false', onclick: () => openProfile() });
 const collapseBtn = h('button', { type: 'button', class: 'btn ghost sm collapse-btn', onclick: () => store.setSettings({ sidebarCollapsed: !store.state.settings.sidebarCollapsed }) });
+// Estado de gravação: mostra quando os dados foram salvos neste navegador (ou que não estão sendo salvos).
+const saveState = h('div', { class: 'save-state', role: 'status', 'aria-live': 'off' }, h('i', { 'aria-hidden': 'true' }), h('span', { class: 'save-text' }, 'Salvo'));
+// Navegação de uma mão no celular: atalhos para os destinos mais usados + menu completo.
+const bottomNav = h('nav', { class: 'bottom-nav', 'aria-label': 'Navegação rápida' });
 const shell = h('div', { class: 'app' },
   h('aside', { class: 'sidebar', id: 'sidebar' },
     h('a', { class: 'brand', href: '#painel', 'aria-label': `${BRAND.name} — ir para o Painel Inicial` },
@@ -109,12 +115,14 @@ const shell = h('div', { class: 'app' },
       h('button', { type: 'button', class: 'btn ghost icon menu-btn', 'aria-label': 'Abrir menu', 'aria-controls': 'sidebar', 'aria-expanded': 'false', onclick: () => toggleNav() }, icon('menu')),
       crumb,
       h('div', { class: 'spacer' }),
+      saveState,
       h('button', { type: 'button', class: 'btn sm search-btn', onclick: () => openSearch({ store, navigate, modules: PAGES }), 'aria-label': 'Buscar no JARVIS (Ctrl+K)' }, icon('search'), h('span', { class: 'hide-sm grow' }, 'Buscar em tudo'), h('kbd', { class: 'hide-sm' }, 'Ctrl K')),
       h('span', { class: 'hide-sm' }, modeSeg),
       h('div', { class: 'pop-wrap' }, bellBtn),
       themeBtn,
       h('div', { class: 'pop-wrap' }, profileBtn)),
-    content));
+    content,
+    bottomNav));
 
 clear(root).append(h('a', { class: 'skip-link', href: '#conteudo', onclick: (e) => { e.preventDefault(); content.focus(); } }, 'Pular para o conteúdo'), shell);
 
@@ -129,11 +137,15 @@ function applyChrome() {
   const root = document.documentElement;
   root.setAttribute('data-ui-mode', uiMode());
   if (st.motion === 'reduced') root.setAttribute('data-motion', 'reduced'); else root.removeAttribute('data-motion');
+  root.setAttribute('data-fx', st.fx === 'essenciais' ? 'essenciais' : 'completos');
+  setSoundEnabled(st.sound === 'on');
   shell.classList.toggle('collapsed', !!st.sidebarCollapsed);
-  clear(collapseBtn).append(icon('sidebar'), h('span', { class: 'btn-label' }, st.sidebarCollapsed ? 'Expandir menu' : 'Recolher menu'));
+  clear(collapseBtn).append(icon('sidebar'), h('span', { class: 'btn-label nav-text' }, st.sidebarCollapsed ? 'Expandir menu' : 'Recolher menu'));
   collapseBtn.setAttribute('aria-label', st.sidebarCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral');
   collapseBtn.setAttribute('aria-expanded', String(!st.sidebarCollapsed));
-  if (st.sidebarCollapsed) { collapseBtn.dataset.tip = 'Expandir menu'; collapseBtn.dataset.tipSide = 'right'; } else { delete collapseBtn.dataset.tip; }
+  collapseBtn.dataset.tip = st.sidebarCollapsed ? 'Expandir menu' : 'Recolher menu';
+  collapseBtn.dataset.tipSide = 'right';
+  collapseBtn.dataset.tipAuto = '';
   // Os botões são criados uma vez e só têm aria-pressed atualizado: assim o foco não se perde.
   if (!modeSeg.childElementCount) modeSeg.append(...MODES.map((m) => h('button', { type: 'button', 'data-mode': m.value, title: m.hint, onclick: () => store.setSettings({ uiMode: m.value }) }, icon(m.icon), m.label)));
   for (const b of modeSeg.children) b.setAttribute('aria-pressed', String(b.dataset.mode === uiMode()));
@@ -181,8 +193,8 @@ function openProfile() {
       h('div', { class: 'popover-head' }, h('div', {}, h('strong', { style: { display: 'block' } }, p.name || 'Perfil sem nome'), h('span', { class: 'small faint' }, p.course || p.headline || 'Edite seu perfil em Configurações'))),
       h('ul', { class: 'popover-list' },
         item(uiMode() === 'assistente' ? 'Mudar para o modo Produtividade' : 'Mudar para o modo Assistente', uiMode() === 'assistente' ? 'rows' : 'orbit', () => store.setSettings({ uiMode: uiMode() === 'assistente' ? 'produtividade' : 'assistente' })),
-        item('Editar perfil', 'person', () => navigate('configuracoes')),
-        item('Configurações e aparência', 'gear', () => navigate('configuracoes')),
+        item('Editar perfil', 'person', () => { selectSettingsTab('perfil'); navigate('configuracoes'); }),
+        item('Configurações e aparência', 'gear', () => { selectSettingsTab('aparencia'); navigate('configuracoes'); }),
         item('Central de Backup', 'lock', () => navigate('backup')),
         item('Revisão semanal', 'cycle', () => navigate('revisoes')),
         item('Atalhos de teclado', 'keyboard', () => openShortcuts())),
@@ -202,9 +214,15 @@ export function navigate(id) {
 
 function toggleNav(force) {
   const open = force ?? !shell.classList.contains('nav-open');
+  const was = shell.classList.contains('nav-open');
   shell.classList.toggle('nav-open', open);
   shell.querySelector('.menu-btn').setAttribute('aria-expanded', String(open));
+  bottomNav.querySelector('[aria-controls="sidebar"]')?.setAttribute('aria-expanded', String(open));
+  // Com a gaveta aberta (celular/tablet), o resto da tela fica inerte: o foco não escapa para trás dela.
+  const drawer = window.matchMedia('(max-width: 1180px)').matches;
+  shell.querySelector('.main').inert = open && drawer;
   if (open) navHost.querySelector('a[aria-current="page"]')?.focus();
+  else if (was && drawer && shell.contains(document.activeElement) && document.getElementById('sidebar').contains(document.activeElement)) shell.querySelector('.menu-btn').focus();
 }
 
 function renderNav(active) {
@@ -220,11 +238,52 @@ function renderNav(active) {
       return h('a', {
         href: `#${r.id}`, 'aria-current': r.id === active ? 'page' : null,
         'aria-label': count ? `${r.label}, ${count} ${r.countLabel || 'pendentes'}` : r.label,
-        'data-tip': store.state.settings.sidebarCollapsed ? r.label : null, 'data-tip-side': 'right',
+        'data-tip': r.label, 'data-tip-side': 'right', 'data-tip-auto': '',
         onclick: () => { toggleNav(false); if (location.hash === `#${r.id}`) render({ focus: true }); },
-      }, icon(r.icon), h('span', {}, r.label), count ? h('span', { class: 'nav-count', 'aria-hidden': 'true' }, String(count)) : null);
+      }, icon(r.icon), h('span', { class: 'nav-text' }, r.label), count ? h('span', { class: 'nav-count', 'aria-hidden': 'true' }, String(count)) : null);
     }))));
+  renderBottomNav(active);
 }
+
+const BOTTOM = [
+  { id: 'painel', label: 'Painel', icon: 'dashboard' },
+  { id: 'estudos', label: 'Estudos', icon: 'book' },
+  { search: true, label: 'Buscar', icon: 'search' },
+  { id: 'roadmap', label: 'Plano', icon: 'roadmap' },
+  { menu: true, label: 'Menu', icon: 'menu' },
+];
+function renderBottomNav(active) {
+  clear(bottomNav).append(...BOTTOM.map((b) => {
+    if (b.search) return h('button', { type: 'button', class: 'bn-item bn-search', 'aria-label': 'Buscar no JARVIS', onclick: () => openSearch({ store, navigate, modules: PAGES }) }, h('span', { class: 'bn-orb' }, icon(b.icon)), h('span', {}, b.label));
+    if (b.menu) return h('button', { type: 'button', class: 'bn-item', 'aria-label': 'Abrir menu com todos os módulos', 'aria-controls': 'sidebar', 'aria-expanded': String(shell.classList.contains('nav-open')), onclick: () => toggleNav() }, icon(b.icon), h('span', {}, b.label));
+    return h('a', { class: 'bn-item', href: `#${b.id}`, 'aria-current': b.id === active ? 'page' : null, onclick: () => { toggleNav(false); if (location.hash === `#${b.id}`) render({ focus: true }); } }, icon(b.icon), h('span', {}, b.label));
+  }));
+}
+
+let saveTimer = 0;
+function updateSaveState(pulse = false) {
+  const ok = store.persistent && !store.loadError;
+  saveState.classList.toggle('off', !ok);
+  saveState.querySelector('.save-text').textContent = ok ? `Salvo · ${clockText()}` : 'Não salvo';
+  saveState.title = ok ? 'Seus dados foram gravados neste navegador.' : 'O navegador não está gravando: exporte um backup.';
+  if (pulse && ok) { saveState.classList.remove('pulse'); void saveState.offsetWidth; saveState.classList.add('pulse'); clearTimeout(saveTimer); saveTimer = setTimeout(() => saveState.classList.remove('pulse'), 1200); }
+}
+
+/** Tabelas e quadros com rolagem lateral recebem foco pelo teclado (WCAG 2.1.1). */
+function markScrollRegions() {
+  for (const el of content.querySelectorAll('.table-wrap, .board, .heat')) {
+    const scrolls = el.scrollWidth > el.clientWidth + 1;
+    if (scrolls) {
+      el.tabIndex = 0;
+      el.setAttribute('role', 'region');
+      if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', `${el.closest('section, .card')?.querySelector('h2, h3')?.textContent || 'Conteúdo'} (role para o lado)`);
+    } else if (el.tabIndex === 0) {
+      el.removeAttribute('tabindex'); el.removeAttribute('role');
+    }
+  }
+}
+let resizeTimer = 0;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(markScrollRegions, 200); });
 
 function applyTheme() {
   const theme = store.state.settings.theme || 'dark';
@@ -239,6 +298,26 @@ function cycleTheme() {
 }
 
 let lastRoute = null;
+let enterTimer = 0;
+
+/** Larguras atuais das barras de progresso, por rótulo, antes de redesenhar. */
+function readProgress() {
+  const map = new Map();
+  for (const el of content.querySelectorAll('.progress[aria-label] > span')) map.set(el.parentElement.getAttribute('aria-label'), el.style.width);
+  return map;
+}
+/** Leva cada barra redesenhada da largura anterior à nova (transição CSS, sem reanimar do zero). */
+function morphProgress(prev) {
+  if (!prev.size) return;
+  const targets = [];
+  for (const el of content.querySelectorAll('.progress[aria-label] > span')) {
+    const before = prev.get(el.parentElement.getAttribute('aria-label'));
+    if (before !== undefined && before !== el.style.width) { targets.push([el, el.style.width]); el.style.width = before; }
+  }
+  if (!targets.length) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => { for (const [el, w] of targets) el.style.width = w; }));
+}
+
 function render({ focus = false } = {}) {
   const route = currentRoute();
   const changed = route.id !== lastRoute;
@@ -248,6 +327,7 @@ function render({ focus = false } = {}) {
   const activeTag = activeEl?.tagName?.toLowerCase();
   const focusWasInContent = content.contains(document.activeElement) && document.activeElement !== content;
   const scroll = window.scrollY;
+  const prevProgress = changed ? new Map() : readProgress();
   renderNav(route.id);
   crumb.replaceChildren(h('span', {}, `${BRAND.name} / `), h('strong', {}, route.label));
   document.title = route.id === DEFAULT ? `${BRAND.name} · ${BRAND.tagline}` : `${route.label} · ${BRAND.name}`;
@@ -260,14 +340,22 @@ function render({ focus = false } = {}) {
     view = notice(`Erro ao abrir "${route.label}": ${err.message}. Seus dados não foram alterados. Exporte um backup em Configurações e recarregue a página.`, 'bad');
   }
   const banners = [];
-  if (store.loadError) banners.push(notice(`Os dados salvos neste navegador não puderam ser lidos (${store.loadError.message}). Nada foi sobrescrito. Importe um backup em Configurações ou restaure a configuração inicial.`, 'bad'));
+  if (store.loadError) banners.push(notice(`Os dados salvos neste navegador não puderam ser lidos (${store.loadError.message}). Nada foi sobrescrito: o conteúdo original continua guardado, e uma cópia foi feita em "${RECOVERY_KEY}". Até você resolver, o que fizer aqui fica só nesta página e não é salvo. Importe um backup ou restaure um ponto de restauração na Central de Backup.`, 'bad', btn('Abrir a Central de Backup', () => navigate('backup'), { size: 'sm', iconName: 'lock' })));
   else if (!store.persistent) banners.push(notice('Não foi possível salvar neste navegador (armazenamento bloqueado, janela anônima ou espaço cheio). Suas alterações valem só até fechar a página: exporte um backup agora em Configurações › Dados e backup.', 'warn'));
   clear(content).append(...banners, view);
   updateBell();
+  updateSaveState();
+  requestAnimationFrame(markScrollRegions);
+  // Animações de entrada só ao abrir um módulo. Mudanças de dado na mesma página não repetem
+  // a entrada (sem "piscar"); nelas, barras e arcos fazem transição do valor anterior ao novo.
   if (changed) {
     content.classList.remove('route-enter');
     void content.offsetWidth; // reinicia a animação de entrada
     content.classList.add('route-enter');
+    clearTimeout(enterTimer);
+    enterTimer = setTimeout(() => content.classList.remove('route-enter'), 1400);
+  } else {
+    morphProgress(prevProgress);
   }
   if (changed || focus) {
     lastRoute = route.id;
@@ -284,7 +372,7 @@ function render({ focus = false } = {}) {
     if (target) target.focus({ preventScroll: true });
     // O elemento focado foi substituído (ex.: botão sem id): o foco vai ao título, não se perde.
     else if (focusWasInContent) {
-      if (!document.querySelector('.modal')) content.querySelector('#page-title')?.focus({ preventScroll: true });
+      if (!modalIsOpen()) content.querySelector('#page-title')?.focus({ preventScroll: true });
     }
   }
 }
@@ -295,12 +383,19 @@ let scheduled = null;
 function scheduleRender(opts = {}) {
   if (scheduled) { scheduled.focus = scheduled.focus || !!opts.focus; return; }
   scheduled = { focus: !!opts.focus };
-  setTimeout(() => { const o = scheduled; scheduled = null; render(o); }, 0);
+  // Se um item acabou de ser concluído, espera a animação de conclusão (~0,3 s) antes de redesenhar.
+  const wait = document.querySelector('.completing') ? 320 : 0;
+  setTimeout(() => { const o = scheduled; scheduled = null; render(o); }, wait);
 }
 
 window.addEventListener('hashchange', () => { closeModal(); closePopover({ restoreFocus: false }); render(); });
 store.subscribe((change) => {
-  if (change.type === 'settings' || change.type === 'profile') { applyTheme(); applyChrome(); }
+  updateSaveState(true);
+  if (change.type === 'settings' || change.type === 'profile') {
+    const next = store.state.settings.theme || 'dark';
+    if (document.documentElement.getAttribute('data-cos-theme') !== next) themeTransition(applyTheme); else applyTheme();
+    applyChrome();
+  }
   if (change.type === 'import' || change.type === 'reset') { upgrade({ silent: true }); applyTheme(); applyChrome(); scheduleRender({ focus: true }); return; }
   scheduleRender();
 });
@@ -311,8 +406,9 @@ window.addEventListener('storage', (e) => {
 // Atalhos globais: Ctrl/Cmd+K ou "/" abrem a busca; "?" mostra os atalhos.
 document.addEventListener('keydown', (e) => {
   const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName) || document.activeElement?.isContentEditable;
+  if (e.key === 'Escape' && shell.classList.contains('nav-open')) { toggleNav(false); shell.querySelector('.menu-btn').focus(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch({ store, navigate, modules: PAGES }); return; }
-  if (typing || e.ctrlKey || e.metaKey || e.altKey || document.querySelector('.modal')) return;
+  if (typing || e.ctrlKey || e.metaKey || e.altKey || modalIsOpen()) return;
   if (e.key === '/') { e.preventDefault(); openSearch({ store, navigate, modules: PAGES }); }
   else if (e.key === '?') { e.preventDefault(); openShortcuts(); }
 });
@@ -321,6 +417,16 @@ bootSplash({ reduced: store.state.settings.motion === 'reduced' });
 applyTheme();
 applyChrome();
 installTooltips();
+installFx();
+installSoundGestures();
+// Conclusão: ao marcar um item (aria-pressed false → true), o marcador e a linha animam antes do redesenho.
+document.addEventListener('click', (e) => {
+  const check = e.target.closest?.('.check[aria-pressed="false"]');
+  if (!check || check.disabled) return;
+  check.classList.add('completing');
+  check.closest('.list-item, tr')?.classList.add('completing-row');
+  play('concluir');
+}, true);
 // Primeira renderização não move o foco: o primeiro Tab deve chegar ao link "Pular para o conteúdo".
 lastRoute = currentRoute().id;
 // A página é montada por JavaScript: a restauração automática de rolagem do navegador

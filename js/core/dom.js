@@ -23,7 +23,11 @@ export function h(tag, attrs = {}, ...children) {
       } else if (key === 'dataset') {
         Object.assign(el.dataset, value);
       } else if (key === 'style' && typeof value === 'object') {
-        Object.assign(el.style, value);
+        // Variáveis CSS (--nome) precisam de setProperty; Object.assign as ignoraria.
+        for (const [prop, v] of Object.entries(value)) {
+          if (v === null || v === undefined) continue;
+          if (prop.startsWith('--')) el.style.setProperty(prop, String(v)); else el.style[prop] = v;
+        }
       } else if (value === true) {
         el.setAttribute(key, '');
       } else if (key === 'value' && 'value' in el) {

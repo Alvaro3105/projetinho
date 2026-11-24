@@ -35,7 +35,7 @@ function skillList({ store, rerender }) {
   const assessed = all.filter((s) => levelScore(s.level) !== null);
   const chart = assessed.length ? card({ title: 'Atual × desejado (avaliadas)', iconName: 'chart' },
     rangeBars(assessed.slice(0, 14).map((s) => ({ label: s.name, value: levelScore(s.level), target: levelScore(s.target), max: 4 })), { label: 'Nível atual e desejado', format: (v) => String(v) }),
-    h('div', { class: 'legend', style: { marginTop: '8px' } }, h('span', {}, h('i', { style: { background: 'var(--primary)' } }), 'atual (0–4)'), h('span', {}, h('i', { style: { background: 'var(--accent)', width: '2px' } }), 'desejado'))) : null;
+    h('div', { class: 'legend', style: { marginTop: '8px' } }, h('span', {}, h('i', { style: { background: 'var(--primary)' } }), 'atual (0–4)'), h('span', {}, h('i', { style: { background: 'var(--amber)', width: '2px' } }), 'desejado'))) : null;
   return h('div', { class: 'stack' },
     statStrip(
       stat('Competências', String(all.length), `${assessed.length} avaliadas`),

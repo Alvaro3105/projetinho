@@ -47,6 +47,14 @@ export function stat(label, value, note, { na = false } = {}) {
     note ? h('span', { class: 'stat-note' }, note) : null);
 }
 
+/** Indicador de carregamento (linhas que "respiram"), com texto para leitores de tela. */
+export function loadingBlock(text = 'Carregando') {
+  return h('div', { class: 'loading', role: 'status', 'aria-live': 'polite' },
+    h('span', { class: 'ld-text' }, `${text}…`),
+    h('i', { class: 'ld-row w1', 'aria-hidden': 'true' }), h('i', { class: 'ld-row w2', 'aria-hidden': 'true' }),
+    h('i', { class: 'ld-row w3', 'aria-hidden': 'true' }), h('i', { class: 'ld-row w4', 'aria-hidden': 'true' }));
+}
+
 /** Faixa de indicadores: uma superfície com divisórias finas, em vez de N cartões iguais. */
 export function statStrip(...items) {
   const list = items.flat().filter(Boolean);

@@ -1,4 +1,4 @@
-// Datas como strings ISO locais (AAAA-MM-DD). Funções puras, testadas em tests/dates.test.js.
+// Datas como strings ISO locais (AAAA-MM-DD). Funções puras, testadas em tests/core.test.js.
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -8,6 +8,18 @@ export function toISO(date) {
 
 export function today(now = new Date()) {
   return toISO(now);
+}
+
+/**
+ * Dia local (AAAA-MM-DD) de uma data ou de um instante ISO com hora (ex.: "2026-11-24T02:30:00Z").
+ * Instantes são convertidos para o fuso do navegador: um backup às 23:30 em Brasília é "hoje",
+ * não o dia seguinte em UTC.
+ */
+export function localDay(value) {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : toISO(d);
 }
 
 export function parseISO(iso) {
@@ -104,4 +116,12 @@ export function greeting(now = new Date()) {
   if (hour < 12) return 'Bom dia';
   if (hour < 18) return 'Boa tarde';
   return 'Boa noite';
+}
+
+/** "Hoje", "Ontem" ou "Há N dias" (N ≥ 2). */
+export function daysAgo(days) {
+  if (days === null || days === undefined) return 'Nunca';
+  if (days <= 0) return 'Hoje';
+  if (days === 1) return 'Ontem';
+  return `Há ${days} dias`;
 }

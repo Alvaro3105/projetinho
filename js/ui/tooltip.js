@@ -7,6 +7,12 @@ let anchor = null;
 function show(el) {
   const text = el.getAttribute('data-tip');
   if (!text || el.getAttribute('aria-expanded') === 'true') { hide(); return; }
+  // data-tip-auto: só mostra a dica quando o rótulo visível do próprio elemento está oculto
+  // (ex.: menu lateral recolhido ou em trilho no tablet).
+  if (el.hasAttribute('data-tip-auto')) {
+    const label = el.querySelector('.nav-text');
+    if (label && getComputedStyle(label).display !== 'none') { hide(); return; }
+  }
   if (!tip) { tip = document.createElement('div'); tip.className = 'tooltip'; tip.setAttribute('aria-hidden', 'true'); document.body.append(tip); }
   anchor = el;
   tip.textContent = text;

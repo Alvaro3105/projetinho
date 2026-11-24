@@ -1,6 +1,6 @@
 // Estado da aplicação + persistência local + backup.
 // A lógica de estado é pura (createStore recebe um "storage"), o que permite testar em Node.
-import { today } from './dates.js';
+import { today, localDay, diffDays } from './dates.js';
 
 export const SCHEMA_VERSION = 1;
 export const STORAGE_KEY = 'careeros:v1';
@@ -17,6 +17,9 @@ export function uid(prefix = 'id') {
     : Math.random().toString(36).slice(2, 10);
   return `${prefix}_${Date.now().toString(36)}${rand}`;
 }
+
+/** Cópia do conteúdo salvo que não pôde ser lido (para recuperação manual). */
+export const RECOVERY_KEY = `${STORAGE_KEY}:ilegivel`;
 
 export function emptyState() {
   const collections = {};
@@ -82,12 +85,17 @@ export function createStore({ storage, seed } = {}) {
   let loadError = null;
   const listeners = new Set();
 
+  let raw = null;
   try {
-    const raw = storage?.getItem(STORAGE_KEY);
+    raw = storage?.getItem(STORAGE_KEY);
     state = raw ? normalizeState(JSON.parse(raw)) : null;
   } catch (err) {
     loadError = err;
     state = null;
+  }
+  if (loadError && raw) {
+    // Guarda uma cópia exata do conteúdo ilegível antes de qualquer outra coisa, para recuperação manual.
+    try { if (storage.getItem(RECOVERY_KEY) !== raw) storage.setItem(RECOVERY_KEY, raw); } catch { /* sem espaço: o original continua intocado */ }
   }
   if (!state) {
     state = emptyState();
@@ -97,6 +105,9 @@ export function createStore({ storage, seed } = {}) {
 
   function save() {
     if (!storage) { persistent = false; return; }
+    // Enquanto os dados salvos estiverem ilegíveis, nada é gravado por cima deles: o JARVIS funciona
+    // só na memória até você importar um backup, restaurar um ponto ou começar do zero.
+    if (loadError) { persistent = false; return; }
     try {
       storage.setItem(STORAGE_KEY, JSON.stringify(state));
       persistent = true;
@@ -225,7 +236,7 @@ export function removeReferences(state, collection, id) {
 
 /** Data do último backup em dias (null se nunca). */
 export function daysSinceExport(state, now = today()) {
-  if (!state.meta.lastExportAt) return null;
-  const last = state.meta.lastExportAt.slice(0, 10);
-  return Math.round((new Date(now) - new Date(last)) / 86400000);
+  const last = localDay(state.meta.lastExportAt);
+  if (!last) return null;
+  return Math.max(0, diffDays(last, now));
 }

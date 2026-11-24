@@ -64,18 +64,18 @@
 }
 .sidebar-foot .sig { color: var(--side-text); font-weight: 500; font-size: var(--fs-xs); }
 .sidebar-foot > div + div { margin-top: 2px; }
-.faint-side { opacity: 0.8; }
+.faint-side { color: var(--side-muted); }
 .collapse-btn { margin: var(--sp-3) 0 0; width: 100%; justify-content: flex-start; color: var(--side-muted); }
 
-/* Recolhida: só ícones, com rótulo em dica (tooltip) */
+/* Trilho (rail): só ícones, com o nome em dica. Usado quando você recolhe a barra no desktop
+   e, automaticamente, em tablets e notebooks compactos (601–1180 px). */
 .app.collapsed .brand { justify-content: center; padding-inline: 0; }
 .app.collapsed .brand > span:last-child,
 .app.collapsed .nav-label,
-.app.collapsed .nav a > span,
-.app.collapsed .sidebar-foot,
-.app.collapsed .collapse-btn .btn-label { display: none; }
+.app.collapsed .nav-text,
+.app.collapsed .sidebar-foot { display: none; }
 .app.collapsed .nav a { justify-content: center; padding-inline: 0; }
-.app.collapsed .nav .nav-count { display: inline-block; position: absolute; top: 0; right: 2px; font-size: 9px; padding: 0 4px; line-height: 14px; }
+.app.collapsed .nav .nav-count { position: absolute; top: 0; right: 2px; font-size: 9px; padding: 0 4px; line-height: 14px; }
 .app.collapsed .nav-group + .nav-group { border-top: 1px solid var(--side-border); margin-top: 8px; padding-top: 8px; }
 .app.collapsed .collapse-btn { justify-content: center; }
 
@@ -94,11 +94,12 @@
 .topbar .crumb { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.04em; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .topbar .crumb strong { color: var(--text); font-weight: 500; font-family: var(--font-sans); font-size: var(--fs-sm); letter-spacing: 0; }
 .topbar .spacer { flex: 1; }
-.menu-btn { display: none; }
+.btn.menu-btn { display: none; flex: none; }
 
 .content {
   width: 100%;
   max-width: 1360px;
+  margin-inline: auto;
   padding-block: var(--sp-6) var(--sp-12);
   padding-left: max(var(--sp-6), env(safe-area-inset-left, 0px));
   padding-right: max(var(--sp-6), env(safe-area-inset-right, 0px));
@@ -111,14 +112,15 @@
 @keyframes route-in { from { opacity: 0; transform: translateY(6px); } }
 
 /* Modo Assistente: grade de HUD muito sutil no fundo */
-:root[data-ui-mode="assistente"] .main { background: var(--grid-lines); background-attachment: fixed; }
+/* (A grade de HUD do modo Assistente fica em body::after, em css/base.css, com borda esmaecida.) */
 
 .page-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--sp-4); justify-content: space-between; padding-bottom: var(--sp-4); border-bottom: 1px solid var(--border); position: relative; }
 .page-head::after {
   content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 120px;
   background: linear-gradient(90deg, var(--accent), transparent);
-  transform-origin: left; animation: line-draw var(--dur-4) var(--ease) both;
+  transform-origin: left; box-shadow: 0 0 10px var(--accent-glow);
 }
+.route-enter .page-head::after { animation: line-draw 900ms var(--ease) 100ms both; }
 @keyframes line-draw { from { transform: scaleX(0); } }
 .page-head .lede { color: var(--text-2); margin-top: 6px; max-width: 72ch; font-size: var(--fs-md); }
 .page-head .actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
@@ -146,7 +148,31 @@
   .guide-grid > nav { position: static !important; }
 }
 
-@media (max-width: 860px) {
+/* Tablet e notebook compacto: trilho de ícones fixo; o menu (☰) abre a barra completa por cima. */
+@media (min-width: 601px) and (max-width: 1180px) {
+  .app, .app.collapsed { grid-template-columns: var(--sidebar-w-collapsed) minmax(0, 1fr); }
+  .app:not(.nav-open) .brand { justify-content: center; padding-inline: 0; }
+  .app:not(.nav-open) .brand > span:last-child,
+  .app:not(.nav-open) .nav-label,
+  .app:not(.nav-open) .nav-text,
+  .app:not(.nav-open) .sidebar-foot { display: none; }
+  .app:not(.nav-open) .nav a { justify-content: center; padding-inline: 0; }
+  .app:not(.nav-open) .nav .nav-count { position: absolute; top: 0; right: 2px; font-size: 9px; padding: 0 4px; line-height: 14px; }
+  .app:not(.nav-open) .nav-group + .nav-group { border-top: 1px solid var(--side-border); margin-top: 8px; padding-top: 8px; }
+  .btn.collapse-btn { display: none; }
+  .btn.menu-btn { display: inline-flex; }
+  .app.nav-open .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 288px; box-shadow: var(--shadow-2); animation: drawer-in var(--dur-3) var(--ease); }
+  .app.nav-open.collapsed .brand > span:last-child, .app.nav-open.collapsed .nav-label, .app.nav-open.collapsed .nav-text, .app.nav-open.collapsed .sidebar-foot { display: revert; }
+  .app.nav-open.collapsed .nav a { justify-content: flex-start; padding-inline: var(--sp-3); }
+  .app.nav-open.collapsed .nav .nav-count { position: static; }
+  .app.nav-open .scrim { display: block; position: fixed; inset: 0; background: var(--overlay); z-index: calc(var(--z-drawer) - 1); animation: fade var(--dur-2) var(--ease); }
+  .topbar { padding-left: var(--sp-4); padding-right: max(var(--sp-4), env(safe-area-inset-right, 0px)); }
+  .content { padding-left: var(--sp-5); padding-right: max(var(--sp-5), env(safe-area-inset-right, 0px)); }
+}
+@keyframes drawer-in { from { transform: translateX(-24px); opacity: 0.6; } }
+
+/* Celular: gaveta completa + navegação inferior */
+@media (max-width: 600px) {
   .app, .app.collapsed { grid-template-columns: minmax(0, 1fr); }
   .sidebar {
     position: fixed; left: 0; top: 0; bottom: 0; width: min(300px, 86vw);
@@ -155,21 +181,31 @@
     box-shadow: var(--shadow-2);
   }
   /* No celular a gaveta sempre mostra rótulos, mesmo se a barra estiver recolhida no desktop. */
-  .app.collapsed .brand > span:last-child, .app.collapsed .nav-label, .app.collapsed .nav a > span, .app.collapsed .sidebar-foot { display: revert; }
+  .app.collapsed .brand > span:last-child, .app.collapsed .nav-label, .app.collapsed .nav-text, .app.collapsed .sidebar-foot { display: revert; }
+  .app.collapsed .brand { justify-content: flex-start; padding-inline: var(--sp-2); }
   .app.collapsed .nav a { justify-content: flex-start; padding-inline: var(--sp-3); }
   .app.collapsed .nav .nav-count { position: static; }
-  .collapse-btn { display: none; }
+  .btn.collapse-btn { display: none; }
   .app.nav-open .sidebar { transform: none; }
   .app.nav-open .scrim { display: block; position: fixed; inset: 0; background: var(--overlay); z-index: calc(var(--z-drawer) - 1); animation: fade var(--dur-2) var(--ease); }
-  .menu-btn { display: inline-flex; }
-  .topbar { padding-left: max(var(--sp-4), env(safe-area-inset-left, 0px)); padding-right: max(var(--sp-4), env(safe-area-inset-right, 0px)); }
-  .content { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: var(--sp-5) var(--sp-8); }
-  .cols-3, .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .btn.menu-btn { display: inline-flex; }
+  .nav a { min-height: 44px; }
+  .topbar { gap: 4px; padding-left: max(var(--sp-3), env(safe-area-inset-left, 0px)); padding-right: max(var(--sp-3), env(safe-area-inset-right, 0px)); }
+  .content { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: var(--sp-5) var(--sp-8); gap: var(--sp-5); }
   .span-2 { grid-column: auto; }
 }
+@media (min-width: 1800px) { .content { max-width: 1480px; } }
 @media (max-width: 600px) {
   .cols-2, .cols-3, .cols-4 { grid-template-columns: minmax(0, 1fr); }
   .board { grid-template-columns: minmax(0, 1fr) !important; overflow-x: visible; }
   .hide-sm { display: none !important; }
   .topbar .crumb span { display: none; }
 }
+
+/* Cabeçalho em telas médias: sem atalho de teclado no botão de busca (economiza espaço) */
+@media (max-width: 1000px) { .search-btn kbd { display: none; } .search-btn { min-width: 0; } }
+
+/* Cabeçalho: os botões nunca encolhem; quem cede espaço é a trilha (com reticências). */
+.topbar > .btn, .topbar > .pop-wrap, .topbar > span > .seg { flex: none; }
+.topbar .crumb { flex: 1 1 auto; }
+.topbar .spacer { flex: 0 1 auto; }

@@ -1,7 +1,7 @@
 // Indicadores calculados a partir dos dados registrados. Funções puras.
 // Regra central: sem dado medido, o resultado é null ("Não avaliado"), nunca 0 inventado.
 import { levelScore, PHASES, APP_FUNNEL } from './schema.js';
-import { addDays, weekStart, monthKey, today as todayISO, diffDays, rangeDays } from './dates.js';
+import { addDays, weekStart, monthKey, today as todayISO, diffDays, rangeDays, localDay } from './dates.js';
 
 export const TECH_CATEGORIES = ['programacao', 'eng_software', 'ciencia_computacao', 'ia', 'matematica', 'dados', 'cloud', 'seguranca'];
 export const PERSONAL_CATEGORIES = ['comunicacao', 'lideranca'];
@@ -165,7 +165,7 @@ export function habitAdherence(habits, weeks = 4, now = todayISO()) {
   for (let i = 0; i < weeks; i++) {
     const ref = addDays(now, -7 * i);
     for (const h of active) {
-      if (h.createdAt && h.createdAt.slice(0, 10) > addDays(weekStart(ref), 6)) continue;
+      if (h.createdAt && localDay(h.createdAt) > addDays(weekStart(ref), 6)) continue;
       const { count, target } = habitWeek(h, ref);
       sum += Math.min(1, count / target);
       n++;
@@ -297,7 +297,8 @@ export function insights(state, now = todayISO()) {
   if (weeklyReviewDue(c.reviews, now)) out.push({ tone: 'info', text: 'Revisão semanal pendente: avalie a semana e reorganize prioridades.', route: 'revisoes' });
   const blockedHigh = gaps.below.filter((s) => s.priority === 'alta').slice(0, 2);
   for (const s of blockedHigh) out.push({ tone: 'info', text: `"${s.name}" está abaixo do nível desejado. Crie uma atividade para desenvolvê-la.`, route: 'competencias' });
-  const days = state.meta.lastExportAt ? diffDays(state.meta.lastExportAt.slice(0, 10), now) : null;
+  const last = localDay(state.meta.lastExportAt);
+  const days = last ? Math.max(0, diffDays(last, now)) : null;
   if (days === null || days > 14) out.push({ tone: 'warn', text: days === null ? 'Você ainda não fez backup. Os dados ficam só neste navegador.' : `Último backup há ${days} dias. Exporte um novo arquivo.`, route: 'configuracoes' });
   return out;
 }

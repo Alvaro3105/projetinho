@@ -5,7 +5,7 @@ Desenvolvido por Álvaro Pires · 2026 (antigo CAREER OS).
 
 Plataforma pessoal de organização e desenvolvimento acadêmico, técnico, profissional e pessoal, para acompanhar a graduação em Engenharia de Software (PUC Minas, Coração Eucarístico, noturno, 2027–2030), a entrada no mercado de tecnologia e a evolução até oportunidades de nível internacional.
 
-**Interface:** dois modos no Painel Inicial. *Assistente* mostra o núcleo (anéis com dados reais: consistência, metas da semana, diagnóstico), busca e ações rápidas. *Produtividade* mostra o painel detalhado. Design system em [docs/12-design-system.md](docs/12-design-system.md).
+**Interface:** dois modos no Painel Inicial. *Assistente* mostra o núcleo (anéis com dados reais: consistência, metas da semana, diagnóstico), busca e ações rápidas. *Produtividade* mostra o painel detalhado. Design system em [docs/12-design-system.md](docs/12-design-system.md); testes da interface em [docs/14-relatorio-de-testes.md](docs/14-relatorio-de-testes.md). Funciona em celular (navegação inferior), tablet (trilho de ícones) e telas largas.
 
 Não é um cronograma estático: é um sistema com **diagnóstico**, **plano**, **execução** e **avaliação**, que começa com tudo "Não avaliado" e só mostra progresso quando há evidência registrada. A evolução por fases (assistente de IA, integrações) está em [docs/13-evolucao-jarvis.md](docs/13-evolucao-jarvis.md); as mudanças, em [CHANGELOG.md](CHANGELOG.md).
 
@@ -36,7 +36,7 @@ Publicação gratuita: **GitHub Pages** (Settings › Pages › branch e pasta r
 | Relatórios | Evolução mensal/semestral, consistência, independência de IA, metas, aprendizagem, oportunidades, pontos de melhoria |
 | Guia Estratégico | Os documentos de `docs/` renderizados no app |
 | Central de Backup | JSON com selo SHA-256, CSV por tipo de dado, importação com prévia, pontos de restauração automáticos, histórico, verificação de integridade |
-| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h), ajuste pela carga do semestre, perfil, aparência (tema, modo do Painel, menu lateral, animações) |
+| Configurações | Rotina (mínima/normal/férias), cenário de trabalho (sem estágio, estágio 20 h, estágio 30 h), ajuste pela carga do semestre, perfil, aparência (tema, modo do Painel, menu lateral, animações, efeitos visuais, sons opcionais) |
 
 **Busca global:** `Ctrl+K` ou `/`. **Atalhos:** `?`.
 

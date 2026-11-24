@@ -2,7 +2,7 @@ import { h } from '../core/dom.js';
 import { today, fmtDate } from '../core/dates.js';
 import { PHASES, MILESTONE_STATUS, MILESTONE_TYPES, SEMESTER_STATUS, optionLabel } from '../core/schema.js';
 import { currentPhase, isBlocked, loadFactor, AVERAGE_SEMESTER_HOURS } from '../core/metrics.js';
-import { card, badge, optBadge, btn, pageHead, tabs, refNames, kv, notice, chips } from '../ui/components.js';
+import { card, badge, optBadge, btn, pageHead, tabs, refNames, kv, notice, chips, empty } from '../ui/components.js';
 import { crud } from '../ui/form.js';
 import { confirmDialog, openModal, closeModal } from '../ui/modal.js';
 import { toast } from '../ui/toast.js';
@@ -18,7 +18,7 @@ export function renderRoadmap(ctx) {
     pageHead('Plano de Evolução', 'Onde você está, o que vem depois e o que depende do quê. Marcos são planos: o status muda quando há entrega verificável.', [
       btn('Novo marco', () => crud(store, 'milestones', { titleNew: 'Novo marco', defaults: { phase: currentPhase().value, status: 'planejado', type: 'tecnico' } }), { kind: 'primary', iconName: 'plus' }),
     ]),
-    tabs([['timeline', 'Linha do tempo'], ['semestres', 'Semestres (PUC Minas)']], tab, (k) => { tab = k; rerender(); }),
+    tabs([['timeline', 'Linha do tempo'], ['semestres', 'Semestres']], tab, (k) => { tab = k; rerender(); }),
     tab === 'timeline' ? timeline(ctx) : semesters(ctx));
 }
 
@@ -69,6 +69,8 @@ function milestoneRow(store, m, all, now) {
 
 function semesters({ store }) {
   const list = [...store.list('semesters')].sort((a, b) => a.number - b.number);
+  // Sem semestres (outro curso, outra fase da vida ou começo do zero): nada de matriz de exemplo.
+  if (!list.length) return empty('Nenhum semestre cadastrado.', 'Semestres são opcionais: use-os se você cursa algo dividido em períodos. A matriz de Engenharia de Software da PUC Minas só aparece no plano de exemplo.');
   const total = list.reduce((a, s) => a + s.disciplines.reduce((x, d) => x + (d.hours || 0), 0), 0);
   const confirmedAt = store.state.settings.curriculumConfirmedAt;
   const header = confirmedAt

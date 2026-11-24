@@ -1,14 +1,17 @@
 import { h } from '../core/dom.js';
-import { today, fmtDate } from '../core/dates.js';
+import { today, fmtDate, localDay, daysAgo } from '../core/dates.js';
 import { PHASES } from '../core/schema.js';
 import { routinePlan, currentPhase, WORK_SCENARIOS, VACATION_DEFAULTS, scenarioOf, currentSemester, semesterHours, AVERAGE_SEMESTER_HOURS } from '../core/metrics.js';
 import { daysSinceExport } from '../core/store.js';
 import { card, btn, pageHead, notice, chips, stat, tabs, statStrip } from '../ui/components.js';
 import { typedConfirm, snapshotNow } from './backup.js';
 import { toast } from '../ui/toast.js';
+import { setSoundEnabled, play } from '../ui/sound.js';
 
 const DAYS = [['seg', 'Seg'], ['ter', 'Ter'], ['qua', 'Qua'], ['qui', 'Qui'], ['sex', 'Sex'], ['sab', 'Sáb'], ['dom', 'Dom']];
 let tab = 'rotina';
+/** Abre Configurações já numa aba (usado pelo aviso de plano de exemplo e pelo menu de perfil). */
+export function selectSettingsTab(k) { if (['rotina', 'perfil', 'dados', 'aparencia'].includes(k)) tab = k; }
 
 const ROUTINES = {
   minima: { title: 'Rotina mínima (dias difíceis)', text: '30 min: 20 min de um problema de lógica sem IA ou leitura do material atual + 10 min de inglês (listening). Objetivo: não quebrar a sequência. Registrar a sessão mesmo assim.' },
@@ -96,7 +99,7 @@ function data({ store, navigate }) {
     !store.persistent ? notice('O navegador não está conseguindo salvar (armazenamento bloqueado ou espaço cheio). As alterações desta sessão serão perdidas ao fechar a página. Exporte um backup antes de sair.', 'bad') : null,
     statStrip(
       stat('Registros', String(counts), 'em todas as coleções'),
-      stat('Último backup', days === null ? 'Nunca' : days === 0 ? 'Hoje' : `Há ${days} dia(s)`, store.state.meta.lastExportAt ? fmtDate(store.state.meta.lastExportAt.slice(0, 10)) : 'Exporte agora', { na: days === null }),
+      stat('Último backup', daysAgo(days), store.state.meta.lastExportAt ? fmtDate(localDay(store.state.meta.lastExportAt)) : 'Exporte agora', { na: days === null }),
       stat('Configuração inicial', store.state.meta.seedVersion ? fmtDate(store.state.meta.seedVersion) : '—', 'versão dos dados iniciais')),
     card({ title: 'Backup e restauração', iconName: 'lock', sub: 'Exportação (JSON com selo de integridade e CSV), importação com prévia, pontos de restauração automáticos, histórico e verificação de integridade ficam na Central de Backup.' },
       btn('Abrir a Central de Backup', () => navigate('backup'), { kind: 'primary', iconName: 'arrow' })),
@@ -129,5 +132,10 @@ function appearance({ store }) {
       row('Menu lateral', 'Recolhido mostra só os ícones, com o nome ao passar o mouse.',
         chips([['aberto', 'Expandido'], ['recolhido', 'Recolhido']], st.sidebarCollapsed ? 'recolhido' : 'aberto', (k) => store.setSettings({ sidebarCollapsed: k === 'recolhido' }), 'Menu lateral')),
       row('Animações', 'Reduzir desliga a abertura, a rotação do núcleo e as transições. O JARVIS também respeita a preferência do sistema.',
-        chips([['system', 'Seguir o sistema'], ['reduced', 'Reduzir']], st.motion === 'reduced' ? 'reduced' : 'system', (k) => store.setSettings({ motion: k }), 'Animações'))));
+        chips([['system', 'Seguir o sistema'], ['reduced', 'Reduzir']], st.motion === 'reduced' ? 'reduced' : 'system', (k) => store.setSettings({ motion: k }), 'Animações')),
+      row('Efeitos visuais', 'Completos: vidro, brilhos, luz que segue o ponteiro e partículas do núcleo. Essenciais: superfícies sólidas e sem brilhos, para computadores e celulares mais simples.',
+        chips([['completos', 'Completos'], ['essenciais', 'Essenciais']], st.fx === 'essenciais' ? 'essenciais' : 'completos', (k) => store.setSettings({ fx: k }), 'Efeitos visuais')),
+      row('Sons', 'Toques curtos e baixos ao concluir, salvar ou errar. Só tocam logo depois de uma ação sua; nada toca ao abrir a página.',
+        h('div', { class: 'row' },
+          chips([['off', 'Desligados'], ['on', 'Ligados']], st.sound === 'on' ? 'on' : 'off', (k) => { store.setSettings({ sound: k }); if (k === 'on') { setSoundEnabled(true); play('concluir'); } }, 'Sons')))));
 }

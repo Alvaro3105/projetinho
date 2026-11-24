@@ -2,6 +2,28 @@
 
 Mudanças importantes do JARVIS (antigo CAREER OS). Datas em DD/MM/AAAA.
 
+## 24/11/2026 — Evolução: núcleo, efeitos, responsividade e auditoria geral
+
+**Correções (classificadas por severidade)**
+- **Crítico:** com os dados salvos ilegíveis, a primeira interação (abrir notificações, trocar modo, criar algo) gravava por cima do conteúdo original, apesar do aviso "nada foi sobrescrito". Agora nada é gravado até você importar, restaurar ou recomeçar, e uma cópia exata fica em `careeros:v1:ilegivel`.
+- **Médio:** "Último backup" aparecia como "Há -1 dia(s)" para backups feitos à noite (data em UTC). Datas de instantes agora usam o fuso do navegador; textos "Hoje", "Ontem", "Há N dias".
+- **Médio:** o quadro de projetos tinha 5 etapas e só 4 colunas ("Pausado" caía para outra linha): variáveis CSS passadas em `style` não eram aplicadas por `h()`.
+- **Médio:** perfil vazio mostrava "Álvaro" na saudação e COTEMIG/PUC na situação acadêmica (textos fixos). Agora tudo vem do perfil e dos semestres; sem semestres, a aba mostra um estado vazio.
+- **Médio:** animações de entrada (barras, gráficos, linha do título) repetiam a cada mudança de dado, fazendo a tela "piscar". Agora só ao abrir o módulo; nas mudanças, os valores fazem transição.
+- **Médio:** em 320 px, o nome de cada competência ficava espremido em ~13 px de largura.
+- **Médio:** o botão ☰ aparecia no desktop sem função e o "Recolher menu" aparecia no celular (cascata do CSS).
+- **Médio (acessibilidade):** contraste insuficiente no rodapé da barra lateral (3,4:1) e no âmbar do tema claro (3,9:1); tabelas com rolagem lateral sem foco pelo teclado; marcadores de conclusão com 20 px.
+- **Baixo:** legendas de gráficos com cores diferentes das barras (mapa de calor e Competências); dica do mapa de calor em AAAA-MM-DD; barras sem alvo geravam `NaN` no SVG; faixa técnica lida sem separadores pelo leitor de tela.
+
+**Novo**
+- **JARVIS CORE:** camadas com profundidade, nós das fases com rótulos F1–F6, avanço na fase atual, pontos em órbita (sessões dos últimos 7 dias), arcos com brilho e ponta luminosa, pulsação ambiente e estados visuais a partir dos seus registros: sem dados, atualização, progresso registrado, meta concluída, nova atividade.
+- **Painel Assistente** recomposto: faixa técnica (data, hora 24 h, fase, origem dos dados), núcleo à esquerda, legenda ao lado das ações.
+- **Efeitos:** vidro, luz que segue o ponteiro, bordas luminosas, atmosfera (textura, pontos de luz, grade com borda esmaecida), transição de tema com revelação circular, conclusão animada, toasts com tempo restante, modais com saída animada, estado "Salvo · HH:MM", carregamento do Guia.
+- **Configurações › Aparência:** "Efeitos visuais" (completos/essenciais) e "Sons" (desligados por padrão; só tocam depois de uma ação sua).
+- **Responsividade:** navegação inferior no celular, trilho de ícones em tablets e notebooks compactos, composição própria do Painel no tablet, conteúdo centralizado em telas largas, abas e filtros com rolagem no celular, alvos maiores em telas de toque.
+- **Dados de exemplo × reais:** instalações novas avisam que começaram com o plano do autor, com "É o meu plano", "Editar perfil" e "Começar do zero".
+- **Testes:** `tests/evolucao.test.js` (dados ilegíveis, fuso, estados do núcleo); relatório em `docs/14-relatorio-de-testes.md`.
+
 ## 24/11/2026 — Redesign completo da interface
 
 - **Conceito "instrumento de bordo pessoal":** obsidiana como base, ciano como luz do sistema, azul para ações, âmbar só para "agora" e atenção. Geist e Geist Mono. Tema claro "Gelo". Contraste AA medido nos dois temas.

@@ -1,7 +1,7 @@
 // Guia estratégico: renderiza os documentos de planejamento em docs/*.md (fonte única).
 import { h, clear } from '../core/dom.js';
 import { renderMarkdown } from '../core/markdown.js';
-import { pageHead, notice } from '../ui/components.js';
+import { pageHead, notice, loadingBlock } from '../ui/components.js';
 import { CAREER_GROUPS, TRACKS, STACK } from '../data/careers.js';
 
 export const DOCS = [
@@ -19,6 +19,7 @@ export const DOCS = [
   { id: '11-uso-de-ia', title: 'Política de uso de IA' },
   { id: '12-design-system', title: 'Design system do JARVIS' },
   { id: '13-evolucao-jarvis', title: 'Evolução do JARVIS: arquitetura e fases' },
+  { id: '14-relatorio-de-testes', title: 'Relatório de testes da interface' },
   { id: 'fontes', title: 'Fontes e datas de consulta' },
 ];
 
@@ -28,7 +29,7 @@ export function selectDoc(id) { if (DOCS.some((d) => d.id === id)) current = id;
 const cache = new Map();
 
 export function renderGuide() {
-  const host = h('div', { class: 'card', style: { minWidth: 0 } }, h('p', { class: 'muted' }, 'Carregando…'));
+  const host = h('div', { class: 'card', style: { minWidth: 0 } }, loadingBlock('Carregando documento'));
   const nav = h('nav', { 'aria-label': 'Documentos do guia', class: 'card flat', style: { alignSelf: 'start', position: 'sticky', top: '80px' } },
     h('ol', { style: { listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '2px' } },
       DOCS.map((d) => h('li', {}, h('a', {
@@ -38,7 +39,7 @@ export function renderGuide() {
       }, d.title)))));
 
   async function load() {
-    clear(host).append(h('p', { class: 'muted' }, 'Carregando…'));
+    clear(host).append(loadingBlock('Carregando documento'));
     try {
       let text = cache.get(current);
       if (!text) {

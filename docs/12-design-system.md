@@ -1,6 +1,6 @@
 # Design system do JARVIS
 
-Versão do redesign de 24/11/2026. Fonte única dos valores: `css/tokens.css`. Os componentes usam só tokens.
+Versão do redesign de 24/11/2026, com a evolução de efeitos, responsividade e acessibilidade do mesmo dia. Fonte única dos valores: `css/tokens.css`. Os componentes usam só tokens.
 
 ## Conceito: "instrumento de bordo pessoal"
 
@@ -115,3 +115,70 @@ O núcleo **não** simula estados de IA ("pensando", "ouvindo", "processando").
 - Núcleo e gráficos com `role="img"` e descrição textual dos valores.
 - `prefers-reduced-motion` respeitado, mais a opção "Reduzir animações" em Configurações › Aparência.
 - Atalhos de uma tecla (`/`, `?`) não funcionam enquanto se digita.
+
+
+## JARVIS CORE (núcleo) — camadas e estados
+
+| Camada (de fora para dentro) | O que mostra | Fonte |
+|---|---|---|
+| Anéis de marcação girando devagar (220 s, 90 s, 140 s) | ambiente, sem significado de dado | decorativo |
+| Órbita com nós F1–F6 | as 6 fases da trajetória; atual em âmbar com halo | calendário das fases |
+| Arco âmbar fino na órbita | avanço no período da fase atual | data de hoje × início/fim da fase |
+| Pontos em órbita | uma sessão registrada nos últimos 7 dias = um ponto (até 14) | Estudos + Inglês |
+| Arco ciano | consistência (dias com estudo em 28) | sessões |
+| Arco azul | metas da semana cumpridas | metas |
+| Arco âmbar | avaliações diagnósticas feitas | avaliações |
+| Disco interno com brilho que "respira" (7 s) | ambiente | decorativo |
+
+**Estados** (atributos `data-state` e `data-event` em `.core`), calculados por comparação com o último retrato dos seus registros nesta sessão do navegador:
+
+| Estado | Quando | Visual |
+|---|---|---|
+| Normal | há dados | anéis em cor plena |
+| Sem dados (`vazio`) | nenhum arco com valor e nenhuma sessão | cores mais apagadas, rotação mais lenta, "Aguardando os primeiros registros" |
+| Atualização (`atualizado`) | qualquer contagem mudou | onda circular ciano |
+| Progresso registrado (`progresso`) | sessão nova ou atividade concluída | onda + arco de consistência acende + ponto novo entra na órbita |
+| Meta concluída (`meta`) | uma meta passou a "cumprida" | onda verde + arco de metas acende |
+| Nova atividade (`atividade`) | atividade criada | onda azul |
+
+Cada mudança mostra um rótulo curto sob o núcleo ("Meta concluída"). Os arcos fazem transição do valor anterior para o novo. Nada é simulado: não há "pensando", "ouvindo" nem "processando".
+
+## Efeitos e microinterações
+
+| Efeito | Onde | Desliga com |
+|---|---|---|
+| Vidro (blur) | cabeçalho, navegação inferior, fundo de modais | Efeitos essenciais |
+| Luz que segue o ponteiro (`.spot`) | painel do núcleo, campo de comando, ações rápidas, módulos | Efeitos essenciais; só com mouse |
+| Bordas luminosas | topo de modais, faixa de indicadores, divisor da faixa técnica | — (estático) |
+| Atmosfera | textura fina, pontos de luz, grade de HUD com borda esmaecida (Assistente) | Efeitos essenciais |
+| Entrada de módulo | conteúdo, linha do título, barras, arcos e gráficos | Reduzir animações |
+| Transição de valores | barras de progresso e arcos vão do valor anterior ao novo | Reduzir animações |
+| Conclusão | marcador "salta", anel verde, linha riscada antes de sair da lista | Reduzir animações |
+| Modal | entrada com escala; saída em 150 ms | Reduzir animações |
+| Toast | entra deslizando, linha de tempo restante, sai animado; clique fecha | Reduzir animações |
+| Troca de tema | revelação circular a partir do ponto clicado (View Transitions) | Reduzir animações / Efeitos essenciais |
+| Estado de gravação | ponto verde "Salvo · HH:MM" pulsa a cada gravação; âmbar "Não salvo" | — |
+| Carregando | linhas com brilho correndo (Guia) | Reduzir animações |
+| Sons (opcionais) | concluir, salvar, erro; Web Audio, volume baixo | desligados por padrão |
+
+**Desempenho:** animações contínuas usam só `transform` e `opacity`; a luz do ponteiro atualiza duas variáveis CSS uma vez por quadro; o relógio é um único intervalo para a página inteira; listeners globais são instalados uma vez (teste confirma que abrir/fechar busca, perfil e navegar não acumula listeners). Entradas animadas só tocam ao abrir um módulo, nunca a cada mudança de dado.
+
+## Responsividade
+
+| Faixa | Composição |
+|---|---|
+| ≤ 600 px (celular) | gaveta completa + **navegação inferior** (Painel, Estudos, Buscar, Plano, Menu) para uso com uma mão; abas e filtros em uma linha com rolagem; listas com ações abaixo do texto; núcleo depois da saudação |
+| 601–900 px (tablet em pé) | **trilho de ícones** fixo (dica com o nome); Painel com saudação e ações na largura toda e núcleo ao lado da legenda |
+| 901–1180 px (tablet deitado, notebook compacto) | trilho de ícones; núcleo e conteúdo lado a lado |
+| 1181–1799 px | barra lateral completa (recolhível); conteúdo até 1360 px |
+| ≥ 1800 px (Full HD largo, ultrawide) | conteúdo centralizado até 1480 px; painel do núcleo com colunas limitadas |
+| Toque (`pointer: coarse`) | botões ≥ 44 px, marcadores 28 px, campos com 16 px (sem zoom no iOS) |
+
+## Acessibilidade (WCAG 2.2 AA)
+
+- axe-core sem violações em 14 módulos × 2 temas × 3 tamanhos (ver `docs/14-relatorio-de-testes.md`).
+- Alvos ≥ 24 px (2.5.8): marcadores de conclusão 24 px (28 px no toque); botão de menu não encolhe.
+- Tabelas, quadros e mapas com rolagem lateral recebem foco pelo teclado.
+- Gaveta (celular/tablet): Esc fecha, foco volta ao botão, o resto da tela fica inerte enquanto ela está aberta.
+- Erros em toasts são anunciados como alerta; a faixa técnica tem separadores para leitura em voz.
+- Âmbar do tema Gelo escurecido para #8A4F00 (contraste ≥ 4,5:1 em badges e contadores).
